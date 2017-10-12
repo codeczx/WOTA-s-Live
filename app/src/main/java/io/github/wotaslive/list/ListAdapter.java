@@ -78,7 +78,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 		notifyDataSetChanged();
 	}
 
-	private static class NormalViewHolder extends RecyclerView.ViewHolder {
+	static class NormalViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.iv_cover)
 		ImageView ivCover;
@@ -112,7 +112,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 
 	}
 
-	private static class HeaderViewHolder extends RecyclerView.ViewHolder {
+	static class HeaderViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.tv_header)
 		TextView tvHeader;
