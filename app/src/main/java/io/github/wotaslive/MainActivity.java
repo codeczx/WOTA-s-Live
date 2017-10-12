@@ -8,10 +8,9 @@ import android.widget.FrameLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.github.wotaslive.live.MemberLiveFragment;
+import io.github.wotaslive.list.ListFragment;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
     @BindView(R.id.fl_container)
     FrameLayout flContainer;
 
@@ -23,7 +22,7 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fl_container, new MemberLiveFragment());
+        transaction.replace(R.id.fl_container, new ListFragment());
         transaction.commit();
     }
 
