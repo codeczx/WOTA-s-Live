@@ -8,7 +8,6 @@ import java.util.List;
 import io.github.wotaslive.Constants;
 import io.github.wotaslive.data.AppRepository;
 import io.github.wotaslive.data.model.LiveInfo;
-import io.github.wotaslive.data.model.LiveRequestBody;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
@@ -30,9 +29,7 @@ public class ListPresenterImpl implements ListContract.MemberLivePresenter {
 
 	@Override
 	public void getMemberLive() {
-		LiveRequestBody requestBody = new LiveRequestBody(
-				0, 0, 0, 0, 20, System.currentTimeMillis());
-		AppRepository.getInstance().getSNHApi().getMemberLive(requestBody)
+		AppRepository.getInstance().getLiveInfo()
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
 				.subscribe(liveInfo -> {

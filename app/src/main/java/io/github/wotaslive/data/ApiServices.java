@@ -12,8 +12,6 @@ import retrofit2.http.POST;
 
 public interface ApiServices {
 
-    public static final String BASE_URL = "https://plive.48.cn/";
-
     @POST("/livesystem/api/live/v1/memberLivePage")
     Flowable<LiveInfo> getMemberLive(@Body LiveRequestBody liveRequestBody);
 }
