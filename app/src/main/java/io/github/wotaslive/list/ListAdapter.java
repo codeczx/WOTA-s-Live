@@ -14,8 +14,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.wotaslive.GlideApp;
 import io.github.wotaslive.R;
-import io.github.wotaslive.data.model.LiveInfo.ContentBean.LiveListBean;
-import io.github.wotaslive.data.model.LiveInfo.ContentBean.ReviewListBean;
 import io.github.wotaslive.data.model.LiveInfo.ContentBean.RoomBean;
 
 /**
@@ -23,62 +21,91 @@ import io.github.wotaslive.data.model.LiveInfo.ContentBean.RoomBean;
  */
 
 public class ListAdapter extends RecyclerView.Adapter {
-	public static final int VIEW_TYPE_HEADER = 0;
-	public static final int VIEW_TYPE_LIVE_ROOM = 1;
+	private static final int TYPE_LIVE_HEADER = 0;
+	private static final int TYPE_LIVE_CONTENT = 1;
+	private static final int TYPE_REVIEW_HEADER = 2;
+	private static final int TYPE_REVIEW_CONTENT = 3;
 
-	private List<Object> mList;
+	private List<RoomBean> mLiveList;
+	private List<RoomBean> mReviewList;
 
-	public ListAdapter() {
-		mList = new ArrayList<>();
+	ListAdapter() {
+		mLiveList = new ArrayList<>();
+		mReviewList = new ArrayList<>();
+	}
+
+	@Override
+	public int getItemViewType(int position) {
+		if (position == 0 && mLiveList.size() != 0)
+			return TYPE_LIVE_HEADER;
+		else if (position <= mLiveList.size())
+			return TYPE_LIVE_CONTENT;
+		else if (mReviewList.size() > 0 &&
+				((position == mLiveList.size() + 1 && mLiveList.size() > 0) ||
+						(position == mLiveList.size() && mLiveList.size() == 0)))
+			return TYPE_REVIEW_HEADER;
+		else
+			return TYPE_REVIEW_CONTENT;
 	}
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		switch (viewType) {
-			case VIEW_TYPE_HEADER:
+			case TYPE_LIVE_HEADER:
 				return HeaderViewHolder.newInstance(parent);
-			case VIEW_TYPE_LIVE_ROOM:
-				return NormalViewHolder.newInstance(parent);
+			case TYPE_LIVE_CONTENT:
+				return ContentViewHolder.newInstance(parent);
+			case TYPE_REVIEW_HEADER:
+				return HeaderViewHolder.newInstance(parent);
+			case TYPE_REVIEW_CONTENT:
+				return ContentViewHolder.newInstance(parent);
 		}
 		return null;
 	}
 
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-
-		Object object = mList.get(position);
-		if (holder instanceof HeaderViewHolder) {
-			((HeaderViewHolder) holder).bind((String) object);
-		}
-		else if (holder instanceof NormalViewHolder) {
-			((NormalViewHolder) holder).bind((RoomBean) object);
+		switch (getItemViewType(position)) {
+			case TYPE_LIVE_HEADER:
+				((HeaderViewHolder) holder).bind("直播");
+				break;
+			case TYPE_LIVE_CONTENT:
+				((ContentViewHolder) holder).bind(mLiveList.get(position - 1));
+				break;
+			case TYPE_REVIEW_HEADER:
+				((HeaderViewHolder) holder).bind("回放");
+				break;
+			case TYPE_REVIEW_CONTENT:
+				((ContentViewHolder) holder).bind(mReviewList.get(mReviewList.size() + position - getItemCount()));
+				break;
 		}
 	}
 
 	@Override
 	public int getItemCount() {
-		return mList == null ? 0 : mList.size();
+		int count = 0;
+		if (mLiveList.size() != 0)
+			count += mLiveList.size() + 1;
+		if (mReviewList.size() != 0)
+			count += mReviewList.size() + 1;
+		return count;
 	}
 
-	@Override
-	public int getItemViewType(int position) {
-		Object object = mList.get(position);
-		if (object instanceof ReviewListBean || object instanceof LiveListBean || object == null) {
-			return VIEW_TYPE_LIVE_ROOM;
+	void updateLiveList(List<RoomBean> list) {
+		mLiveList.clear();
+		if (list != null) {
+			mLiveList.addAll(list);
 		}
-		else if (object instanceof String) {
-			return VIEW_TYPE_HEADER;
+	}
+
+	void updateReviewList(List<RoomBean> list) {
+		mReviewList.clear();
+		if (list != null) {
+			mReviewList.addAll(list);
 		}
-		return RecyclerView.INVALID_TYPE;
 	}
 
-	public void updateData(List<Object> list) {
-		mList.clear();
-		mList.addAll(list);
-		notifyDataSetChanged();
-	}
-
-	static class NormalViewHolder extends RecyclerView.ViewHolder {
+	static class ContentViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.iv_cover)
 		ImageView ivCover;
@@ -87,13 +114,13 @@ public class ListAdapter extends RecyclerView.Adapter {
 		@BindView(R.id.tv_subtitle)
 		TextView tvSubtitle;
 
-		private static NormalViewHolder newInstance(ViewGroup viewGroup) {
+		private static ContentViewHolder newInstance(ViewGroup viewGroup) {
 			View view = LayoutInflater.from(viewGroup.getContext())
-					.inflate(R.layout.item_member_live, viewGroup, false);
-			return new NormalViewHolder(view);
+					.inflate(R.layout.item_live, viewGroup, false);
+			return new ContentViewHolder(view);
 		}
 
-		private NormalViewHolder(View itemView) {
+		private ContentViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}
@@ -104,8 +131,13 @@ public class ListAdapter extends RecyclerView.Adapter {
 			}
 			tvTitle.setText(roomBean.getTitle());
 			tvSubtitle.setText(roomBean.getSubTitle());
+			String path = roomBean.getPicPath();
+			if (path.contains(",")) {
+				String[] paths = path.split(",");
+				path = paths[0];
+			}
 			GlideApp.with(itemView.getContext())
-					.load("https://source.48.cn/" + roomBean.getPicPath())
+					.load("https://source.48.cn" + path)
 					.centerCrop()
 					.into(ivCover);
 		}
@@ -119,7 +151,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 
 		private static HeaderViewHolder newInstance(ViewGroup viewGroup) {
 			View view = LayoutInflater.from(viewGroup.getContext())
-					.inflate(R.layout.item_member_live_header, viewGroup, false);
+					.inflate(R.layout.item_live_header, viewGroup, false);
 			return new HeaderViewHolder(view);
 		}
 

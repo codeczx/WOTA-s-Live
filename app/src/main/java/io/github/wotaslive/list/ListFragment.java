@@ -5,13 +5,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
-import com.blankj.utilcode.util.LogUtils;
 
 import java.util.List;
 
@@ -19,11 +17,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import io.github.wotaslive.R;
+import io.github.wotaslive.data.model.LiveInfo;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ListFragment extends Fragment implements ListContract.MemberLiveView {
 
 	@BindView(R.id.rv_member_live)
@@ -35,9 +31,6 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 
 	private ListContract.MemberLivePresenter mPresenter;
 
-	public ListFragment() {
-	}
-
 	@Override
 	public void onAttach(Context context) {
 		super.onAttach(context);
@@ -47,7 +40,7 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.fragment_member_live, container, false);
+		View view = inflater.inflate(R.layout.frag_live, container, false);
 		unbinder = ButterKnife.bind(this, view);
 		return view;
 	}
@@ -62,21 +55,7 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 
 	private void initView() {
 		mAdapter = new ListAdapter();
-		GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 2);
-		gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-			@Override
-			public int getSpanSize(int position) {
-				switch (mAdapter.getItemViewType(position)) {
-					case ListAdapter.VIEW_TYPE_LIVE_ROOM:
-						return 1;
-					case ListAdapter.VIEW_TYPE_HEADER:
-						return 2;
-					default:
-						return -1;
-				}
-			}
-		});
-		rvMemberLive.setLayoutManager(gridLayoutManager);
+		rvMemberLive.setLayoutManager(new LinearLayoutManager(getContext()));
 		rvMemberLive.setAdapter(mAdapter);
 	}
 
@@ -86,9 +65,18 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 		unbinder.unbind();
 	}
 
+	@Override
+	public void refreshUI() {
+		mAdapter.notifyDataSetChanged();
+	}
 
 	@Override
-	public void refreshUI(List<Object> list) {
-		mAdapter.updateData(list);
+	public void updateLive(List<LiveInfo.ContentBean.RoomBean> list) {
+		mAdapter.updateLiveList(list);
+	}
+
+	@Override
+	public void updateReview(List<LiveInfo.ContentBean.RoomBean> list) {
+		mAdapter.updateReviewList(list);
 	}
 }
