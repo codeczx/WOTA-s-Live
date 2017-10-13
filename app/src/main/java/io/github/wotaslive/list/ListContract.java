@@ -9,15 +9,15 @@ import io.github.wotaslive.data.model.LiveInfo;
  */
 
 public class ListContract {
-
+	
 	interface MemberLiveView {
 		void refreshUI();
-
+		
 		void updateLive(List<LiveInfo.ContentBean.RoomBean> list);
-
+		
 		void updateReview(List<LiveInfo.ContentBean.RoomBean> list);
 	}
-
+	
 	interface MemberLivePresenter {
 		void getMemberLive();
 	}

@@ -13,14 +13,14 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class AppRepository {
-
+	
 	private static final String LIVE_BASE_URL = "https://plive.48.cn/";
 	private volatile static AppRepository mInstance;
 	private ApiServices snhApi;
-
+	
 	private AppRepository() {
 	}
-
+	
 	public static AppRepository getInstance() {
 		if (mInstance == null) {
 			synchronized (AppRepository.class) {
@@ -31,7 +31,7 @@ public class AppRepository {
 		}
 		return mInstance;
 	}
-
+	
 	private ApiServices getSNHApi() {
 		if (mInstance.snhApi == null) {
 			Retrofit retrofit = new Retrofit.Builder()
@@ -44,13 +44,13 @@ public class AppRepository {
 		}
 		return mInstance.snhApi;
 	}
-
+	
 	private static OkHttpClient getOkHttpClient() {
 		return new OkHttpClient.Builder()
 				.addInterceptor(new HeaderInterceptor())
 				.build();
 	}
-
+	
 	public Flowable<LiveInfo> getLiveInfo() {
 		LiveRequestBody requestBody = new LiveRequestBody(
 				0, 0, 0, 0, 20, System.currentTimeMillis());

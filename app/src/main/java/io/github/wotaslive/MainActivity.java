@@ -11,19 +11,19 @@ import butterknife.ButterKnife;
 import io.github.wotaslive.list.ListFragment;
 
 public class MainActivity extends AppCompatActivity {
-    @BindView(R.id.fl_container)
-    FrameLayout flContainer;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-        ButterKnife.bind(this);
-
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fl_container, new ListFragment());
-        transaction.commit();
-    }
-
+	@BindView(R.id.fl_container)
+	FrameLayout flContainer;
+	
+	@Override
+	protected void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.activity_main);
+		ButterKnife.bind(this);
+		
+		FragmentManager fragmentManager = getSupportFragmentManager();
+		FragmentTransaction transaction = fragmentManager.beginTransaction();
+		transaction.replace(R.id.fl_container, new ListFragment());
+		transaction.commit();
+	}
+	
 }

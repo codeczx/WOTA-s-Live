@@ -25,15 +25,15 @@ public class ListAdapter extends RecyclerView.Adapter {
 	private static final int TYPE_LIVE_CONTENT = 1;
 	private static final int TYPE_REVIEW_HEADER = 2;
 	private static final int TYPE_REVIEW_CONTENT = 3;
-
+	
 	private List<RoomBean> mLiveList;
 	private List<RoomBean> mReviewList;
-
+	
 	ListAdapter() {
 		mLiveList = new ArrayList<>();
 		mReviewList = new ArrayList<>();
 	}
-
+	
 	@Override
 	public int getItemViewType(int position) {
 		if (position == 0 && mLiveList.size() != 0)
@@ -47,7 +47,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 		else
 			return TYPE_REVIEW_CONTENT;
 	}
-
+	
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 		switch (viewType) {
@@ -62,7 +62,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 		}
 		return null;
 	}
-
+	
 	@Override
 	public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
 		switch (getItemViewType(position)) {
@@ -80,7 +80,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 				break;
 		}
 	}
-
+	
 	@Override
 	public int getItemCount() {
 		int count = 0;
@@ -90,41 +90,41 @@ public class ListAdapter extends RecyclerView.Adapter {
 			count += mReviewList.size() + 1;
 		return count;
 	}
-
+	
 	void updateLiveList(List<RoomBean> list) {
 		mLiveList.clear();
 		if (list != null) {
 			mLiveList.addAll(list);
 		}
 	}
-
+	
 	void updateReviewList(List<RoomBean> list) {
 		mReviewList.clear();
 		if (list != null) {
 			mReviewList.addAll(list);
 		}
 	}
-
+	
 	static class ContentViewHolder extends RecyclerView.ViewHolder {
-
+		
 		@BindView(R.id.iv_cover)
 		ImageView ivCover;
 		@BindView(R.id.tv_title)
 		TextView tvTitle;
 		@BindView(R.id.tv_subtitle)
 		TextView tvSubtitle;
-
+		
 		private static ContentViewHolder newInstance(ViewGroup viewGroup) {
 			View view = LayoutInflater.from(viewGroup.getContext())
 					.inflate(R.layout.item_live, viewGroup, false);
 			return new ContentViewHolder(view);
 		}
-
+		
 		private ContentViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}
-
+		
 		private void bind(RoomBean roomBean) {
 			if (roomBean == null) {
 				return;
@@ -141,25 +141,25 @@ public class ListAdapter extends RecyclerView.Adapter {
 					.centerCrop()
 					.into(ivCover);
 		}
-
+		
 	}
-
+	
 	static class HeaderViewHolder extends RecyclerView.ViewHolder {
-
+		
 		@BindView(R.id.tv_header)
 		TextView tvHeader;
-
+		
 		private static HeaderViewHolder newInstance(ViewGroup viewGroup) {
 			View view = LayoutInflater.from(viewGroup.getContext())
 					.inflate(R.layout.item_live_header, viewGroup, false);
 			return new HeaderViewHolder(view);
 		}
-
+		
 		private HeaderViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
 		}
-
+		
 		private void bind(String header) {
 			tvHeader.setText(header);
 		}

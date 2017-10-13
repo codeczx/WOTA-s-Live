@@ -12,16 +12,16 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 public class ListPresenterImpl implements ListContract.MemberLivePresenter {
-
+	
 	private Context mContext;
 	private ListContract.MemberLiveView mView;
-
+	
 	ListPresenterImpl(Context context, ListContract.MemberLiveView view) {
 		mContext = context;
 		mView = view;
 	}
-
-
+	
+	
 	@Override
 	public void getMemberLive() {
 		AppRepository.getInstance().getLiveInfo()

@@ -11,7 +11,7 @@ import retrofit2.http.POST;
  */
 
 public interface ApiServices {
-
-    @POST("/livesystem/api/live/v1/memberLivePage")
-    Flowable<LiveInfo> getMemberLive(@Body LiveRequestBody liveRequestBody);
+	
+	@POST("/livesystem/api/live/v1/memberLivePage")
+	Flowable<LiveInfo> getMemberLive(@Body LiveRequestBody liveRequestBody);
 }

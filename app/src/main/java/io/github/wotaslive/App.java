@@ -9,17 +9,17 @@ import com.blankj.utilcode.util.Utils;
  */
 
 public class App extends Application {
-
-    private App mInstance;
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        Utils.init(this);
-        mInstance = this;
-    }
-
-    public App getInstance() {
-        return mInstance;
-    }
+	
+	private App mInstance;
+	
+	@Override
+	public void onCreate() {
+		super.onCreate();
+		Utils.init(this);
+		mInstance = this;
+	}
+	
+	public App getInstance() {
+		return mInstance;
+	}
 }
