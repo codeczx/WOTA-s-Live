@@ -36,13 +36,12 @@ public class ListAdapter extends RecyclerView.Adapter {
 	
 	@Override
 	public int getItemViewType(int position) {
-		if (position == 0 && mLiveList.size() != 0)
+		if (position == 0)
 			return TYPE_LIVE_HEADER;
-		else if (position <= mLiveList.size())
+		else if (position <= mLiveList.size() && mLiveList.size() != 0)
 			return TYPE_LIVE_CONTENT;
-		else if (mReviewList.size() > 0 &&
-				((position == mLiveList.size() + 1 && mLiveList.size() > 0) ||
-						(position == mLiveList.size() && mLiveList.size() == 0)))
+		else if ((position == mLiveList.size() + 1 && mLiveList.size() > 0) ||
+				(position == 1 && mLiveList.size() == 0))
 			return TYPE_REVIEW_HEADER;
 		else
 			return TYPE_REVIEW_CONTENT;

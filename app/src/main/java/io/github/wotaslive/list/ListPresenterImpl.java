@@ -31,6 +31,9 @@ public class ListPresenterImpl implements ListContract.MemberLivePresenter {
 					mView.updateLive(liveInfo.getContent().getLiveList());
 					mView.updateReview(liveInfo.getContent().getReviewList());
 					mView.refreshUI();
-				}, Throwable::printStackTrace, () -> mView.refreshUI());
+				}, error -> {
+					error.printStackTrace();
+					mView.refreshUI();
+				}, () -> mView.refreshUI());
 	}
 }
