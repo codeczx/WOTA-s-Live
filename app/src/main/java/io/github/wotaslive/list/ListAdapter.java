@@ -7,6 +7,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.request.target.Target;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,7 +139,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 			}
 			GlideApp.with(itemView.getContext())
 					.load("https://source.48.cn" + path)
-					.centerCrop()
+					.override(Target.SIZE_ORIGINAL)
 					.into(ivCover);
 		}
 		

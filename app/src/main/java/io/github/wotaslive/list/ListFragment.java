@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -59,6 +60,7 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 	private void initView() {
 		mAdapter = new ListAdapter();
 		rvMemberLive.setLayoutManager(new LinearLayoutManager(getContext()));
+		rvMemberLive.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
 		rvMemberLive.setAdapter(mAdapter);
 		srlMemberLive.setOnRefreshListener(this);
 	}
