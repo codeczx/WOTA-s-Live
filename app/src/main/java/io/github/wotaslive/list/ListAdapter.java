@@ -1,9 +1,14 @@
 package io.github.wotaslive.list;
 
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.widget.FrameLayout;
+import android.widget.ListPopupWindow;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -114,6 +119,9 @@ public class ListAdapter extends RecyclerView.Adapter {
 		TextView tvTitle;
 		@BindView(R.id.tv_subtitle)
 		TextView tvSubtitle;
+		@BindView(R.id.iv_more)
+		ImageView ivMore;
+		Context mContext;
 		
 		private static ContentViewHolder newInstance(ViewGroup viewGroup) {
 			View view = LayoutInflater.from(viewGroup.getContext())
@@ -124,6 +132,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 		private ContentViewHolder(View itemView) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
+			mContext = itemView.getContext();
 		}
 		
 		private void bind(RoomBean roomBean) {
@@ -141,6 +150,57 @@ public class ListAdapter extends RecyclerView.Adapter {
 					.load("https://source.48.cn" + path)
 					.override(Target.SIZE_ORIGINAL)
 					.into(ivCover);
+			setUpListPop(roomBean);
+		}
+		
+		private void setUpListPop(RoomBean roomBean){
+			ListPopupWindow listPop = new ListPopupWindow(mContext);
+			List<String> list = new ArrayList<>();
+			list.add(mContext.getString(R.string.copy_address));
+			ArrayAdapter<String> arrayAdapter = new ArrayAdapter<>(mContext, android.R.layout.simple_list_item_1, list);
+			listPop.setAdapter(arrayAdapter);
+			listPop.setAnchorView(ivMore);
+			// ListPopupWindow.setWidth(ListPopupWindow.WRAP_CONTENT)会用AnchorView的width来当做
+			// ListPopupWindow的宽，所以要手动算
+			listPop.setWidth(measureContent(arrayAdapter));
+			listPop.setHeight(ListPopupWindow.WRAP_CONTENT);
+			listPop.setOnItemClickListener((adapterView, view1, i, l) -> {
+				if (list.get(i).equals(mContext.getString(R.string.copy_address))) {
+					ClipboardManager cmb = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+					cmb.setText(roomBean.getStreamPath());
+					listPop.dismiss();
+				}
+			});
+			ivMore.setOnClickListener(view -> listPop.show());
+		}
+		
+		/**
+		 * 测量ArrayAdapter列表里的最大宽度
+		 */
+		private int measureContent(ArrayAdapter arrayAdapter) {
+			int itemType = 0;
+			int maxWidth = 0;
+			View itemView = null;
+			ViewGroup measureParent = null;
+			int widthMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+			int heightMeasureSpec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+			for (int i = 0; i < arrayAdapter.getCount(); i++) {
+				int positionType = arrayAdapter.getItemViewType(i);
+				if (positionType != itemType) {
+					itemType = positionType;
+					itemView = null;
+				}
+				if (measureParent == null) {
+					measureParent = new FrameLayout(mContext);
+				}
+				itemView = arrayAdapter.getView(i, itemView, measureParent);
+				itemView.measure(widthMeasureSpec, heightMeasureSpec);
+				int itemWidth = itemView.getMeasuredWidth();
+				if (maxWidth < itemWidth){
+					maxWidth = itemWidth;
+				}
+			}
+			return maxWidth;
 		}
 		
 	}
