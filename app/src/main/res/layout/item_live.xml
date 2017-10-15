@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="360dp"
-    android:background="@color/white"
-    android:padding="16dp">
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:background="@color/white"
+                android:padding="16dp">
 
     <ImageView
         android:id="@+id/iv_cover"
         android:layout_width="match_parent"
         android:layout_height="270dp"
         android:contentDescription="@string/empty_value"
-        android:scaleType="centerCrop" />
+        android:foreground="?android:attr/selectableItemBackground"
+        android:scaleType="centerCrop"/>
 
     <TextView
         android:id="@+id/tv_title"
@@ -20,7 +21,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/black"
-        android:textSize="15sp" />
+        android:textSize="15sp"/>
 
     <TextView
         android:id="@+id/tv_subtitle"
@@ -30,15 +31,17 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:maxLines="2"
-        android:textSize="14sp" />
+        android:textSize="14sp"/>
 
     <ImageView
         android:id="@+id/iv_more"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/iv_cover"
         android:layout_alignParentEnd="true"
+        android:layout_below="@id/iv_cover"
         android:layout_marginTop="8dp"
-        android:src="@drawable/ic_more"/>
+        android:foreground="?android:attr/selectableItemBackground"
+        android:contentDescription="@string/empty_value"
+        android:src="@drawable/ic_more_vert_black_24dp"/>
 
 </RelativeLayout>

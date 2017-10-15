@@ -35,6 +35,8 @@ public class ListAdapter extends RecyclerView.Adapter {
 
 	public interface Callbacks {
 		void onMoreClick(RoomBean room, View anchor);
+
+		void onCoverClick(RoomBean room);
 	}
 
 	ListAdapter(Callbacks callbacks) {
@@ -155,6 +157,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 					.override(Target.SIZE_ORIGINAL)
 					.into(ivCover);
 			ivMore.setOnClickListener(view -> mCallbacks.onMoreClick(roomBean, view));
+			ivCover.setOnClickListener(view -> mCallbacks.onCoverClick(roomBean));
 		}
 	}
 

@@ -6,6 +6,8 @@ import android.content.Context;
 import android.view.View;
 import android.widget.PopupMenu;
 
+import com.blankj.utilcode.util.LogUtils;
+
 import io.github.wotaslive.R;
 import io.github.wotaslive.data.AppRepository;
 import io.github.wotaslive.data.model.LiveInfo;
@@ -60,5 +62,10 @@ public class ListPresenterImpl implements ListContract.MemberLivePresenter {
 			return false;
 		});
 		popupMenu.show();
+	}
+
+	@Override
+	public void onCoverClick(LiveInfo.ContentBean.RoomBean room) {
+		//TODO enter live room
 	}
 }
