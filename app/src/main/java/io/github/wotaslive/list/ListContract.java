@@ -18,7 +18,7 @@ public class ListContract {
 		void updateReview(List<LiveInfo.ContentBean.RoomBean> list);
 	}
 	
-	interface MemberLivePresenter {
+	interface MemberLivePresenter extends ListAdapter.Callbacks{
 		void getMemberLive();
 	}
 }

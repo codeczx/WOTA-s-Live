@@ -58,7 +58,7 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 	}
 	
 	private void initView() {
-		mAdapter = new ListAdapter();
+		mAdapter = new ListAdapter(mPresenter);
 		rvMemberLive.setLayoutManager(new LinearLayoutManager(getContext()));
 		rvMemberLive.addItemDecoration(new DividerItemDecoration(mContext, DividerItemDecoration.VERTICAL));
 		rvMemberLive.setAdapter(mAdapter);
