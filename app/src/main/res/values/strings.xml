@@ -1,8 +1,10 @@
 <resources>
-    <string name="app_name">WOTA‘s Live</string>
+    <string name="app_name">WOTA&apos;s&#160;Live</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="empty_value">-</string>
     <string name="list_copy_address">复制地址</string>
+    <string name="tab_stream">直播</string>
+    <string name="tab_room">房间</string>
 </resources>

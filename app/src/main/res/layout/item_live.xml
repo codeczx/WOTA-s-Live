@@ -2,7 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="360dp"
-                android:background="@color/white"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/white"
                 android:padding="16dp">
 
     <ImageView
@@ -20,7 +24,7 @@
         android:layout_below="@id/iv_cover"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:textColor="@color/black"
+        android:textColor="@android:color/black"
         android:textSize="15sp"/>
 
     <TextView
@@ -40,8 +44,8 @@
         android:layout_alignParentEnd="true"
         android:layout_below="@id/iv_cover"
         android:layout_marginTop="8dp"
-        android:foreground="?android:attr/selectableItemBackground"
         android:contentDescription="@string/empty_value"
+        android:foreground="?android:attr/selectableItemBackground"
         android:src="@drawable/ic_more_vert_black_24dp"/>
 
 </RelativeLayout>
