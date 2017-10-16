@@ -8,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Gravity;
 import android.view.MenuItem;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
@@ -36,9 +37,6 @@ public class MainActivity extends AppCompatActivity {
 		if (toolbar != null) {
 			setSupportActionBar(toolbar);
 		}
-
-		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, 0, 0);
-		mDrawerLayout.addDrawerListener(mDrawerToggle);
 		final ActionBar actionBar = getSupportActionBar();
 		if (actionBar != null) {
 			actionBar.setDisplayHomeAsUpEnabled(true);
@@ -47,7 +45,21 @@ public class MainActivity extends AppCompatActivity {
 			actionBar.setDisplayUseLogoEnabled(false);
 			actionBar.setHomeButtonEnabled(true);
 		}
+
+		mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout, toolbar, 0, 0);
+		mDrawerLayout.addDrawerListener(mDrawerToggle);
+		mDrawerToggle.syncState();
 		initViewpager();
+	}
+
+	@Override
+	public void onBackPressed() {
+		if (mDrawerLayout.isDrawerOpen(Gravity.START)) {
+			mDrawerLayout.closeDrawer(Gravity.START);
+		}
+		else {
+			super.onBackPressed();
+		}
 	}
 
 	@Override
