@@ -4,11 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.view.View;
-import android.widget.PopupMenu;
 
-import com.blankj.utilcode.util.LogUtils;
-
-import io.github.wotaslive.R;
 import io.github.wotaslive.data.AppRepository;
 import io.github.wotaslive.data.model.LiveInfo;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -46,22 +42,17 @@ public class ListPresenterImpl implements ListContract.MemberLivePresenter {
 	}
 
 	@Override
+	public void setClipboard(String text) {
+		ClipboardManager cmb = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
+		if (cmb != null) {
+			ClipData clipData = ClipData.newPlainText(null, text);
+			cmb.setPrimaryClip(clipData);
+		}
+	}
+
+	@Override
 	public void onMoreClick(LiveInfo.ContentBean.RoomBean room, View anchor) {
-		PopupMenu popupMenu = new PopupMenu(mContext, anchor);
-		popupMenu.inflate(R.menu.menu_list_more);
-		popupMenu.setOnMenuItemClickListener(menuItem -> {
-			switch (menuItem.getItemId()) {
-				case R.id.List_copy_address:
-					ClipboardManager cmb = (ClipboardManager) mContext.getSystemService(Context.CLIPBOARD_SERVICE);
-					if (cmb != null) {
-						ClipData clipData = ClipData.newPlainText(null, room.getStreamPath());
-						cmb.setPrimaryClip(clipData);
-					}
-					return true;
-			}
-			return false;
-		});
-		popupMenu.show();
+		mView.showMenu(room, anchor);
 	}
 
 	@Override

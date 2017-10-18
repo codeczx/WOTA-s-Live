@@ -8,9 +8,11 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.PopupMenu;
 
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 
@@ -91,6 +93,22 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 	@Override
 	public void updateReview(List<LiveInfo.ContentBean.RoomBean> list) {
 		mAdapter.updateReviewList(list);
+	}
+
+	@Override
+	public void showMenu(LiveInfo.ContentBean.RoomBean room, View anchor) {
+		Context wrapper = new ContextThemeWrapper(getContext(), R.style.AppTheme_Menu);
+		PopupMenu popupMenu = new PopupMenu(wrapper, anchor);
+		popupMenu.inflate(R.menu.menu_list_more);
+		popupMenu.setOnMenuItemClickListener(menuItem -> {
+			switch (menuItem.getItemId()) {
+				case R.id.List_copy_address:
+					mPresenter.setClipboard(room.getStreamPath());
+					return true;
+			}
+			return false;
+		});
+		popupMenu.show();
 	}
 
 	@Override

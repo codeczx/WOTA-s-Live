@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="list_card_radius">5dp</dimen>
+    <dimen name="list_card_elevation">3dp</dimen>
+    <dimen name="list_card_height">360dp</dimen>
+</resources>

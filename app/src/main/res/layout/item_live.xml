@@ -1,51 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="360dp"
-                android:layout_marginBottom="8dp"
-                android:layout_marginLeft="10dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="8dp"
-                android:background="@android:color/white"
-                android:padding="16dp">
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_card_height"
+    android:layout_marginEnd="@dimen/cardMarginHorizontal"
+    android:layout_marginStart="@dimen/cardMarginHorizontal"
+    android:layout_marginTop="@dimen/cardMarginVertical"
+    android:background="@android:color/white"
+    app:cardCornerRadius="@dimen/list_card_radius"
+    app:cardElevation="@dimen/list_card_elevation">
 
-    <ImageView
-        android:id="@+id/iv_cover"
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="270dp"
-        android:contentDescription="@string/empty_value"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:scaleType="centerCrop"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/tv_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/iv_cover"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:textColor="@android:color/black"
-        android:textSize="15sp"/>
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_start"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="@dimen/cardMarginHorizontal"/>
 
-    <TextView
-        android:id="@+id/tv_subtitle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/tv_title"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:maxLines="2"
-        android:textSize="14sp"/>
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_end"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="@dimen/cardMarginHorizontal"/>
 
-    <ImageView
-        android:id="@+id/iv_more"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_below="@id/iv_cover"
-        android:layout_marginTop="8dp"
-        android:contentDescription="@string/empty_value"
-        android:foreground="?android:attr/selectableItemBackground"
-        android:src="@drawable/ic_more_vert_black_24dp"/>
+        <ImageView
+            android:id="@+id/iv_cover"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:contentDescription="@string/empty_value"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:scaleType="centerCrop"
+            app:layout_constraintDimensionRatio="4:3"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/iv_cover"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/empty_value"
+            android:textColor="@android:color/black"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toTopOf="@id/tv_subtitle"
+            app:layout_constraintLeft_toLeftOf="@id/guide_start"
+            app:layout_constraintTop_toBottomOf="@+id/iv_cover"/>
+
+        <TextView
+            android:id="@+id/tv_subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_title"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/empty_value"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@id/guide_start"
+            app:layout_constraintTop_toBottomOf="@id/tv_title"/>
+
+        <ImageView
+            android:id="@+id/iv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@id/iv_cover"
+            android:contentDescription="@string/empty_value"
+            android:foreground="?android:attr/selectableItemBackground"
+            android:src="@drawable/ic_more_vert_black_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="@id/guide_end"
+            app:layout_constraintTop_toBottomOf="@id/iv_cover"/>
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>
