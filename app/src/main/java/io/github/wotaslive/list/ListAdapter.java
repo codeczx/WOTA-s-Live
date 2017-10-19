@@ -158,6 +158,10 @@ public class ListAdapter extends RecyclerView.Adapter {
 					.into(ivCover);
 			ivMore.setOnClickListener(view -> mCallbacks.onMoreClick(roomBean, view));
 			ivCover.setOnClickListener(view -> mCallbacks.onCoverClick(roomBean));
+			ivCover.setOnLongClickListener(view -> {
+				mCallbacks.onMoreClick(roomBean, ivMore);
+				return true;
+			});
 		}
 	}
 

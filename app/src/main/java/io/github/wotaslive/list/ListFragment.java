@@ -2,6 +2,7 @@ package io.github.wotaslive.list;
 
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -64,6 +65,18 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 		mAdapter = new ListAdapter(mPresenter);
 		rvMemberLive.setLayoutManager(new LinearLayoutManager(getContext()));
 		rvMemberLive.addItemDecoration(new MaterialViewPagerHeaderDecorator());
+		int verticalSpace = getContext().getResources().getDimensionPixelOffset(R.dimen.cardMarginVertical);
+		int horizontalSpace = getContext().getResources().getDimensionPixelOffset(R.dimen.cardMarginHorizontal);
+		rvMemberLive.addItemDecoration(new RecyclerView.ItemDecoration() {
+			@Override
+			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+				super.getItemOffsets(outRect, view, parent, state);
+				outRect.bottom = 0;
+				outRect.left = horizontalSpace;
+				outRect.right = horizontalSpace;
+				outRect.top = parent.getChildAdapterPosition(view) == 0 ? 0 : verticalSpace;
+			}
+		});
 		rvMemberLive.setAdapter(mAdapter);
 		srlMemberLive.setOnRefreshListener(this);
 	}

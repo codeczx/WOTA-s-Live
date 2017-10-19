@@ -4,9 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_card_height"
-    android:layout_marginEnd="@dimen/cardMarginHorizontal"
-    android:layout_marginStart="@dimen/cardMarginHorizontal"
-    android:layout_marginTop="@dimen/cardMarginVertical"
     android:background="@android:color/white"
     app:cardCornerRadius="@dimen/list_card_radius"
     app:cardElevation="@dimen/list_card_elevation">
