@@ -20,7 +20,8 @@ import io.github.wotaslive.R;
 import io.github.wotaslive.data.model.LiveInfo.ContentBean.RoomBean;
 
 /**
- * Created by codeczx on 2017/10/11.
+ * Author codeczx
+ * Created at 2017/10/11
  */
 
 public class ListAdapter extends RecyclerView.Adapter {
@@ -36,7 +37,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 	public interface Callbacks {
 		void onMoreClick(RoomBean room, View anchor);
 
-		void onCoverClick(RoomBean room);
+		void onCoverClick(RoomBean room, boolean isLive);
 	}
 
 	ListAdapter(Callbacks callbacks) {
@@ -80,13 +81,13 @@ public class ListAdapter extends RecyclerView.Adapter {
 				((HeaderViewHolder) holder).bind("直播");
 				break;
 			case TYPE_LIVE_CONTENT:
-				((ContentViewHolder) holder).bind(mLiveList.get(position - 1));
+				((ContentViewHolder) holder).bind(mLiveList.get(position - 1), true);
 				break;
 			case TYPE_REVIEW_HEADER:
 				((HeaderViewHolder) holder).bind("回放");
 				break;
 			case TYPE_REVIEW_CONTENT:
-				((ContentViewHolder) holder).bind(mReviewList.get(mReviewList.size() + position - getItemCount()));
+				((ContentViewHolder) holder).bind(mReviewList.get(mReviewList.size() + position - getItemCount()), false);
 				break;
 		}
 	}
@@ -141,7 +142,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 			mContext = itemView.getContext();
 		}
 
-		private void bind(final RoomBean roomBean) {
+		private void bind(final RoomBean roomBean, boolean isLive) {
 			if (roomBean == null) {
 				return;
 			}
@@ -157,7 +158,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 					.override(Target.SIZE_ORIGINAL)
 					.into(ivCover);
 			ivMore.setOnClickListener(view -> mCallbacks.onMoreClick(roomBean, view));
-			ivCover.setOnClickListener(view -> mCallbacks.onCoverClick(roomBean));
+			ivCover.setOnClickListener(view -> mCallbacks.onCoverClick(roomBean, isLive));
 			ivCover.setOnLongClickListener(view -> {
 				mCallbacks.onMoreClick(roomBean, ivMore);
 				return true;

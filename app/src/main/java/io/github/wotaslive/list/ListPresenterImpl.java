@@ -3,18 +3,21 @@ package io.github.wotaslive.list;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.Intent;
 import android.view.View;
 
+import io.github.wotaslive.Constants;
 import io.github.wotaslive.data.AppRepository;
 import io.github.wotaslive.data.model.LiveInfo;
+import io.github.wotaslive.live.PlayerActivity;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
 
 
 /**
- * Created by codeczx on 2017/10/10.
+ * Author codeczx
+ * Created at 2017/10/10
  */
-
 public class ListPresenterImpl implements ListContract.MemberLivePresenter {
 
 	private Context mContext;
@@ -56,7 +59,10 @@ public class ListPresenterImpl implements ListContract.MemberLivePresenter {
 	}
 
 	@Override
-	public void onCoverClick(LiveInfo.ContentBean.RoomBean room) {
-		//TODO enter live room
+	public void onCoverClick(LiveInfo.ContentBean.RoomBean room, boolean isLive) {
+		Intent intent = new Intent(mContext, PlayerActivity.class);
+		intent.putExtra(Constants.URL, room.getStreamPath());
+		intent.putExtra(Constants.IS_LIVE, isLive);
+		mContext.startActivity(intent);
 	}
 }

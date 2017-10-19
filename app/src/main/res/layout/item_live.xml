@@ -77,6 +77,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="@id/guide_end"
             app:layout_constraintTop_toBottomOf="@id/iv_cover"/>
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>
+

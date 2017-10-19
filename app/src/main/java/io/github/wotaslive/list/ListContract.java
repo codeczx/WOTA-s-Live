@@ -7,7 +7,8 @@ import java.util.List;
 import io.github.wotaslive.data.model.LiveInfo;
 
 /**
- * Created by codeczx on 2017/10/10.
+ * Author codeczx
+ * Created at 2017/10/10
  */
 
 class ListContract {

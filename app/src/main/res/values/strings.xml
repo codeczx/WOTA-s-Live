@@ -7,4 +7,5 @@
     <string name="list_copy_address">复制地址</string>
     <string name="tab_stream">直播</string>
     <string name="tab_room">房间</string>
+    <string name="default_time">00:00</string>
 </resources>
