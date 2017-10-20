@@ -136,12 +136,12 @@ public class MediaController extends FrameLayout implements MediaViewControl, Se
 
 	@Override
 	public void start() {
-		ivPlay.setImageResource(R.drawable.ic_pause);
+		ivPlay.setImageResource(R.drawable.ic_pause_circle_outline_white_24dp);
 	}
 
 	@Override
 	public void pause() {
-		ivPlay.setImageResource(R.drawable.ic_play);
+		ivPlay.setImageResource(R.drawable.ic_play_circle_outline_white_24dp);
 	}
 
 	@Override
