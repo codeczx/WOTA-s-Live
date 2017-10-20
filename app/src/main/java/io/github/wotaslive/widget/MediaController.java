@@ -5,8 +5,11 @@ import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewConfiguration;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -32,12 +35,12 @@ import io.reactivex.disposables.Disposable;
 public class MediaController extends FrameLayout implements MediaViewControl, SeekBar.OnSeekBarChangeListener {
 
 
-	public static final int INTERVAL_MENU_HIDE = 5000;
-	public static final int INTERVAL_SHOW_PROGRESS = 1000;
+	private static final int INTERVAL_MENU_HIDE = 5000;
+	private static final int INTERVAL_SHOW_PROGRESS = 1000;
+	private static final double FAST_RATE = 0.3;
+
 	@BindView(R.id.cl_media_controller)
 	ConstraintLayout clMediaController;
-	@BindView(R.id.fl_container)
-	FrameLayout flContainer;
 	@BindView(R.id.iv_play)
 	ImageView ivPlay;
 	@BindView(R.id.sb_video)
@@ -48,9 +51,17 @@ public class MediaController extends FrameLayout implements MediaViewControl, Se
 	TextView tvCurrentPosition;
 	@BindView(R.id.tv_duration)
 	TextView tvDuration;
+	@BindView(R.id.tv_preview)
+	TextView tvPreview;
+	@BindView(R.id.cv_preview)
+	CardView cvPreview;
 
 	private Context mContext;
 	private MediaPlayerControl mPlayer;
+	private float mLastX;
+	private float mLastY;
+	private boolean mIsSlide;
+	private int mPlayerOffset;
 
 	private CompositeDisposable disposables;
 	private Disposable timeDisposable;
@@ -83,7 +94,7 @@ public class MediaController extends FrameLayout implements MediaViewControl, Se
 		prepareToHide();
 	}
 
-	@OnClick({ R.id.iv_close, R.id.iv_play, R.id.fl_container })
+	@OnClick({ R.id.iv_close, R.id.iv_play })
 	public void onViewClicked(View view) {
 		prepareToHide();
 		switch (view.getId()) {
@@ -97,9 +108,6 @@ public class MediaController extends FrameLayout implements MediaViewControl, Se
 				else {
 					mPlayer.start();
 				}
-				break;
-			case R.id.fl_container:
-				showOrHideController();
 				break;
 		}
 	}
@@ -152,7 +160,7 @@ public class MediaController extends FrameLayout implements MediaViewControl, Se
 		}
 		else {
 			sbVideo.setEnabled(true);
-			tvDuration.setText(timeToString(mPlayer.getDuration()));
+			tvDuration.setText(longToHHMM(mPlayer.getDuration()));
 			sbVideo.setMax((int) mPlayer.getDuration());
 		}
 		pollingProgress();
@@ -184,7 +192,7 @@ public class MediaController extends FrameLayout implements MediaViewControl, Se
 					.subscribe(aLong -> {
 						if (mPlayer != null) {
 
-							tvCurrentPosition.setText(timeToString(mPlayer.getCurrentPosition()));
+							tvCurrentPosition.setText(longToHHMM(mPlayer.getCurrentPosition()));
 						}
 					});
 			disposables.add(timeDisposable);
@@ -221,9 +229,62 @@ public class MediaController extends FrameLayout implements MediaViewControl, Se
 		prepareToHide();
 	}
 
-	private String timeToString(long time) {
+	private String longToHHMM(long time) {
 		long minute = time / (60 * 1000);
 		long second = (time - (minute * 60 * 1000)) / 1000;
 		return String.format(Locale.CHINA, "%02d:%02d", minute, second);
 	}
+
+	private String longToSecond(long time) {
+		return String.valueOf(time / 1000);
+	}
+
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		float x = event.getX();
+		float y = event.getY();
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				cancelPrepareToHide();
+				mIsSlide = false;
+				mPlayerOffset = 0;
+				mLastX = x;
+				mLastY = y;
+				return true;
+			case MotionEvent.ACTION_MOVE:
+				float xOffset = x - mLastX;
+				float yOffset = y - mLastY;
+				int touchSlop = ViewConfiguration.get(mContext).getScaledTouchSlop();
+				if (Math.abs(xOffset) > touchSlop || Math.abs(yOffset) > touchSlop) {
+					mIsSlide = true;
+					if (!mPlayer.isLive()) {
+						long duration = mPlayer.getDuration();
+						int width = getWidth();
+						mPlayerOffset = (int) (((xOffset / width) * duration) * FAST_RATE);
+						String preview = longToSecond(mPlayerOffset) + mContext.getString(R.string.second);
+						if (mPlayerOffset > 0) {
+							preview = "+" + preview;
+						}
+						clMediaController.setVisibility(View.VISIBLE);
+						tvPreview.setText(preview);
+						cvPreview.setVisibility(View.VISIBLE);
+					}
+				}
+				break;
+			case MotionEvent.ACTION_UP:
+				if (mIsSlide) {
+					if (!mPlayer.isLive()) {
+						mPlayer.seekTo(mPlayer.getCurrentPosition() + mPlayerOffset);
+						cvPreview.setVisibility(View.GONE);
+					}
+					prepareToHide();
+				}
+				else {
+					showOrHideController();
+				}
+				break;
+		}
+		return super.onTouchEvent(event);
+	}
+
 }
