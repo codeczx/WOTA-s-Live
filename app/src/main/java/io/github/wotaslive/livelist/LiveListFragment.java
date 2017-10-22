@@ -1,4 +1,4 @@
-package io.github.wotaslive.list;
+package io.github.wotaslive.livelist;
 
 
 import android.content.Context;
@@ -26,29 +26,21 @@ import io.github.wotaslive.R;
 import io.github.wotaslive.data.model.LiveInfo;
 
 
-public class ListFragment extends Fragment implements ListContract.MemberLiveView, SwipeRefreshLayout.OnRefreshListener {
+public class LiveListFragment extends Fragment implements LiveListContract.LiveListView, SwipeRefreshLayout.OnRefreshListener {
 
-	@BindView(R.id.rv_member_live)
-	RecyclerView rvMemberLive;
 	Unbinder unbinder;
-	@BindView(R.id.srl_member_live)
-	SwipeRefreshLayout srlMemberLive;
-	private ListAdapter mAdapter;
+	@BindView(R.id.rv_live)
+	RecyclerView mRvLive;
+	@BindView(R.id.srl_live)
+	SwipeRefreshLayout mSrlLive;
+	private LiveListAdapter mAdapter;
 
-	private Context mContext;
-
-	private ListContract.MemberLivePresenter mPresenter;
-
-	@Override
-	public void onAttach(Context context) {
-		super.onAttach(context);
-		mContext = context;
-	}
+	private LiveListContract.LiveListPresenter mPresenter;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 							 Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.frag_live, container, false);
+		View view = inflater.inflate(R.layout.frag_live_list, container, false);
 		unbinder = ButterKnife.bind(this, view);
 		return view;
 	}
@@ -56,18 +48,18 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 	@Override
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
-		mPresenter = new ListPresenterImpl(mContext, this);
+		new LiveListPresenterImpl(getContext(), this);
 		initView();
 		initData();
 	}
 
 	private void initView() {
-		mAdapter = new ListAdapter(mPresenter);
-		rvMemberLive.setLayoutManager(new LinearLayoutManager(getContext()));
-		rvMemberLive.addItemDecoration(new MaterialViewPagerHeaderDecorator());
+		mAdapter = new LiveListAdapter(mPresenter);
+		mRvLive.setLayoutManager(new LinearLayoutManager(getContext()));
+		mRvLive.addItemDecoration(new MaterialViewPagerHeaderDecorator());
 		int verticalSpace = getContext().getResources().getDimensionPixelOffset(R.dimen.cardMarginVertical);
 		int horizontalSpace = getContext().getResources().getDimensionPixelOffset(R.dimen.cardMarginHorizontal);
-		rvMemberLive.addItemDecoration(new RecyclerView.ItemDecoration() {
+		mRvLive.addItemDecoration(new RecyclerView.ItemDecoration() {
 			@Override
 			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
 				super.getItemOffsets(outRect, view, parent, state);
@@ -77,13 +69,13 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 				outRect.top = parent.getChildAdapterPosition(view) == 0 ? 0 : verticalSpace;
 			}
 		});
-		rvMemberLive.setAdapter(mAdapter);
-		srlMemberLive.setOnRefreshListener(this);
+		mRvLive.setAdapter(mAdapter);
+		mSrlLive.setOnRefreshListener(this);
 	}
 
 	private void initData() {
 		mPresenter.getMemberLive();
-		srlMemberLive.setRefreshing(true);
+		mSrlLive.setRefreshing(true);
 	}
 
 	@Override
@@ -95,7 +87,7 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 	@Override
 	public void refreshUI() {
 		mAdapter.notifyDataSetChanged();
-		srlMemberLive.setRefreshing(false);
+		mSrlLive.setRefreshing(false);
 	}
 
 	@Override
@@ -127,5 +119,10 @@ public class ListFragment extends Fragment implements ListContract.MemberLiveVie
 	@Override
 	public void onRefresh() {
 		mPresenter.getMemberLive();
+	}
+
+	@Override
+	public void setPresenter(LiveListContract.LiveListPresenter presenter) {
+		mPresenter = presenter;
 	}
 }

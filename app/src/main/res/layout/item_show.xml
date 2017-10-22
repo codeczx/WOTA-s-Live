@@ -26,6 +26,13 @@
             android:orientation="vertical"
             app:layout_constraintGuide_end="@dimen/cardMarginHorizontal"/>
 
+        <android.support.constraint.Guideline
+            android:id="@+id/guide_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintGuide_begin="@dimen/cardMarginVertical"/>
+
         <ImageView
             android:id="@+id/iv_cover"
             android:layout_width="0dp"
@@ -37,6 +44,17 @@
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+
+        <TextView
+            android:id="@+id/tv_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_show_status"
+            android:padding="5dp"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:layout_constraintRight_toRightOf="@+id/guide_end"
+            app:layout_constraintTop_toTopOf="@+id/guide_top"/>
 
         <TextView
             android:id="@+id/tv_title"
@@ -63,17 +81,17 @@
             app:layout_constraintLeft_toLeftOf="@id/guide_start"
             app:layout_constraintTop_toBottomOf="@id/tv_title"/>
 
-        <ImageView
-            android:id="@+id/iv_more"
+        <TextView
+            android:id="@+id/tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
-            android:contentDescription="@string/empty_value"
-            android:foreground="?android:attr/selectableItemBackground"
+            android:maxLines="1"
             android:src="@drawable/ic_more_vert_black_24dp"
+            android:textSize="14sp"
+            app:layout_constraintBaseline_toBaselineOf="@+id/tv_subtitle"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="@id/guide_end"
-            app:layout_constraintTop_toBottomOf="@id/iv_cover"/>
+            app:layout_constraintRight_toRightOf="@id/guide_end"/>
 
     </android.support.constraint.ConstraintLayout>
 

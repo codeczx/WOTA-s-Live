@@ -1,4 +1,4 @@
-package io.github.wotaslive.list;
+package io.github.wotaslive.livelist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -24,7 +24,7 @@ import io.github.wotaslive.data.model.LiveInfo.ContentBean.RoomBean;
  * Created at 2017/10/11
  */
 
-public class ListAdapter extends RecyclerView.Adapter {
+public class LiveListAdapter extends RecyclerView.Adapter {
 	private static final int TYPE_LIVE_HEADER = 0;
 	private static final int TYPE_LIVE_CONTENT = 1;
 	private static final int TYPE_REVIEW_HEADER = 2;
@@ -40,7 +40,7 @@ public class ListAdapter extends RecyclerView.Adapter {
 		void onCoverClick(RoomBean room, boolean isLive);
 	}
 
-	ListAdapter(Callbacks callbacks) {
+	LiveListAdapter(Callbacks callbacks) {
 		mLiveList = new ArrayList<>();
 		mReviewList = new ArrayList<>();
 		mCallbacks = callbacks;
