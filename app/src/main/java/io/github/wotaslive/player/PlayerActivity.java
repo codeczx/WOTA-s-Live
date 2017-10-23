@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,21 +28,16 @@ public class PlayerActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_player);
 		ButterKnife.bind(this);
-		setFullScreen();
+		initView();
+	}
+
+	private void initView(){
 		String url = getIntent().getStringExtra(Constants.URL);
 		boolean isLive = getIntent().getBooleanExtra(Constants.IS_LIVE, false);
 		mVvLive.setVideoUrl(url, isLive);
 	}
 
-	private void setFullScreen() {
-		getWindow().getDecorView().setSystemUiVisibility(
-				View.SYSTEM_UI_FLAG_FULLSCREEN
-						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-						| View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
-	}
+
 
 	@Override
 	protected void onRestart() {

@@ -8,10 +8,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -69,15 +69,32 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 		mMediaController.setVideoController(this);
 		mMediaViewControl = mMediaController;
 		surfaceView.getHolder().addCallback(mSHCallback);
+		setFullScreen();
 	}
 
-	private static final String TAG = "VideoView";
+	private void keepScreenOn() {
+		mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+
+	private void clearKeepScreenOn(){
+		mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+	}
+
+	private void setFullScreen() {
+		mActivity.getWindow().getDecorView().setSystemUiVisibility(
+				View.SYSTEM_UI_FLAG_FULLSCREEN
+						| View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+						| View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+						| View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+	}
+
 	private SurfaceHolder.Callback mSHCallback = new SurfaceHolder.Callback() {
 		@Override
 		public void surfaceCreated(SurfaceHolder holder) {
 			mSurfaceHolder = holder;
 			if (mPlayer == null) {
-				Log.i(TAG, "surfaceCreated: ");
 				openVideo();
 			}
 		}
@@ -160,6 +177,7 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 	}
 
 	private void release(boolean clearState) {
+		clearKeepScreenOn();
 		if (mPlayer != null) {
 			mCurrentPosition = getCurrentPosition();
 			mPlayer.release();
@@ -179,6 +197,7 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 
 	@Override
 	public void start() {
+		keepScreenOn();
 		if (mPlayer != null) {
 			mPlayer.start();
 			mMediaViewControl.start();
