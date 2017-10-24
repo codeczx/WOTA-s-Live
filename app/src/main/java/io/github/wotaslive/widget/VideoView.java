@@ -1,8 +1,13 @@
 package io.github.wotaslive.widget;
 
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.net.Uri;
+import android.os.Build;
+import android.provider.Settings;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,6 +18,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
@@ -45,6 +51,7 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 	private long mCurrentPosition;
 	private int mWidth;
 	private int mHeight;
+	private int mBrightnessMode;
 
 	public VideoView(@NonNull Context context) {
 		this(context, null);
@@ -59,6 +66,8 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 		mContext = context;
 		mActivity = (Activity) mContext;
 		initView();
+		setFullScreen();
+
 	}
 
 	private void initView() {
@@ -69,14 +78,13 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 		mMediaController.setVideoController(this);
 		mMediaViewControl = mMediaController;
 		surfaceView.getHolder().addCallback(mSHCallback);
-		setFullScreen();
 	}
 
 	private void keepScreenOn() {
 		mActivity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
-	private void clearKeepScreenOn(){
+	private void clearKeepScreenOn() {
 		mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 	}
 
@@ -88,6 +96,48 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 						| View.SYSTEM_UI_FLAG_LAYOUT_STABLE
 						| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
 						| View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION);
+	}
+
+	private void setUpBrightness() {
+		// 检查当前亮度模式，设置为手动模式
+		ContentResolver contentResolver = mContext.getContentResolver();
+		try {
+			int brightnessMode = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE);
+			mBrightnessMode = brightnessMode;
+			if (brightnessMode == Settings.System.SCREEN_BRIGHTNESS_MODE_AUTOMATIC) {
+				Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
+						Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
+			}
+		} catch (Settings.SettingNotFoundException e) {
+			e.printStackTrace();
+		}
+		// 用window的方式来调整亮度，lp.screenBrightness的亮度默认是-1，需要初始化为当前系统亮度
+		int defVal = 125;
+		int brightnessVal = Settings.System.getInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS, defVal);
+		Window window = ((Activity) mContext).getWindow();
+		WindowManager.LayoutParams lp = window.getAttributes();
+		lp.screenBrightness = brightnessVal * (1f / 255);
+		window.setAttributes(lp);
+	}
+
+	private void checkSystemWritePermission() {
+		boolean retVal;
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+			retVal = Settings.System.canWrite(mContext);
+			if (retVal) {
+				openVideo();
+			} else {
+				Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
+				intent.setData(Uri.parse("package:" + mContext.getPackageName()));
+				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+				mContext.startActivity(intent);
+			}
+		}
+	}
+
+	private void resumeBrightnessMode() {
+		ContentResolver contentResolver = mContext.getContentResolver();
+		Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE, mBrightnessMode);
 	}
 
 	private SurfaceHolder.Callback mSHCallback = new SurfaceHolder.Callback() {
@@ -130,7 +180,7 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 	public void setVideoUrl(String url, boolean isLive) {
 		mUrl = url;
 		mIsLive = isLive;
-		openVideo();
+		checkSystemWritePermission();
 	}
 
 	private void openVideo() {
@@ -150,6 +200,7 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 		mPlayer.setOnCompletionListener(mCompletionListener);
 		mPlayer.setOption(IjkMediaPlayer.OPT_CATEGORY_PLAYER, "mediacodec", 1);
 		mPlayer.prepareAsync();
+		setUpBrightness();
 	}
 
 	@Override
@@ -163,8 +214,7 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 			mLayoutParams.height = mHeight;
 			setLayoutParams(mLayoutParams);
 			mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		}
-		else {
+		} else {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			mLayoutParams = getLayoutParams();
 			mWidth = mLayoutParams.width;
