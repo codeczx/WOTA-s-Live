@@ -4,6 +4,7 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import io.github.wotaslive.data.AppRepository
+import io.github.wotaslive.data.model.ShowInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -14,10 +15,10 @@ import io.reactivex.schedulers.Schedulers
  */
 class ShowListPresenterImpl(context: Context, view: ShowListContract.ShowListView) : ShowListContract.ShowListPresenter {
     private val mContext = context
+
     private val mView = view
     private val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
     private var isLockRefresh: Boolean = false
-
     init {
         mView.setPresenter(this)
     }
@@ -48,5 +49,9 @@ class ShowListPresenterImpl(context: Context, view: ShowListContract.ShowListVie
         val cmb = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText(null, text)
         cmb.primaryClip = clipData
+    }
+
+    override fun onCoverClick(show: ShowInfo.ContentBean.ShowBean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }

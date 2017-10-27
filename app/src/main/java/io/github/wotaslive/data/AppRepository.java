@@ -13,6 +13,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class AppRepository {
 
+	public static final String IMG_BASE_URL = "https://source.48.cn/";
 	private static final String LIVE_BASE_URL = "https://plive.48.cn/";
 	private volatile static AppRepository mInstance;
 	private ApiServices snhApi;

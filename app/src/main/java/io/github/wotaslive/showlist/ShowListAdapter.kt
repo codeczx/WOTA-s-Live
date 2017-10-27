@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import com.bumptech.glide.request.target.Target
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.R
+import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.ShowInfo
 import kotlinx.android.synthetic.main.item_show.view.*
 import java.text.SimpleDateFormat
@@ -16,8 +17,13 @@ import java.util.*
  * Created by Tony on 2017/10/22 21:10.
  * Class description:
  */
-class ShowListAdapter : RecyclerView.Adapter<ShowListAdapter.ShowViewHolder>() {
+class ShowListAdapter(callbacks: Callbacks) : RecyclerView.Adapter<ShowListAdapter.ShowViewHolder>() {
     private var mList: ArrayList<ShowInfo.ContentBean.ShowBean> = ArrayList()
+    private var mCallbacks: Callbacks = callbacks
+
+    interface Callbacks {
+        fun onCoverClick(show: ShowInfo.ContentBean.ShowBean)
+    }
 
     override fun onBindViewHolder(holder: ShowViewHolder?, position: Int) {
         holder?.bind(mList[position])
@@ -28,7 +34,7 @@ class ShowListAdapter : RecyclerView.Adapter<ShowListAdapter.ShowViewHolder>() {
     }
 
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ShowViewHolder {
-        return ShowViewHolder.newInstance(parent)
+        return ShowViewHolder.newInstance(parent, mCallbacks)
     }
 
     fun updateShowList(list: List<ShowInfo.ContentBean.ShowBean>?) {
@@ -39,12 +45,13 @@ class ShowListAdapter : RecyclerView.Adapter<ShowListAdapter.ShowViewHolder>() {
         }
     }
 
-    class ShowViewHolder private constructor(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    class ShowViewHolder private constructor(itemView: View, callbacks: Callbacks) : RecyclerView.ViewHolder(itemView) {
+        private val mCallbacks: Callbacks = callbacks
 
         companion object {
-            fun newInstance(viewGroup: ViewGroup?): ShowViewHolder {
+            fun newInstance(viewGroup: ViewGroup?, callbacks: Callbacks): ShowViewHolder {
                 val view = LayoutInflater.from(viewGroup?.context).inflate(R.layout.item_show, viewGroup, false)
-                return ShowViewHolder(view)
+                return ShowViewHolder(view, callbacks)
             }
         }
 
@@ -60,10 +67,12 @@ class ShowListAdapter : RecyclerView.Adapter<ShowListAdapter.ShowViewHolder>() {
                 path = paths[0]
             }
             GlideApp.with(itemView.context)
-                    .load("https://source.48.cn" + path)
+                    .load(AppRepository.IMG_BASE_URL + path)
                     .override(Target.SIZE_ORIGINAL)
                     .into(itemView.iv_cover)
-            itemView.iv_cover.setOnClickListener { }
+            itemView.iv_cover.setOnClickListener {
+                mCallbacks.onCoverClick(show)
+            }
         }
     }
 }

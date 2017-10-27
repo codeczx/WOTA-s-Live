@@ -17,6 +17,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.wotaslive.GlideApp;
 import io.github.wotaslive.R;
+import io.github.wotaslive.data.AppRepository;
 import io.github.wotaslive.data.model.LiveInfo.ContentBean.RoomBean;
 
 /**
@@ -154,7 +155,7 @@ public class LiveListAdapter extends RecyclerView.Adapter {
 				path = paths[0];
 			}
 			GlideApp.with(itemView.getContext())
-					.load("https://source.48.cn" + path)
+					.load(AppRepository.IMG_BASE_URL + path)
 					.override(Target.SIZE_ORIGINAL)
 					.into(ivCover);
 			ivMore.setOnClickListener(view -> mCallbacks.onMoreClick(roomBean, view));

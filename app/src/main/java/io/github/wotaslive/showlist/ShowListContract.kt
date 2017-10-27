@@ -15,7 +15,7 @@ class ShowListContract {
         fun showMenu()
     }
 
-    interface ShowListPresenter : BasePresenter {
+    interface ShowListPresenter : BasePresenter, ShowListAdapter.Callbacks {
         fun getShowList()
         fun setClipboard(text: String)
     }

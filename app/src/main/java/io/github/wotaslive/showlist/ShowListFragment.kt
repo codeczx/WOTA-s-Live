@@ -32,7 +32,7 @@ class ShowListFragment : Fragment(), ShowListContract.ShowListView, SwipeRefresh
     }
 
     private fun initView() {
-        mShowAdapter = ShowListAdapter()
+        mShowAdapter = ShowListAdapter(mPresenter)
         rv_show.layoutManager = LinearLayoutManager(context)
         rv_show.addItemDecoration(MaterialViewPagerHeaderDecorator())
         val verticalSpace = context.resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)

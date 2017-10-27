@@ -1,9 +1,5 @@
 package io.github.wotaslive.data.model;
 
-/**
- * Created by codeczx on 2017/10/10.
- */
-
 public class LiveRequestBody {
 	
 	/**
