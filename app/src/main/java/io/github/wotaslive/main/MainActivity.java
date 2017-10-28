@@ -14,17 +14,21 @@ import android.view.MenuItem;
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
 
+import org.jetbrains.annotations.NotNull;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.wotaslive.R;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MainContract.MainView {
 
 	@BindView(R.id.materialViewPager)
 	MaterialViewPager mMaterialViewPager;
 	@BindView(R.id.drawer_layout)
 	DrawerLayout mDrawerLayout;
 	private ActionBarDrawerToggle mDrawerToggle;
+	private MainContract.MainPresenter mPresenter;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		setTitle("");
 		ButterKnife.bind(this);
+		new MainPresenterImpl(this);
+		mPresenter.subscribe();
 
 		Toolbar toolbar = mMaterialViewPager.getToolbar();
 		if (toolbar != null) {
@@ -63,6 +69,12 @@ public class MainActivity extends AppCompatActivity {
 	}
 
 	@Override
+	protected void onDestroy() {
+		mPresenter.unSubscribe();
+		super.onDestroy();
+	}
+
+	@Override
 	public void onPostCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
 		super.onPostCreate(savedInstanceState, persistentState);
 		mDrawerToggle.syncState();
@@ -77,21 +89,21 @@ public class MainActivity extends AppCompatActivity {
 		MainPagerAdapter pagerAdapter = new MainPagerAdapter(this, getSupportFragmentManager());
 		mMaterialViewPager.getViewPager().setAdapter(pagerAdapter);
 
-		mMaterialViewPager.setMaterialViewPagerListener(page -> {
-			switch (page) {
-				case 0:
-					return HeaderDesign.fromColorResAndDrawable(R.color.green, getDrawable(R.drawable.bg_test1));
-				case 1:
-					return HeaderDesign.fromColorResAndDrawable(R.color.blue, getDrawable(R.drawable.bg_test2));
-				case 2:
-					return HeaderDesign.fromColorResAndDrawable(R.color.cyan, getDrawable(R.drawable.bg_test1));
-				case 3:
-					return HeaderDesign.fromColorResAndDrawable(R.color.red, getDrawable(R.drawable.bg_test2));
-			}
-			return null;
-		});
+		mMaterialViewPager.setMaterialViewPagerListener(page ->
+				HeaderDesign.fromColorResAndDrawable(R.color.colorPrimaryDark, getDrawable(R.drawable.bg_default_header)));
 
 		mMaterialViewPager.getViewPager().setOffscreenPageLimit(mMaterialViewPager.getViewPager().getAdapter().getCount());
 		mMaterialViewPager.getPagerTitleStrip().setViewPager(mMaterialViewPager.getViewPager());
+	}
+
+	@Override
+	public void setPresenter(MainContract.MainPresenter presenter) {
+		mPresenter = presenter;
+	}
+
+	@Override
+	public void updateHeader(@NotNull MaterialViewPager.Listener listener) {
+		mMaterialViewPager.setMaterialViewPagerListener(listener);
+		mMaterialViewPager.notifyHeaderChanged();
 	}
 }

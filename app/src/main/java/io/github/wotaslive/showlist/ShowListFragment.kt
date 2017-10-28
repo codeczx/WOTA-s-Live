@@ -31,6 +31,11 @@ class ShowListFragment : Fragment(), ShowListContract.ShowListView, SwipeRefresh
         initData()
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        mPresenter.unSubscribe()
+    }
+
     private fun initView() {
         mShowAdapter = ShowListAdapter(mPresenter)
         rv_show.layoutManager = LinearLayoutManager(context)

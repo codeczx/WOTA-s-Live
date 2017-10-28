@@ -82,6 +82,7 @@ public class LiveListFragment extends Fragment implements LiveListContract.LiveL
 	public void onDestroyView() {
 		super.onDestroyView();
 		unbinder.unbind();
+		mPresenter.unSubscribe();
 	}
 
 	@Override
