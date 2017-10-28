@@ -19,6 +19,7 @@ class ShowListPresenterImpl(context: Context, view: ShowListContract.ShowListVie
     private val mView = view
     private val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
     private var isLockRefresh: Boolean = false
+
     init {
         mView.setPresenter(this)
     }
@@ -30,7 +31,7 @@ class ShowListPresenterImpl(context: Context, view: ShowListContract.ShowListVie
     }
 
     override fun getShowList() {
-        val disposable = AppRepository.getInstance().openLiveInfo
+        val disposable = AppRepository.getInstance().getOpenLiveInfo(0, 0, 0, 0)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally {

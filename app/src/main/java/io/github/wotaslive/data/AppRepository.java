@@ -4,6 +4,7 @@ import io.github.wotaslive.data.model.LiveInfo;
 import io.github.wotaslive.data.model.LiveOneRequestBody;
 import io.github.wotaslive.data.model.LiveRequestBody;
 import io.github.wotaslive.data.model.ShowInfo;
+import io.github.wotaslive.data.model.ShowRequestBody;
 import io.reactivex.Flowable;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -15,6 +16,7 @@ public class AppRepository {
 
 	public static final String IMG_BASE_URL = "https://source.48.cn/";
 	private static final String LIVE_BASE_URL = "https://plive.48.cn/";
+	private static final int DEFAULT_LITMIT = 20;
 	private volatile static AppRepository mInstance;
 	private ApiServices snhApi;
 
@@ -53,14 +55,14 @@ public class AppRepository {
 
 	public Flowable<LiveInfo> getLiveInfo() {
 		LiveRequestBody requestBody = new LiveRequestBody(
-				0, 0, 0, 0, 20, System.currentTimeMillis());
+				0, 0, 0, 0, DEFAULT_LITMIT, System.currentTimeMillis());
 		return getSNHApi().getMemberLive(requestBody);
 	}
 
-	public Flowable<ShowInfo> getOpenLiveInfo() {
-		LiveRequestBody requestBody = new LiveRequestBody(
-				0, 0, 0, 0, 20, System.currentTimeMillis());
-		return getSNHApi().getOpenLive(requestBody);
+	public Flowable<ShowInfo> getOpenLiveInfo(int isReview, int groupId, int lastGroupId, long lastTime) {
+		ShowRequestBody showRequestBody = new ShowRequestBody(
+				isReview, groupId, lastGroupId, lastTime, DEFAULT_LITMIT, System.currentTimeMillis());
+		return getSNHApi().getOpenLive(showRequestBody);
 	}
 
 	public Flowable<ResponseBody> getLiveOneInfo(String liveId) {
