@@ -1,5 +1,6 @@
 package io.github.wotaslive.main
 
+import android.content.Context
 import com.github.florent37.materialviewpager.MaterialViewPager
 import io.github.wotaslive.BasePresenter
 import io.github.wotaslive.BaseView
@@ -14,6 +15,6 @@ interface MainContract {
     }
 
     interface MainPresenter : BasePresenter, MaterialViewPager.Listener {
-        fun subscribe()
+        fun loanHeader(context: Context)
     }
 }

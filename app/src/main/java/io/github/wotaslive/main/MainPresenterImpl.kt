@@ -1,8 +1,16 @@
 package io.github.wotaslive.main
 
-import android.graphics.Color
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.Drawable
+import android.support.v7.graphics.Palette
+import com.bumptech.glide.request.target.SimpleTarget
+import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.header.HeaderDesign
+import io.github.wotaslive.GlideApp
 import io.github.wotaslive.data.AppRepository
+import io.github.wotaslive.data.model.RecommendInfo
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -15,23 +23,36 @@ import java.util.*
 class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresenter {
     private var mView: MainContract.MainView = view
     private val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
-    private val mHeaderImgArray = ArrayList<String>()
-    private var maxImgSize = 5
+    private val mHeaderArray = ArrayList<HeaderDesign>()
+    private var maxImgSize = 10
 
     init {
         mView.setPresenter(this)
     }
 
-    override fun subscribe() {
+    override fun loanHeader(context: Context) {
         val disposable = AppRepository.getInstance().recommendList
+                .flatMap({ t: RecommendInfo -> Flowable.fromIterable(t.content) })
+                .take(maxImgSize.toLong())
+                .map { t -> AppRepository.IMG_BASE_URL + t.picPath }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ t ->
-                    if (t.content != null && t.content.size > maxImgSize) {
-                        (0..maxImgSize).mapTo(mHeaderImgArray) { t.content[it].picPath }
-                        mView.updateHeader(this)
-                    }
-
+                    GlideApp.with(context)
+                            .asDrawable()
+                            .load(t)
+                            .into(object : SimpleTarget<Drawable>() {
+                                override fun onResourceReady(resource: Drawable?, transition: Transition<in Drawable>?) {
+                                    if (resource is BitmapDrawable) {
+                                        Palette.from(resource.bitmap).generate { palette ->
+                                            palette.lightVibrantSwatch?.rgb?.let {
+                                                mHeaderArray.add(HeaderDesign.fromColorAndDrawable(it, resource))
+                                                mView.updateHeader(this@MainPresenterImpl)
+                                            }
+                                        }
+                                    }
+                                }
+                            })
                 }, { t -> t.printStackTrace() })
         mCompositeDisposable.add(disposable)
     }
@@ -43,8 +64,7 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
     }
 
     override fun getHeaderDesign(page: Int): HeaderDesign {
-        val rnd = Random()
-        val color = Color.rgb(rnd.nextInt(256), rnd.nextInt(256), rnd.nextInt(256))
-        return HeaderDesign.fromColorAndUrl(color, AppRepository.IMG_BASE_URL + mHeaderImgArray[page % maxImgSize])
+        val random = Random()
+        return mHeaderArray[random.nextInt(mHeaderArray.size)]
     }
 }

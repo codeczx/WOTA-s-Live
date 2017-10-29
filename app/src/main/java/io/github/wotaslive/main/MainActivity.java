@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.Main
 		setTitle("");
 		ButterKnife.bind(this);
 		new MainPresenterImpl(this);
-		mPresenter.subscribe();
+		mPresenter.loanHeader(this);
 
 		Toolbar toolbar = mMaterialViewPager.getToolbar();
 		if (toolbar != null) {
