@@ -10,6 +10,7 @@ import java.util.List;
 
 import io.github.wotaslive.R;
 import io.github.wotaslive.livelist.LiveListFragment;
+import io.github.wotaslive.roomlist.RoomListFragment;
 import io.github.wotaslive.showlist.ShowListFragment;
 
 /**
@@ -26,7 +27,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 		mFragments = new ArrayList<>();
 		mFragments.add(new LiveListFragment());
 		mFragments.add(new ShowListFragment());
-		mFragments.add(new Fragment());
+		mFragments.add(new RoomListFragment());
 		mTitles = new ArrayList<>();
 		mTitles.add(context.getString(R.string.tab_stream));
 		mTitles.add(context.getString(R.string.tab_show));

@@ -4,6 +4,8 @@ import io.github.wotaslive.data.model.LiveInfo;
 import io.github.wotaslive.data.model.LiveOneRequestBody;
 import io.github.wotaslive.data.model.LiveRequestBody;
 import io.github.wotaslive.data.model.RecommendInfo;
+import io.github.wotaslive.data.model.RoomInfo;
+import io.github.wotaslive.data.model.RoomListRequestBody;
 import io.github.wotaslive.data.model.ShowInfo;
 import io.github.wotaslive.data.model.ShowRequestBody;
 import io.reactivex.Flowable;
@@ -24,4 +26,7 @@ public interface ApiServices {
 
 	@POST("othersystem/api/user/v1/homepage/recommendList")
 	Flowable<RecommendInfo> getRecommendList();
+
+	@POST("imsystem/api/im/room/v1/login/user/list")
+	Flowable<RoomInfo> getRoomList(@Body RoomListRequestBody roomListRequestBody);
 }
