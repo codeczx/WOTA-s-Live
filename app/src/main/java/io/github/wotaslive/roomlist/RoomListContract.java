@@ -10,16 +10,20 @@ import io.github.wotaslive.data.model.RoomInfo;
  * Created by codeczx on 2017/11/2 21:18.
  * Class description:
  */
-public class RoomListContract {
+class RoomListContract {
 
-	interface RoomListView extends BaseView<RoomListPresenter>{
+	interface RoomListView extends BaseView<RoomListPresenter> {
 
 		void updateRoom(List<RoomInfo.ContentBean> roomInfo);
 
 		void refreshUI();
+
+		void showRoomList();
 	}
 
-	interface RoomListPresenter extends BasePresenter{
+	interface RoomListPresenter extends BasePresenter {
+
+		void subscribe();
 
 		void getRoomList();
 	}

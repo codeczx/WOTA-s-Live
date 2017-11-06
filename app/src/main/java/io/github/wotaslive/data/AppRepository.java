@@ -1,17 +1,28 @@
 package io.github.wotaslive.data;
 
-import java.util.Arrays;
+
+import com.google.gson.Gson;
+
+
+import java.io.FileInputStream;
+
+import java.io.IOException;
+
 import java.util.List;
 
+import io.github.wotaslive.App;
+import io.github.wotaslive.Constants;
 import io.github.wotaslive.data.model.LiveInfo;
 import io.github.wotaslive.data.model.LiveOneRequestBody;
 import io.github.wotaslive.data.model.LiveRequestBody;
+import io.github.wotaslive.data.model.LoginInfo;
+import io.github.wotaslive.data.model.LoginRequestBody;
 import io.github.wotaslive.data.model.RecommendInfo;
 import io.github.wotaslive.data.model.RoomInfo;
 import io.github.wotaslive.data.model.RoomListRequestBody;
 import io.github.wotaslive.data.model.ShowInfo;
 import io.github.wotaslive.data.model.ShowRequestBody;
-import io.github.wotaslive.roomlist.RoomListAdapter;
+
 import io.reactivex.Flowable;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -25,11 +36,13 @@ public class AppRepository {
 	private static final String LIVE_BASE_URL = "https://plive.48.cn/";
 	private static final String OTHER_BASE_URL = "https://pother.48.cn/";
 	private static final String ROOM_BASE_URL = "https://pjuju.48.cn/";
+	private static final String USER_BASE_URL = "https://puser.48.cn/";
 	private static final int DEFAULT_LITMIT = 20;
 	private volatile static AppRepository mInstance;
 	private ApiServices mLiveApi;
 	private ApiServices mOtherApi;
 	private ApiServices mRoomApi;
+	private ApiServices mUserApi;
 
 	private AppRepository() {
 	}
@@ -84,6 +97,19 @@ public class AppRepository {
 		return mInstance.mRoomApi;
 	}
 
+	private ApiServices getUserApi() {
+		if (mInstance.mUserApi == null) {
+			Retrofit retrofit = new Retrofit.Builder()
+					.client(getOkHttpClient())
+					.baseUrl(USER_BASE_URL)
+					.addConverterFactory(GsonConverterFactory.create())
+					.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+					.build();
+			mInstance.mUserApi = retrofit.create(ApiServices.class);
+		}
+		return mInstance.mUserApi;
+	}
+
 	private static OkHttpClient getOkHttpClient() {
 		return new OkHttpClient.Builder()
 				.addInterceptor(new HeaderInterceptor())
@@ -111,9 +137,41 @@ public class AppRepository {
 		return getOtherApi().getRecommendList();
 	}
 
-	public Flowable<RoomInfo> getRoomList(){
-		Integer[] friends = {28,32,43,45,46,63,1544,2470,2508,5562,5566,5567,49005,49007,63555,63558,286977,399669,530584};
-		RoomListRequestBody roomListRequestBody = new RoomListRequestBody(Arrays.asList(friends));
+	public Flowable<RoomInfo> getRoomList() {
+		List<Integer> friends = getFriends();
+		RoomListRequestBody roomListRequestBody = new RoomListRequestBody(friends);
 		return getRoomApi().getRoomList(roomListRequestBody);
+	}
+
+	public Flowable<LoginInfo> login(String username, String password) {
+		LoginRequestBody loginRequestBody = new LoginRequestBody(0, 0, password, username);
+		return getUserApi().login(loginRequestBody);
+	}
+
+	private List<Integer> getFriends() {
+		StringBuilder sf = new StringBuilder();
+		FileInputStream fis = null;
+		try {
+			fis = App.getInstance().openFileInput(Constants.CACHE_FRIENDS);
+			byte[] buffer = new byte[1024];
+			int n;
+			while ((n = fis.read(buffer)) != -1) {
+				sf.append(new String(buffer, 0, n));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fis != null) {
+					fis.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		String login = sf.toString();
+		Gson gson = new Gson();
+		LoginInfo loginInfo = gson.fromJson(login, LoginInfo.class);
+		return loginInfo.getContent().getFriends();
 	}
 }

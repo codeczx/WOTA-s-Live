@@ -7,4 +7,6 @@
     <dimen name="margin_vertical">8dp</dimen>
     <dimen name="margin_horizontal_large">16dp</dimen>
     <dimen name="margin_vertical_large">16dp</dimen>
+	<dimen name="popup_width">300dp</dimen>
+    <dimen name="popup_height">250dp</dimen>
 </resources>

@@ -8,19 +8,26 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 
+import com.blankj.utilcode.util.SPUtils;
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
 
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import butterknife.Unbinder;
+import io.github.wotaslive.Constants;
 import io.github.wotaslive.R;
 import io.github.wotaslive.data.model.RoomInfo;
+import io.github.wotaslive.login.LoginFragment;
 
 public class RoomListFragment extends Fragment implements RoomListContract.RoomListView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -29,6 +36,10 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 	@BindView(R.id.srl_room)
 	SwipeRefreshLayout mSrlRoom;
 	Unbinder unbinder;
+	@BindView(R.id.btn_ask_login)
+	Button mBtnAskLogin;
+	@BindView(R.id.fl_login)
+	FrameLayout mFlLogin;
 
 	private RoomListContract.RoomListPresenter mPresenter;
 	private RoomListAdapter mAdapter;
@@ -45,8 +56,19 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 	public void onActivityCreated(@Nullable Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		new RoomListPresenterImpl(getContext(), this);
-		initView();
-		initData();
+		SPUtils spUtils = SPUtils.getInstance(Constants.SP_NAME);
+		String token = spUtils.getString(Constants.HEADER_KEY_TOKEN, "");
+		if (TextUtils.isEmpty(token)) {
+			showLoginButton();
+		} else {
+			showRoomList();
+		}
+	}
+
+
+	private void showLoginButton() {
+		mSrlRoom.setVisibility(View.GONE);
+		mFlLogin.setVisibility(View.VISIBLE);
 	}
 
 	private void initData() {
@@ -97,7 +119,37 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 	}
 
 	@Override
+	public void showRoomList() {
+		mSrlRoom.setVisibility(View.VISIBLE);
+		mFlLogin.setVisibility(View.GONE);
+		initView();
+		initData();
+	}
+
+	@Override
 	public void onRefresh() {
 		mPresenter.getRoomList();
+	}
+
+	@OnClick(R.id.btn_ask_login)
+	public void onViewClicked() {
+		showLoginDialog();
+	}
+
+	private void showLoginDialog() {
+		LoginFragment loginFragment = new LoginFragment();
+		loginFragment.show(getChildFragmentManager(), "loginDialogFragment");
+	}
+
+	@Override
+	public void onStart() {
+		super.onStart();
+		mPresenter.subscribe();
+	}
+
+	@Override
+	public void onStop() {
+		super.onStop();
+		mPresenter.unSubscribe();
 	}
 }
