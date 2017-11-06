@@ -20,7 +20,7 @@ public class HeaderInterceptor implements Interceptor {
 		SPUtils spUtils = SPUtils.getInstance(Constants.SP_NAME);
 		request = request.newBuilder()
 				.addHeader(Constants.HEADER_KEY_IMEI, PhoneUtils.getIMEI())
-				.addHeader(Constants.HEADER_KEY_TOKEN, spUtils.getString(Constants.HEADER_KEY_TOKEN, ""))
+				.addHeader(Constants.HEADER_KEY_TOKEN, spUtils.getString(Constants.HEADER_KEY_TOKEN, "0"))
 				.addHeader(Constants.HEADER_KEY_OS, Constants.HEADER_VALUE_OS)
 				.addHeader(Constants.HEADER_KEY_VERSION, Constants.HEADER_VALUE_VERSION)
 				.addHeader(Constants.HEADER_KEY_USER_AGENT, Constants.HEADER_VALUE_USER_AGENT)

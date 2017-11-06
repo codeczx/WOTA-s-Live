@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.support.v7.graphics.Palette
-import com.blankj.utilcode.util.LogUtils
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.header.HeaderDesign
@@ -40,41 +39,31 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
                 .flatMap { t -> Flowable.just(AppRepository.IMG_BASE_URL + t.picPath) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .flatMap { t -> createDrawableFlowable(t, context) })
-                .observeOn(Schedulers.io())
+                .flatMap { t -> createBitmapFlowable(t, context) })
+                .observeOn(Schedulers.newThread())
                 .flatMap { t -> createPaletteFlowable(t, context) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally {
-                    LogUtils.d("finally")
-                    if (mHeaderArray.size > 0)
-                        mView.updateHeader(this@MainPresenterImpl)
-                }
-                .doOnTerminate {
                     if (mHeaderArray.size > 0)
                         mView.updateHeader(this@MainPresenterImpl)
                 }
                 .subscribe({ t ->
-                    LogUtils.d("onNext")
                     mHeaderArray.add(t)
                 }, { t -> t.printStackTrace() })
         mCompositeDisposable.add(disposable)
     }
 
-    private fun createDrawableFlowable(url: String, context: Context): Flowable<Bitmap> {
-        LogUtils.d("")
+    private fun createBitmapFlowable(url: String, context: Context): Flowable<Bitmap> {
         return Flowable.create({ e: FlowableEmitter<Bitmap> ->
             GlideApp.with(context)
                     .asBitmap()
+                    .override(480, 360)
                     .load(url)
                     .into(object : SimpleTarget<Bitmap>() {
                         override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
-                            try {
-                                resource?.let {
-                                    e.onNext(it)
-                                    e.onComplete()
-                                }
-                            } catch (e1: Exception) {
-                                e.onError(e1)
+                            resource?.let {
+                                e.onNext(it)
+                                e.onComplete()
                             }
                         }
                     })
@@ -82,15 +71,13 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
     }
 
     private fun createPaletteFlowable(bitmap: Bitmap, context: Context): Flowable<HeaderDesign> {
-        LogUtils.d("")
         return Flowable.create({ e: FlowableEmitter<HeaderDesign> ->
-            Palette.from(bitmap).generate().lightVibrantSwatch?.rgb?.let {
-                try {
-                    e.onNext(HeaderDesign.fromColorAndDrawable(it, BitmapDrawable(context.resources, bitmap)))
-                    e.onComplete()
-                } catch (e1: Exception) {
-                    e.onError(e1)
-                }
+            val swatch = Palette.from(bitmap).generate().vibrantSwatch
+            if (swatch != null) {
+                e.onNext(HeaderDesign.fromColorAndDrawable(swatch.rgb, BitmapDrawable(context.resources, bitmap)))
+                e.onComplete()
+            } else {
+                e.onError(NullPointerException("swatch is null"))
             }
         }, BackpressureStrategy.BUFFER)
     }
@@ -102,7 +89,6 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
     }
 
     override fun getHeaderDesign(page: Int): HeaderDesign {
-        LogUtils.d(page)
         return if (page < mHeaderArray.size)
             mHeaderArray[page]
         else
