@@ -1,16 +1,19 @@
 package io.github.wotaslive.main
 
 import android.content.Context
+import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import android.support.v7.graphics.Palette
+import com.blankj.utilcode.util.LogUtils
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.header.HeaderDesign
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.RecommendInfo
+import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
+import io.reactivex.FlowableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -24,37 +27,72 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
     private var mView: MainContract.MainView = view
     private val mCompositeDisposable: CompositeDisposable = CompositeDisposable()
     private val mHeaderArray = ArrayList<HeaderDesign>()
-    private var maxImgSize = 10
+    private var maxImgSize = 5
 
     init {
         mView.setPresenter(this)
     }
 
     override fun loanHeader(context: Context) {
-        val disposable = AppRepository.getInstance().recommendList
-                .flatMap({ t: RecommendInfo -> Flowable.fromIterable(t.content) })
+        val disposable = Flowable.mergeArray(AppRepository.getInstance().recommendList
+                .flatMap { t: RecommendInfo -> Flowable.fromIterable(t.content) }
                 .take(maxImgSize.toLong())
-                .map { t -> AppRepository.IMG_BASE_URL + t.picPath }
+                .flatMap { t -> Flowable.just(AppRepository.IMG_BASE_URL + t.picPath) }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .flatMap { t -> createDrawableFlowable(t, context) })
+                .observeOn(Schedulers.io())
+                .flatMap { t -> createPaletteFlowable(t, context) }
+                .observeOn(AndroidSchedulers.mainThread())
+                .doFinally {
+                    LogUtils.d("finally")
+                    if (mHeaderArray.size > 0)
+                        mView.updateHeader(this@MainPresenterImpl)
+                }
+                .doOnTerminate {
+                    if (mHeaderArray.size > 0)
+                        mView.updateHeader(this@MainPresenterImpl)
+                }
                 .subscribe({ t ->
-                    GlideApp.with(context)
-                            .asDrawable()
-                            .load(t)
-                            .into(object : SimpleTarget<Drawable>() {
-                                override fun onResourceReady(resource: Drawable?, transition: Transition<in Drawable>?) {
-                                    if (resource is BitmapDrawable) {
-                                        Palette.from(resource.bitmap).generate { palette ->
-                                            palette.lightVibrantSwatch?.rgb?.let {
-                                                mHeaderArray.add(HeaderDesign.fromColorAndDrawable(it, resource))
-                                                mView.updateHeader(this@MainPresenterImpl)
-                                            }
-                                        }
-                                    }
-                                }
-                            })
+                    LogUtils.d("onNext")
+                    mHeaderArray.add(t)
                 }, { t -> t.printStackTrace() })
         mCompositeDisposable.add(disposable)
+    }
+
+    private fun createDrawableFlowable(url: String, context: Context): Flowable<Bitmap> {
+        LogUtils.d("")
+        return Flowable.create({ e: FlowableEmitter<Bitmap> ->
+            GlideApp.with(context)
+                    .asBitmap()
+                    .load(url)
+                    .into(object : SimpleTarget<Bitmap>() {
+                        override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
+                            try {
+                                resource?.let {
+                                    e.onNext(it)
+                                    e.onComplete()
+                                }
+                            } catch (e1: Exception) {
+                                e.onError(e1)
+                            }
+                        }
+                    })
+        }, BackpressureStrategy.BUFFER)
+    }
+
+    private fun createPaletteFlowable(bitmap: Bitmap, context: Context): Flowable<HeaderDesign> {
+        LogUtils.d("")
+        return Flowable.create({ e: FlowableEmitter<HeaderDesign> ->
+            Palette.from(bitmap).generate().lightVibrantSwatch?.rgb?.let {
+                try {
+                    e.onNext(HeaderDesign.fromColorAndDrawable(it, BitmapDrawable(context.resources, bitmap)))
+                    e.onComplete()
+                } catch (e1: Exception) {
+                    e.onError(e1)
+                }
+            }
+        }, BackpressureStrategy.BUFFER)
     }
 
     override fun unSubscribe() {
@@ -64,7 +102,10 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
     }
 
     override fun getHeaderDesign(page: Int): HeaderDesign {
-        val random = Random()
-        return mHeaderArray[random.nextInt(mHeaderArray.size)]
+        LogUtils.d(page)
+        return if (page < mHeaderArray.size)
+            mHeaderArray[page]
+        else
+            mHeaderArray[mHeaderArray.size - 1]
     }
 }
