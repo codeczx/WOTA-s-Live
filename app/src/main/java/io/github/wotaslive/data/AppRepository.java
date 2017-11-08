@@ -1,13 +1,19 @@
 package io.github.wotaslive.data;
 
 
+import android.util.Log;
+
+import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 
 import java.io.FileInputStream;
 
 import java.io.IOException;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.wotaslive.App;
@@ -138,7 +144,9 @@ public class AppRepository {
 	}
 
 	public Flowable<RoomInfo> getRoomList() {
-		List<Integer> friends = getFriends();
+		String friendsStr = SPUtils.getInstance().getString(Constants.SP_FRIENDS,"0");
+		Type listType = new TypeToken<ArrayList<Integer>>(){}.getType();
+		List<Integer> friends = new Gson().fromJson(friendsStr,listType);
 		RoomListRequestBody roomListRequestBody = new RoomListRequestBody(friends);
 		return getRoomApi().getRoomList(roomListRequestBody);
 	}
@@ -146,32 +154,5 @@ public class AppRepository {
 	public Flowable<LoginInfo> login(String username, String password) {
 		LoginRequestBody loginRequestBody = new LoginRequestBody(0, 0, password, username);
 		return getUserApi().login(loginRequestBody);
-	}
-
-	private List<Integer> getFriends() {
-		StringBuilder sf = new StringBuilder();
-		FileInputStream fis = null;
-		try {
-			fis = App.getInstance().openFileInput(Constants.CACHE_FRIENDS);
-			byte[] buffer = new byte[1024];
-			int n;
-			while ((n = fis.read(buffer)) != -1) {
-				sf.append(new String(buffer, 0, n));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		} finally {
-			try {
-				if (fis != null) {
-					fis.close();
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		String login = sf.toString();
-		Gson gson = new Gson();
-		LoginInfo loginInfo = gson.fromJson(login, LoginInfo.class);
-		return loginInfo.getContent().getFriends();
 	}
 }

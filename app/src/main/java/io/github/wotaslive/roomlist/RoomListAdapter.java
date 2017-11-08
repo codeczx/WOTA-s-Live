@@ -77,10 +77,10 @@ public class RoomListAdapter extends RecyclerView.Adapter {
 
 		void bind(RoomInfo.ContentBean contentBean) {
 			GlideApp.with(itemView.getContext())
-					.load(AppRepository.IMG_BASE_URL + contentBean.getBgPath())
+					.load(AppRepository.IMG_BASE_URL + contentBean.getRoomAvatar())
 					.override(Target.SIZE_ORIGINAL)
 					.into(mIvAvatar);
-			mTvName.setText(contentBean.getRoomName());
+			mTvName.setText(contentBean.getCreatorName());
 			mTvComment.setText(contentBean.getComment());
 			mIvTime.setText(contentBean.getCommentTime());
 		}

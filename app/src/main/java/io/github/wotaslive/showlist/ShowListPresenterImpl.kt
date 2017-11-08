@@ -53,6 +53,5 @@ class ShowListPresenterImpl(context: Context, view: ShowListContract.ShowListVie
     }
 
     override fun onCoverClick(show: ShowInfo.ContentBean.ShowBean) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 }
