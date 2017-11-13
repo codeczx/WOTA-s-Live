@@ -36,6 +36,12 @@ android {
             storeFile file('/debug.keystore')
             storePassword 'android'
         }
+        release {
+            keyAlias 'androiddebugkey'
+            keyPassword 'android'
+            storeFile file('/debug.keystore')
+            storePassword 'android'
+        }
     }
 }
 

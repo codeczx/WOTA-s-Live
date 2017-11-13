@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.support.v7.graphics.Palette
+import com.blankj.utilcode.util.LogUtils
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.header.HeaderDesign
@@ -40,7 +41,7 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .flatMap { t -> createBitmapFlowable(t, context) })
-                .observeOn(Schedulers.newThread())
+                .observeOn(Schedulers.io())
                 .flatMap { t -> createPaletteFlowable(t, context) }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally {
@@ -62,9 +63,9 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
                     .into(object : SimpleTarget<Bitmap>() {
                         override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
                             resource?.let {
-                                e.onNext(it)
-                                e.onComplete()
+                                e.onNext(resource)
                             }
+                            e.onComplete()
                         }
                     })
         }, BackpressureStrategy.BUFFER)
@@ -73,12 +74,10 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
     private fun createPaletteFlowable(bitmap: Bitmap, context: Context): Flowable<HeaderDesign> {
         return Flowable.create({ e: FlowableEmitter<HeaderDesign> ->
             val swatch = Palette.from(bitmap).generate().vibrantSwatch
-            if (swatch != null) {
+            swatch?.let {
                 e.onNext(HeaderDesign.fromColorAndDrawable(swatch.rgb, BitmapDrawable(context.resources, bitmap)))
-                e.onComplete()
-            } else {
-                e.onError(NullPointerException("swatch is null"))
             }
+            e.onComplete()
         }, BackpressureStrategy.BUFFER)
     }
 
