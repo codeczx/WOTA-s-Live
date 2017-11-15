@@ -28,6 +28,7 @@ import io.github.wotaslive.Constants;
 import io.github.wotaslive.R;
 import io.github.wotaslive.data.model.RoomInfo;
 import io.github.wotaslive.login.LoginFragment;
+import io.github.wotaslive.room.RoomDetailActivity;
 
 public class RoomListFragment extends Fragment implements RoomListContract.RoomListView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -65,7 +66,6 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 		}
 	}
 
-
 	private void showLoginButton() {
 		mSrlRoom.setVisibility(View.GONE);
 		mFlLogin.setVisibility(View.VISIBLE);
@@ -77,7 +77,8 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 	}
 
 	private void initView() {
-		mAdapter = new RoomListAdapter();
+		mAdapter = new RoomListAdapter(contentBean ->
+				RoomDetailActivity.startRoomDetailActivity(getContext(), contentBean));
 		mRvRoom.setLayoutManager(new LinearLayoutManager(getContext()));
 		mRvRoom.addItemDecoration(new MaterialViewPagerHeaderDecorator());
 		int verticalSpace = getContext().getResources().getDimensionPixelOffset(R.dimen.cardMarginVertical);
@@ -138,7 +139,7 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 
 	private void showLoginDialog() {
 		LoginFragment loginFragment = new LoginFragment();
-		loginFragment.show(getChildFragmentManager(), "loginDialogFragment");
+		loginFragment.show(getChildFragmentManager(), LoginFragment.TAG);
 	}
 
 	@Override

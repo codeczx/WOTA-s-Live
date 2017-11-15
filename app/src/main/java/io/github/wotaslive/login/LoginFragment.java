@@ -20,6 +20,8 @@ import io.github.wotaslive.R;
 
 public class LoginFragment extends DialogFragment implements LoginContract.LoginView {
 
+	public static final String TAG = "loginFragment";
+
 	@BindView(R.id.et_username)
 	EditText mEtUsername;
 	@BindView(R.id.et_password)

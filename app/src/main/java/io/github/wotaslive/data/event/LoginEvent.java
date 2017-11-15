@@ -5,20 +5,7 @@ package io.github.wotaslive.data.event;
  * Class description:
  */
 
-import io.github.wotaslive.data.model.LoginInfo;
 public class LoginEvent {
-
-	private LoginInfo mLoginInfo;
-
-	public LoginEvent(LoginInfo loginInfo) {
-		mLoginInfo = loginInfo;
-	}
-
-	public LoginInfo getLoginInfo() {
-		return mLoginInfo;
-	}
-
-	public void setLoginInfo(LoginInfo loginInfo) {
-		mLoginInfo = loginInfo;
+	public LoginEvent() {
 	}
 }

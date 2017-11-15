@@ -6,4 +6,7 @@
     <color name="blackCover">#55000000</color>
     <color name="white">#FFFFFF</color>
     <color name="black">#000000</color>
+	<color name="gray">#ECEDF1</color>
+	<color name="gray_dark">#D4D4D4</color>
+	<color name="blue">#0088FF</color>
 </resources>

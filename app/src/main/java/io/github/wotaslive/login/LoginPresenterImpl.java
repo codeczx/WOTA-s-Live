@@ -3,6 +3,7 @@ package io.github.wotaslive.login;
 import android.content.Context;
 
 import com.blankj.utilcode.util.SPUtils;
+import com.google.gson.Gson;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -39,7 +40,8 @@ public class LoginPresenterImpl implements LoginContract.LoginPresenter {
 				.subscribe(loginInfo -> {
 					SPUtils spUtils = SPUtils.getInstance(Constants.SP_NAME);
 					spUtils.put(Constants.HEADER_KEY_TOKEN, loginInfo.getContent().getToken());
-					EventBus.getDefault().post(new LoginEvent(loginInfo));
+					spUtils.put(Constants.SP_FRIENDS, new Gson().toJson(loginInfo.getContent().getFriends()));
+					EventBus.getDefault().post(new LoginEvent());
 					mView.dismiss();
 				}, Throwable::printStackTrace);
 		mCompositeDisposable.add(disposable);
@@ -47,7 +49,7 @@ public class LoginPresenterImpl implements LoginContract.LoginPresenter {
 
 	@Override
 	public void unSubscribe() {
-		if(!mCompositeDisposable.isDisposed()){
+		if (!mCompositeDisposable.isDisposed()) {
 			mCompositeDisposable.dispose();
 		}
 	}

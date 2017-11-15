@@ -6,6 +6,8 @@ import io.github.wotaslive.data.model.LiveRequestBody;
 import io.github.wotaslive.data.model.LoginInfo;
 import io.github.wotaslive.data.model.LoginRequestBody;
 import io.github.wotaslive.data.model.RecommendInfo;
+import io.github.wotaslive.data.model.RoomDetailInfo;
+import io.github.wotaslive.data.model.RoomDetailRequestBody;
 import io.github.wotaslive.data.model.RoomInfo;
 import io.github.wotaslive.data.model.RoomListRequestBody;
 import io.github.wotaslive.data.model.ShowInfo;
@@ -34,4 +36,7 @@ public interface ApiServices {
 
 	@POST("usersystem/api/user/v1/login/phone")
 	Flowable<LoginInfo> login(@Body LoginRequestBody loginRequestBody);
+
+	@POST("imsystem/api/im/v1/member/room/message/mainpage")
+	Flowable<RoomDetailInfo> getRoomDetail(@Body RoomDetailRequestBody roomDetailRequestBody);
 }

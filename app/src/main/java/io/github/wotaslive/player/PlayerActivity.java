@@ -31,13 +31,11 @@ public class PlayerActivity extends AppCompatActivity {
 		initView();
 	}
 
-	private void initView(){
+	private void initView() {
 		String url = getIntent().getStringExtra(Constants.URL);
 		boolean isLive = getIntent().getBooleanExtra(Constants.IS_LIVE, false);
 		mVvLive.setVideoUrl(url, isLive);
 	}
-
-
 
 	@Override
 	protected void onRestart() {

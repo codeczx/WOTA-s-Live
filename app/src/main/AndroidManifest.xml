@@ -31,6 +31,9 @@
 			android:screenOrientation="portrait"
 			android:theme="@style/AppBaseTheme">
 		</activity>
+		<activity android:name=".room.RoomDetailActivity"
+			android:theme="@style/AppBaseTheme">
+		</activity>
 	</application>
 
 </manifest>

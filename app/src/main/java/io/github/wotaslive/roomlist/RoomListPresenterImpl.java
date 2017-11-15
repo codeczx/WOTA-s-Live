@@ -2,16 +2,11 @@ package io.github.wotaslive.roomlist;
 
 import android.content.Context;
 
-import com.blankj.utilcode.util.SPUtils;
-import com.google.gson.Gson;
-
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
-
-import io.github.wotaslive.Constants;
 import io.github.wotaslive.data.AppRepository;
 import io.github.wotaslive.data.event.LoginEvent;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -50,22 +45,17 @@ public class RoomListPresenterImpl implements RoomListContract.RoomListPresenter
 					mView.refreshUI();
 				})
 				.subscribe(roomInfo -> {
-					Collections.sort(roomInfo.getContent(), (o1, o2) -> {
-						if(o1.getCommentTimeMs()<=o2.getCommentTimeMs()){
-							return 1;
-						}else {
-							return -1;
-						}
-					});
+					if (roomInfo == null) {
+						return;
+					}
+					Collections.sort(roomInfo.getContent(), (o1, o2) -> (int) (o2.getCommentTimeMs() - o1.getCommentTimeMs()));
 					mView.updateRoom(roomInfo.getContent());
-					}, Throwable::printStackTrace);
+				}, Throwable::printStackTrace);
 		mCompositeDisposable.add(disposable);
 	}
 
 	@Subscribe(threadMode = ThreadMode.MAIN)
 	public void onLoginEvent(LoginEvent loginEvent) {
-		String friendsStr = new Gson().toJson(loginEvent.getLoginInfo().getContent().getFriends());
-		SPUtils.getInstance().put(Constants.SP_FRIENDS,friendsStr);
 		mView.showRoomList();
 	}
 

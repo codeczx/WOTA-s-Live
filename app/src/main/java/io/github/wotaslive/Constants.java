@@ -19,9 +19,16 @@ public class Constants {
 	public static final String HEADER_VALUE_CONTENT_TYPE = "application/json;charset=utf-8";
 
 	public static final String SP_NAME = "wota";
-	public static final String SP_FRIENDS ="friends" ;
+	public static final String SP_FRIENDS = "friends";
 
 	public static final String URL = "url";
 	public static final String IS_LIVE = "is_live";
 	public static final String ROOM_ID = "room_id";
+	public static final String ROOM_NAME = "room_name";
+	public static final String ROOM_CREATOR = "room_creator";
+
+	public static final String MESSAGE_TYPE_TEXT = "text";
+	public static final String MESSAGE_TYPE_IMAGE = "image";
+	public static final String MESSAGE_TYPE_LIVE = "live";
+	public static final String MESSAGE_TYPE_FANPAI_TEXT = "faipaiText";
 }

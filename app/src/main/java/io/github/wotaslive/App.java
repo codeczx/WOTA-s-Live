@@ -3,6 +3,8 @@ package io.github.wotaslive;
 import android.app.Application;
 
 import com.blankj.utilcode.util.Utils;
+import com.orhanobut.logger.AndroidLogAdapter;
+import com.orhanobut.logger.Logger;
 
 public class App extends Application {
 
@@ -13,6 +15,7 @@ public class App extends Application {
 		super.onCreate();
 		Utils.init(this);
 		mInstance = this;
+		Logger.addLogAdapter(new AndroidLogAdapter());
 	}
 
 	public static App getInstance() {

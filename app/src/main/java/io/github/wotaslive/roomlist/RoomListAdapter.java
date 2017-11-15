@@ -26,14 +26,20 @@ import io.github.wotaslive.data.model.RoomInfo;
 public class RoomListAdapter extends RecyclerView.Adapter {
 
 	private List<RoomInfo.ContentBean> mList;
+	private Callbacks mCallbacks;
 
-	RoomListAdapter() {
+	RoomListAdapter(Callbacks callbacks) {
 		mList = new ArrayList<>();
+		mCallbacks = callbacks;
+	}
+
+	interface Callbacks {
+		void onRoomClick(RoomInfo.ContentBean contentBean);
 	}
 
 	@Override
 	public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-		return RoomViewHolder.newInstance(parent);
+		return RoomViewHolder.newInstance(parent, mCallbacks);
 	}
 
 	@Override
@@ -64,15 +70,17 @@ public class RoomListAdapter extends RecyclerView.Adapter {
 		TextView mTvComment;
 		@BindView(R.id.tv_time)
 		TextView mIvTime;
+		private final Callbacks mCallbacks;
 
-		private RoomViewHolder(View itemView) {
+		private RoomViewHolder(View itemView, Callbacks callbacks) {
 			super(itemView);
 			ButterKnife.bind(this, itemView);
+			mCallbacks = callbacks;
 		}
 
-		static RoomViewHolder newInstance(ViewGroup parent) {
+		static RoomViewHolder newInstance(ViewGroup parent, Callbacks callbacks) {
 			View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_room, parent, false);
-			return new RoomViewHolder(view);
+			return new RoomViewHolder(view, callbacks);
 		}
 
 		void bind(RoomInfo.ContentBean contentBean) {
@@ -83,6 +91,7 @@ public class RoomListAdapter extends RecyclerView.Adapter {
 			mTvName.setText(contentBean.getCreatorName());
 			mTvComment.setText(contentBean.getComment());
 			mIvTime.setText(contentBean.getCommentTime());
+			itemView.setOnClickListener(v -> mCallbacks.onRoomClick(contentBean));
 		}
 	}
 }

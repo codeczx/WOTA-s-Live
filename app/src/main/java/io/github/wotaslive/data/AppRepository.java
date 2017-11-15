@@ -1,22 +1,16 @@
 package io.github.wotaslive.data;
 
 
-import android.util.Log;
+import android.text.TextUtils;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-
-import java.io.FileInputStream;
-
-import java.io.IOException;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.wotaslive.App;
 import io.github.wotaslive.Constants;
 import io.github.wotaslive.data.model.LiveInfo;
 import io.github.wotaslive.data.model.LiveOneRequestBody;
@@ -24,6 +18,8 @@ import io.github.wotaslive.data.model.LiveRequestBody;
 import io.github.wotaslive.data.model.LoginInfo;
 import io.github.wotaslive.data.model.LoginRequestBody;
 import io.github.wotaslive.data.model.RecommendInfo;
+import io.github.wotaslive.data.model.RoomDetailInfo;
+import io.github.wotaslive.data.model.RoomDetailRequestBody;
 import io.github.wotaslive.data.model.RoomInfo;
 import io.github.wotaslive.data.model.RoomListRequestBody;
 import io.github.wotaslive.data.model.ShowInfo;
@@ -43,6 +39,7 @@ public class AppRepository {
 	private static final String OTHER_BASE_URL = "https://pother.48.cn/";
 	private static final String ROOM_BASE_URL = "https://pjuju.48.cn/";
 	private static final String USER_BASE_URL = "https://puser.48.cn/";
+
 	private static final int DEFAULT_LITMIT = 20;
 	private volatile static AppRepository mInstance;
 	private ApiServices mLiveApi;
@@ -144,9 +141,14 @@ public class AppRepository {
 	}
 
 	public Flowable<RoomInfo> getRoomList() {
-		String friendsStr = SPUtils.getInstance().getString(Constants.SP_FRIENDS,"0");
-		Type listType = new TypeToken<ArrayList<Integer>>(){}.getType();
-		List<Integer> friends = new Gson().fromJson(friendsStr,listType);
+		String friendsStr = SPUtils.getInstance(Constants.SP_NAME).getString(Constants.SP_FRIENDS, "");
+		List<Integer> friends;
+		if (TextUtils.isEmpty(friendsStr)) {
+			friends = new ArrayList<>();
+		} else {
+			Type listType = new TypeToken<ArrayList<Integer>>() {}.getType();
+			friends = new Gson().fromJson(friendsStr, listType);
+		}
 		RoomListRequestBody roomListRequestBody = new RoomListRequestBody(friends);
 		return getRoomApi().getRoomList(roomListRequestBody);
 	}
@@ -154,5 +156,10 @@ public class AppRepository {
 	public Flowable<LoginInfo> login(String username, String password) {
 		LoginRequestBody loginRequestBody = new LoginRequestBody(0, 0, password, username);
 		return getUserApi().login(loginRequestBody);
+	}
+
+	public Flowable<RoomDetailInfo> getRoomDetailInfo(int roomId, int lastTime) {
+		RoomDetailRequestBody roomDetailRequestBody = new RoomDetailRequestBody(roomId, 0, lastTime, 20);
+		return getRoomApi().getRoomDetail(roomDetailRequestBody);
 	}
 }
