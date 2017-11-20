@@ -21,7 +21,5 @@ class RoomDetailContract {
 	interface RoomDetailView extends BaseView<RoomDetailPresenter> {
 
 		void updateData(List<ExtInfo> extInfoList, List<RoomDetailInfo.ContentBean.DataBean> content);
-
-		void refreshUI();
 	}
 }

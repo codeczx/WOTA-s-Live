@@ -38,10 +38,17 @@ public class RoomDetailAdapter extends RecyclerView.Adapter {
 
 	private List<RoomDetailInfo.ContentBean.DataBean> mDataBeanList;
 	private List<Object> mList;
+	private RecyclerView mRecyclerView;
 
 	RoomDetailAdapter() {
 		mDataBeanList = new ArrayList<>();
 		mList = new ArrayList<>();
+	}
+
+	@Override
+	public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+		super.onAttachedToRecyclerView(recyclerView);
+		mRecyclerView = recyclerView;
 	}
 
 	@Override
@@ -118,6 +125,8 @@ public class RoomDetailAdapter extends RecyclerView.Adapter {
 				}
 			}
 			mList.addAll(tempList);
+			notifyDataSetChanged();
+			mRecyclerView.getLayoutManager().scrollToPosition(tempList.size() - 1);
 		}
 	}
 

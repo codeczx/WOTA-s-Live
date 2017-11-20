@@ -50,10 +50,7 @@ public class RoomDetailPresenterImpl implements RoomDetailContract.RoomDetailPre
 		Disposable disposable = AppRepository.getInstance().getRoomDetailInfo(roomId, lastTime)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
-				.doFinally(() -> {
-					isLockRefresh = false;
-					mView.refreshUI();
-				})
+				.doFinally(() -> isLockRefresh = false)
 				.subscribe(roomDetailInfo -> {
 					List<ExtInfo> extInfoList = new ArrayList<>();
 					for (RoomDetailInfo.ContentBean.DataBean dataBean : roomDetailInfo.getContent().getData()) {
@@ -61,7 +58,7 @@ public class RoomDetailPresenterImpl implements RoomDetailContract.RoomDetailPre
 						extInfoList.add(extInfo);
 					}
 					mView.updateData(extInfoList, roomDetailInfo.getContent().getData());
-				});
+				}, Throwable::printStackTrace);
 		mCompositeDisposable.add(disposable);
 	}
 }

@@ -3,17 +3,18 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_marginTop="16dp"
+	android:layout_marginBottom="@dimen/padding_bg_message_vertical"
+	android:layout_marginTop="@dimen/padding_bg_message_vertical"
 	android:gravity="center">
 
 	<TextView
 		android:id="@+id/tv_time"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:background="@color/gray_dark"
 		android:padding="4dp"
-		android:textSize="12sp"
 		android:textColor="@color/white"
-		android:background="@color/gray_dark">
+		android:textSize="12sp">
 	</TextView>
 
 </LinearLayout>

@@ -3,7 +3,7 @@
 	xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
 	android:layout_height="wrap_content"
-	android:layout_marginTop="16dp"
+	android:layout_marginBottom="@dimen/padding_bg_message_vertical"
 	android:paddingEnd="50dp"
 	android:paddingStart="@dimen/padding_bg_message_horizontal">
 
@@ -11,7 +11,8 @@
 		android:id="@+id/iv_avatar"
 		android:layout_width="50dp"
 		android:layout_height="50dp"
-		android:contentDescription="@string/empty_value"/>
+		android:contentDescription="@string/empty_value"
+		android:scaleType="centerCrop"/>
 
 	<TextView
 		android:id="@+id/tv_sender_name"

@@ -7,6 +7,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Collections;
+
 import io.github.wotaslive.data.AppRepository;
 import io.github.wotaslive.data.event.LoginEvent;
 import io.reactivex.android.schedulers.AndroidSchedulers;
@@ -68,7 +69,7 @@ public class RoomListPresenterImpl implements RoomListContract.RoomListPresenter
 	public void unSubscribe() {
 		EventBus.getDefault().unregister(this);
 		if (!mCompositeDisposable.isDisposed()) {
-			mCompositeDisposable.isDisposed();
+			mCompositeDisposable.dispose();
 		}
 	}
 }
