@@ -15,10 +15,10 @@ public class RoomDetailRequestBody {
 
 	private int roomId;
 	private int chatType;
-	private int lastTime;
+	private long lastTime;
 	private int limit;
 
-	public RoomDetailRequestBody(int roomId, int chatType, int lastTime, int limit) {
+	public RoomDetailRequestBody(int roomId, int chatType, long lastTime, int limit) {
 		this.roomId = roomId;
 		this.chatType = chatType;
 		this.lastTime = lastTime;
@@ -41,11 +41,11 @@ public class RoomDetailRequestBody {
 		this.chatType = chatType;
 	}
 
-	public int getLastTime() {
+	public long getLastTime() {
 		return lastTime;
 	}
 
-	public void setLastTime(int lastTime) {
+	public void setLastTime(long lastTime) {
 		this.lastTime = lastTime;
 	}
 

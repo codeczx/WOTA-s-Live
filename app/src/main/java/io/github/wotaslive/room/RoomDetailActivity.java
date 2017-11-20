@@ -3,13 +3,13 @@ package io.github.wotaslive.room;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
-import android.widget.LinearLayout;
 
 import java.util.List;
 
@@ -21,15 +21,18 @@ import io.github.wotaslive.data.model.ExtInfo;
 import io.github.wotaslive.data.model.RoomDetailInfo;
 import io.github.wotaslive.data.model.RoomInfo;
 
-public class RoomDetailActivity extends AppCompatActivity implements RoomDetailContract.RoomDetailView {
+public class RoomDetailActivity extends AppCompatActivity implements RoomDetailContract.RoomDetailView, SwipeRefreshLayout.OnRefreshListener {
 
 	@BindView(R.id.toolbar)
 	Toolbar mToolbar;
 	@BindView(R.id.rv_room_detail)
 	RecyclerView mRvRoomDetail;
+	@BindView(R.id.srl_room_detail)
+	SwipeRefreshLayout mSrlRoomDetail;
 
 	private RoomDetailContract.RoomDetailPresenter mPresenter;
 	private RoomDetailAdapter mAdapter;
+	private int mRoomId;
 
 	public static void startRoomDetailActivity(Context context, RoomInfo.ContentBean contentBean) {
 		Intent intent = new Intent(context, RoomDetailActivity.class);
@@ -45,7 +48,7 @@ public class RoomDetailActivity extends AppCompatActivity implements RoomDetailC
 		setContentView(R.layout.activity_room_detail);
 		ButterKnife.bind(this);
 
-		int roomId = getIntent().getIntExtra(Constants.ROOM_ID, 0);
+		mRoomId = getIntent().getIntExtra(Constants.ROOM_ID, 0);
 		String roomName = getIntent().getStringExtra(Constants.ROOM_NAME);
 		String roomCreator = getIntent().getStringExtra(Constants.ROOM_CREATOR);
 		setSupportActionBar(mToolbar);
@@ -57,17 +60,19 @@ public class RoomDetailActivity extends AppCompatActivity implements RoomDetailC
 		}
 		new RoomDetailPresenterImpl(this, this);
 		initView();
-		initData(roomId);
+		initData();
 	}
 
 	private void initView() {
 		mRvRoomDetail.setLayoutManager(new LinearLayoutManager(this));
 		mAdapter = new RoomDetailAdapter();
 		mRvRoomDetail.setAdapter(mAdapter);
+		mSrlRoomDetail.setOnRefreshListener(this);
 	}
 
-	private void initData(int roomId) {
-		mPresenter.getRoomDetailInfo(roomId, 0);
+	private void initData() {
+		mSrlRoomDetail.setRefreshing(true);
+		mPresenter.getRoomDetailInfo(mRoomId);
 	}
 
 	@Override
@@ -81,6 +86,11 @@ public class RoomDetailActivity extends AppCompatActivity implements RoomDetailC
 	}
 
 	@Override
+	public void refreshUI() {
+		mSrlRoomDetail.setRefreshing(false);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case android.R.id.home:
@@ -88,5 +98,10 @@ public class RoomDetailActivity extends AppCompatActivity implements RoomDetailC
 				break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	@Override
+	public void onRefresh() {
+		mPresenter.getRoomDetailInfo(mRoomId);
 	}
 }

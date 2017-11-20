@@ -118,15 +118,20 @@ public class RoomDetailAdapter extends RecyclerView.Adapter {
 	void updateData(List<ExtInfo> extInfoList, List<RoomDetailInfo.ContentBean.DataBean> dataBeanList) {
 		if (extInfoList != null) {
 			List<Object> tempList = new ArrayList<>();
+			tempList.add(TimeUtils.getTimeStamp(dataBeanList.get(dataBeanList.size() - 1).getMsgTime()));
 			for (int i = extInfoList.size() - 1; i >= 0; i--) {
 				tempList.add(extInfoList.get(i));
 				if (i >= 1 && TimeUtils.isNeedShowTimeStamp(dataBeanList.get(i).getMsgTime(), dataBeanList.get(i - 1).getMsgTime())) {
-					tempList.add(TimeUtils.getTimeStamp(dataBeanList.get(i).getMsgTime()));
+					tempList.add(TimeUtils.getTimeStamp(dataBeanList.get(i - 1).getMsgTime()));
 				}
 			}
-			mList.addAll(tempList);
+			int updateSize = tempList.size();
+			if (mList != null) {
+				tempList.addAll(mList);
+				mList = tempList;
+			}
 			notifyDataSetChanged();
-			mRecyclerView.getLayoutManager().scrollToPosition(tempList.size() - 1);
+			mRecyclerView.getLayoutManager().scrollToPosition(updateSize - 1);
 		}
 	}
 

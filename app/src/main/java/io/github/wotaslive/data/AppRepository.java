@@ -158,7 +158,7 @@ public class AppRepository {
 		return getUserApi().login(loginRequestBody);
 	}
 
-	public Flowable<RoomDetailInfo> getRoomDetailInfo(int roomId, int lastTime) {
+	public Flowable<RoomDetailInfo> getRoomDetailInfo(int roomId, long lastTime) {
 		RoomDetailRequestBody roomDetailRequestBody = new RoomDetailRequestBody(roomId, 0, lastTime, 20);
 		return getRoomApi().getRoomDetail(roomDetailRequestBody);
 	}

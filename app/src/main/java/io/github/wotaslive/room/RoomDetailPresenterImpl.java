@@ -26,6 +26,7 @@ public class RoomDetailPresenterImpl implements RoomDetailContract.RoomDetailPre
 	private RoomDetailContract.RoomDetailView mView;
 	private boolean isLockRefresh;
 	private CompositeDisposable mCompositeDisposable;
+	private long mLastTime;
 
 	RoomDetailPresenterImpl(Context context, RoomDetailContract.RoomDetailView view) {
 		mContext = context;
@@ -42,21 +43,25 @@ public class RoomDetailPresenterImpl implements RoomDetailContract.RoomDetailPre
 	}
 
 	@Override
-	public void getRoomDetailInfo(int roomId, int lastTime) {
+	public void getRoomDetailInfo(int roomId) {
 		if (isLockRefresh) {
 			return;
 		}
 		isLockRefresh = true;
-		Disposable disposable = AppRepository.getInstance().getRoomDetailInfo(roomId, lastTime)
+		Disposable disposable = AppRepository.getInstance().getRoomDetailInfo(roomId, mLastTime)
 				.subscribeOn(Schedulers.io())
 				.observeOn(AndroidSchedulers.mainThread())
-				.doFinally(() -> isLockRefresh = false)
+				.doFinally(() -> {
+					isLockRefresh = false;
+					mView.refreshUI();
+				})
 				.subscribe(roomDetailInfo -> {
 					List<ExtInfo> extInfoList = new ArrayList<>();
 					for (RoomDetailInfo.ContentBean.DataBean dataBean : roomDetailInfo.getContent().getData()) {
 						ExtInfo extInfo = new Gson().fromJson(dataBean.getExtInfo(), ExtInfo.class);
 						extInfoList.add(extInfo);
 					}
+					mLastTime = roomDetailInfo.getContent().getLastTime();
 					mView.updateData(extInfoList, roomDetailInfo.getContent().getData());
 				}, Throwable::printStackTrace);
 		mCompositeDisposable.add(disposable);

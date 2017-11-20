@@ -15,11 +15,13 @@ class RoomDetailContract {
 
 	interface RoomDetailPresenter extends BasePresenter {
 
-		void getRoomDetailInfo(int roomId, int i);
+		void getRoomDetailInfo(int roomId);
 	}
 
 	interface RoomDetailView extends BaseView<RoomDetailPresenter> {
 
 		void updateData(List<ExtInfo> extInfoList, List<RoomDetailInfo.ContentBean.DataBean> content);
+
+		void refreshUI();
 	}
 }
