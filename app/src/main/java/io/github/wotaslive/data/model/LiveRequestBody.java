@@ -11,14 +11,14 @@ public class LiveRequestBody {
 	 * giftUpdTime : 1498211389003
 	 */
 	
-	private int lastTime;
+	private long lastTime;
 	private int groupId;
 	private int type;
 	private int memberId;
 	private int limit;
 	private long giftUpdTime;
 	
-	public LiveRequestBody(int lastTime, int groupId, int type, int memberId, int limit, long giftUpdTime) {
+	public LiveRequestBody(long lastTime, int groupId, int type, int memberId, int limit, long giftUpdTime) {
 		this.lastTime = lastTime;
 		this.groupId = groupId;
 		this.type = type;
@@ -27,11 +27,11 @@ public class LiveRequestBody {
 		this.giftUpdTime = giftUpdTime;
 	}
 	
-	public int getLastTime() {
+	public long getLastTime() {
 		return lastTime;
 	}
 	
-	public void setLastTime(int lastTime) {
+	public void setLastTime(long lastTime) {
 		this.lastTime = lastTime;
 	}
 	

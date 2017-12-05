@@ -70,6 +70,15 @@ public class LiveListFragment extends Fragment implements LiveListContract.LiveL
 			}
 		});
 		mRvLive.setAdapter(mAdapter);
+		mRvLive.addOnScrollListener(new RecyclerView.OnScrollListener() {
+			@Override
+			public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+				super.onScrollStateChanged(recyclerView, newState);
+				if (newState == RecyclerView.SCROLL_STATE_IDLE && !recyclerView.canScrollVertically(0)) {
+					mPresenter.loadMemberLive();
+				}
+			}
+		});
 		mSrlLive.setOnRefreshListener(this);
 	}
 
@@ -85,20 +94,24 @@ public class LiveListFragment extends Fragment implements LiveListContract.LiveL
 		mPresenter.unSubscribe();
 	}
 
+
 	@Override
-	public void refreshUI() {
+	public void refreshList(List<LiveInfo.ContentBean.RoomBean> liveList, List<LiveInfo.ContentBean.RoomBean> reviewList) {
+		mAdapter.updateLiveList(liveList);
+		mAdapter.updateReviewList(reviewList);
 		mAdapter.notifyDataSetChanged();
 		mSrlLive.setRefreshing(false);
 	}
 
 	@Override
-	public void updateLive(List<LiveInfo.ContentBean.RoomBean> list) {
-		mAdapter.updateLiveList(list);
+	public void updateList(List<LiveInfo.ContentBean.RoomBean> liveList, List<LiveInfo.ContentBean.RoomBean> reviewList) {
+		mAdapter.insertLiveList(liveList);
+		mAdapter.insertReviewList(reviewList);
 	}
 
 	@Override
-	public void updateReview(List<LiveInfo.ContentBean.RoomBean> list) {
-		mAdapter.updateReviewList(list);
+	public void stopRefreshing() {
+		mSrlLive.setRefreshing(false);
 	}
 
 	@Override

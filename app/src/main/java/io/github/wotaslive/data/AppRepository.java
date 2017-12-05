@@ -119,9 +119,9 @@ public class AppRepository {
 				.build();
 	}
 
-	public Flowable<LiveInfo> getLiveInfo() {
+	public Flowable<LiveInfo> getLiveInfo(long lastTime) {
 		LiveRequestBody requestBody = new LiveRequestBody(
-				0, 0, 0, 0, DEFAULT_LITMIT, System.currentTimeMillis());
+				lastTime, 0, 0, 0, DEFAULT_LITMIT, System.currentTimeMillis());
 		return getLiveApi().getMemberLive(requestBody);
 	}
 
@@ -145,8 +145,10 @@ public class AppRepository {
 		List<Integer> friends;
 		if (TextUtils.isEmpty(friendsStr)) {
 			friends = new ArrayList<>();
-		} else {
-			Type listType = new TypeToken<ArrayList<Integer>>() {}.getType();
+		}
+		else {
+			Type listType = new TypeToken<ArrayList<Integer>>() {
+			}.getType();
 			friends = new Gson().fromJson(friendsStr, listType);
 		}
 		RoomListRequestBody roomListRequestBody = new RoomListRequestBody(friends);

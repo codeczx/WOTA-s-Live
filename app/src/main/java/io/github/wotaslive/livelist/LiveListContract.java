@@ -16,17 +16,19 @@ import io.github.wotaslive.data.model.LiveInfo;
 class LiveListContract {
 
 	interface LiveListView extends BaseView<LiveListPresenter> {
-		void refreshUI();
+		void refreshList(List<LiveInfo.ContentBean.RoomBean> liveList, List<LiveInfo.ContentBean.RoomBean> reviewList);
 
-		void updateLive(List<LiveInfo.ContentBean.RoomBean> list);
-
-		void updateReview(List<LiveInfo.ContentBean.RoomBean> list);
+		void updateList(List<LiveInfo.ContentBean.RoomBean> liveList, List<LiveInfo.ContentBean.RoomBean> reviewList);
 
 		void showMenu(LiveInfo.ContentBean.RoomBean room, View anchor);
+
+		void stopRefreshing();
 	}
 
 	interface LiveListPresenter extends BasePresenter, LiveListAdapter.Callbacks {
 		void getMemberLive();
+
+		void loadMemberLive();
 
 		void setClipboard(String text);
 	}

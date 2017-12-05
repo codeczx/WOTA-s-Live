@@ -117,6 +117,22 @@ public class LiveListAdapter extends RecyclerView.Adapter {
 		}
 	}
 
+	void insertLiveList(List<RoomBean> list) {
+		if (list != null && list.size() > 0) {
+			int size = mLiveList.size();
+			mLiveList.addAll(list);
+			notifyItemRangeInserted(size + 1, list.size());
+		}
+	}
+
+	void insertReviewList(List<RoomBean> list) {
+		if (list != null && list.size() > 0) {
+			int size = getItemCount();
+			mReviewList.addAll(list);
+			notifyItemRangeInserted(size, list.size());
+		}
+	}
+
 	static class ContentViewHolder extends RecyclerView.ViewHolder {
 
 		@BindView(R.id.iv_cover)
