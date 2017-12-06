@@ -41,16 +41,17 @@
 
         <TextView
             android:id="@+id/tv_subtitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/cardMarginHorizontal"
             android:ellipsize="end"
-            android:maxLength="30"
             android:singleLine="true"
             android:text="@string/empty_value"
             android:textColor="#666"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_time"
+            app:layout_constraintHorizontal_weight="1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"/>
 
@@ -60,8 +61,8 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/empty_value"
             android:foreground="?android:attr/selectableItemBackground"
+            android:padding="5dp"
             android:src="@drawable/ic_more_vert_black_24dp"
-            app:layout_constraintBottom_toTopOf="@id/tv_time"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_cover"/>
 
@@ -76,6 +77,7 @@
             android:textSize="12sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_subtitle"
             app:layout_constraintTop_toBottomOf="@id/iv_more"/>
     </android.support.constraint.ConstraintLayout>
 
