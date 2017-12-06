@@ -12,20 +12,6 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_begin="@dimen/cardMarginHorizontal"/>
-
-        <android.support.constraint.Guideline
-            android:id="@+id/guide_end"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_end="@dimen/cardMarginHorizontal"/>
-
         <ImageView
             android:id="@+id/iv_cover"
             android:layout_width="0dp"
@@ -42,39 +28,55 @@
             android:id="@+id/tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/cardMarginHorizontal"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLength="30"
+            android:singleLine="true"
             android:text="@string/empty_value"
             android:textColor="@android:color/black"
             android:textSize="15sp"
             app:layout_constraintBottom_toTopOf="@id/tv_subtitle"
-            app:layout_constraintLeft_toLeftOf="@id/guide_start"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/iv_cover"/>
 
         <TextView
             android:id="@+id/tv_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/cardMarginHorizontal"
             android:ellipsize="end"
-            android:maxLines="1"
+            android:maxLength="30"
+            android:singleLine="true"
             android:text="@string/empty_value"
+            android:textColor="#666"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="@id/guide_start"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_title"/>
 
         <ImageView
             android:id="@+id/iv_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
             android:contentDescription="@string/empty_value"
             android:foreground="?android:attr/selectableItemBackground"
             android:src="@drawable/ic_more_vert_black_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="@id/guide_end"
+            app:layout_constraintBottom_toTopOf="@id/tv_time"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/iv_cover"/>
 
+        <TextView
+            android:id="@+id/tv_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="@dimen/cardMarginHorizontal"
+            android:text="@string/empty_value"
+            android:textColor="#999"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/iv_more"/>
     </android.support.constraint.ConstraintLayout>
 
 </android.support.v7.widget.CardView>

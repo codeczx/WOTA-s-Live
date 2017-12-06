@@ -12,6 +12,7 @@ import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -141,6 +142,8 @@ public class LiveListAdapter extends RecyclerView.Adapter {
 		TextView tvTitle;
 		@BindView(R.id.tv_subtitle)
 		TextView tvSubtitle;
+		@BindView(R.id.tv_time)
+		TextView tvTime;
 		@BindView(R.id.iv_more)
 		ImageView ivMore;
 		private final Callbacks mCallbacks;
@@ -165,6 +168,8 @@ public class LiveListAdapter extends RecyclerView.Adapter {
 			}
 			tvTitle.setText(roomBean.getTitle());
 			tvSubtitle.setText(roomBean.getSubTitle());
+			tvTime.setText(String.format(Locale.US,
+					mContext.getString(R.string.live_start_time), roomBean.getStartTime()));
 			String path = roomBean.getPicPath();
 			if (path.contains(",")) {
 				String[] paths = path.split(",");

@@ -10,7 +10,6 @@ import io.github.wotaslive.R
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.ShowInfo
 import kotlinx.android.synthetic.main.item_show.view.*
-import java.text.SimpleDateFormat
 import java.util.*
 
 /**
@@ -56,11 +55,11 @@ class ShowListAdapter(callbacks: Callbacks) : RecyclerView.Adapter<ShowListAdapt
         }
 
         fun bind(show: ShowInfo.ContentBean.ShowBean) {
-            val format = SimpleDateFormat("MM.dd HH:mm", Locale.US)
             itemView.tv_title.text = show.title
             itemView.tv_subtitle.text = show.subTitle
             itemView.tv_status.setText(if (show.isIsOpen) R.string.show_status_Streaming else R.string.show_status_future)
-            itemView.tv_time.text = itemView.context.getString(R.string.show_stream_time, format.format(Date(show.startTime)))
+            itemView.tv_time.text = String.format(Locale.US,
+                    itemView.resources.getString(R.string.live_start_time), show.startTime)
             var path = show.picPath
             if (path.contains(",")) {
                 val paths = path.split(",".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
