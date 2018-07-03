@@ -13,7 +13,7 @@ import io.reactivex.schedulers.Schedulers
  * Created by Tony on 2017/10/22 13:43.
  * Class description:
  */
-class ShowListPresenterImpl(context: Context, view: ShowListContract.ShowListView) : ShowListContract.ShowListPresenter {
+class ShowListPresenterImpl(context: Context?, view: ShowListContract.ShowListView) : ShowListContract.ShowListPresenter {
     private val mContext = context
 
     private val mView = view
@@ -47,7 +47,7 @@ class ShowListPresenterImpl(context: Context, view: ShowListContract.ShowListVie
     }
 
     override fun setClipboard(text: String) {
-        val cmb = mContext.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+        val cmb = mContext?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
         val clipData = ClipData.newPlainText(null, text)
         cmb.primaryClip = clipData
     }

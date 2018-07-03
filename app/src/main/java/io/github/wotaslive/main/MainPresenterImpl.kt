@@ -60,8 +60,8 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
                     .override(480, 360)
                     .load(url)
                     .into(object : SimpleTarget<Bitmap>() {
-                        override fun onResourceReady(resource: Bitmap?, transition: Transition<in Bitmap>?) {
-                            resource?.let {
+                        override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                            resource.let {
                                 e.onNext(resource)
                             }
                             e.onComplete()

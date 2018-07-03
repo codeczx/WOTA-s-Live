@@ -24,15 +24,15 @@ class ShowListAdapter(callbacks: Callbacks) : RecyclerView.Adapter<ShowListAdapt
         fun onCoverClick(show: ShowInfo.ContentBean.ShowBean)
     }
 
-    override fun onBindViewHolder(holder: ShowViewHolder?, position: Int) {
-        holder?.bind(mList[position])
+    override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
+        holder.bind(mList[position])
     }
 
     override fun getItemCount(): Int {
         return mList.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): ShowViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
         return ShowViewHolder.newInstance(parent, mCallbacks)
     }
 

@@ -19,7 +19,7 @@ class ShowListFragment : Fragment(), ShowListContract.ShowListView, SwipeRefresh
     private lateinit var mPresenter: ShowListContract.ShowListPresenter
     private lateinit var mShowAdapter: ShowListAdapter
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         return inflater!!.inflate(R.layout.frag_show_list, container, false)
     }
@@ -40,15 +40,15 @@ class ShowListFragment : Fragment(), ShowListContract.ShowListView, SwipeRefresh
         mShowAdapter = ShowListAdapter(mPresenter)
         rv_show.layoutManager = LinearLayoutManager(context)
         rv_show.addItemDecoration(MaterialViewPagerHeaderDecorator())
-        val verticalSpace = context.resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
-        val horizontalSpace = context.resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal)
+        val verticalSpace = context?.resources?.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+        val horizontalSpace = context?.resources?.getDimensionPixelOffset(R.dimen.cardMarginHorizontal)
         rv_show.addItemDecoration(object : RecyclerView.ItemDecoration() {
             override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
                 super.getItemOffsets(outRect, view, parent, state)
                 outRect.bottom = 0
-                outRect.left = horizontalSpace
+                outRect.left = horizontalSpace!!
                 outRect.right = horizontalSpace
-                outRect.top = if (parent.getChildAdapterPosition(view) == 0) 0 else verticalSpace
+                outRect.top = if (parent.getChildAdapterPosition(view) == 0) 0 else verticalSpace!!
             }
         })
         rv_show.adapter = mShowAdapter
