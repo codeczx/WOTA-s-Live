@@ -1,10 +1,15 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".livelist.LiveListFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <android.support.v4.widget.SwipeRefreshLayout
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="io.github.wotaslive.livelist.LiveListViewModel" />
+    </data>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/srl_live"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -12,9 +17,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_live"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" />
 
-    </android.support.v4.widget.SwipeRefreshLayout>
-
-
-</FrameLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</layout>

@@ -1,5 +1,7 @@
 package io.github.wotaslive.main
 
+import android.Manifest
+import android.app.Activity
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -7,12 +9,14 @@ import android.support.v7.graphics.Palette
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.header.HeaderDesign
+import com.tbruyelle.rxpermissions2.RxPermissions
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.RecommendInfo
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -33,6 +37,17 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
     }
 
     override fun loanHeader(context: Context) {
+        val rxPermissions = RxPermissions(context as Activity)
+        rxPermissions.request(Manifest.permission.READ_PHONE_STATE).subscribe {
+            if (it)
+                initHeader(context)
+            else
+                context.finish()
+        }
+
+    }
+
+    private fun initHeader(context: Context) {
         val disposable = Flowable.mergeArray(AppRepository.getInstance().recommendList
                 .flatMap { t: RecommendInfo -> Flowable.fromIterable(t.content) }
                 .take(maxImgSize.toLong())

@@ -1,5 +1,6 @@
 package io.github.wotaslive.main;
 
+import android.Manifest;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.annotation.Nullable;
@@ -13,12 +14,15 @@ import android.view.MenuItem;
 
 import com.github.florent37.materialviewpager.MaterialViewPager;
 import com.github.florent37.materialviewpager.header.HeaderDesign;
+import com.tbruyelle.rxpermissions2.RxPermissions;
+import com.tbruyelle.rxpermissions2.RxPermissionsFragment;
 
 import org.jetbrains.annotations.NotNull;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.github.wotaslive.R;
+import io.reactivex.disposables.Disposable;
 
 public class MainActivity extends AppCompatActivity implements MainContract.MainView {
 

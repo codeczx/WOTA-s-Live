@@ -9,6 +9,8 @@
     <string name="second">秒</string>
 
     <string name="live_start_time"><![CDATA[开始时间：%tm-%<td %<tH:%<tM]]></string>
+    <string name="live">直播中</string>
+    <string name="review">回放中</string>
 
     <string name="show_status_Streaming">进行中</string>
     <string name="show_status_future">即将进行</string>

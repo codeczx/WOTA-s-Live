@@ -42,6 +42,9 @@ android {
             storePassword 'android'
         }
     }
+    dataBinding {
+        enabled = true
+    }
 }
 
 dependencies {
@@ -58,7 +61,6 @@ dependencies {
 //    kapt "android.arch.persistence.room:compiler:$rootProject.roomVersion"
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     kapt "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
-    implementation "android.arch.lifecycle:reactivestreams:$rootProject.archLifecycleVersion"
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -79,6 +81,8 @@ dependencies {
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.orhanobut:logger:2.1.1'
+    implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-10'
+    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-10'
     //MaterialViewPager
     implementation 'com.github.florent37:materialviewpager:1.2.3'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'

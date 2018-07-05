@@ -25,7 +25,7 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
 	MainPagerAdapter(Context context, FragmentManager fm) {
 		super(fm);
 		mFragments = new ArrayList<>();
-		mFragments.add(new LiveListFragment());
+		mFragments.add(LiveListFragment.Companion.newInstance());
 		mFragments.add(new ShowListFragment());
 		mFragments.add(new RoomListFragment());
 		mTitles = new ArrayList<>();
