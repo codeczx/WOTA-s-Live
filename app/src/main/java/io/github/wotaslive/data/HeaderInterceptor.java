@@ -13,7 +13,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class HeaderInterceptor implements Interceptor {
-	
+
 	@Override
 	public Response intercept(@NonNull Chain chain) throws IOException {
 		Request request = chain.request();
@@ -23,6 +23,7 @@ public class HeaderInterceptor implements Interceptor {
 				.addHeader(Constants.HEADER_KEY_TOKEN, spUtils.getString(Constants.HEADER_KEY_TOKEN, "0"))
 				.addHeader(Constants.HEADER_KEY_OS, Constants.HEADER_VALUE_OS)
 				.addHeader(Constants.HEADER_KEY_VERSION, Constants.HEADER_VALUE_VERSION)
+				.addHeader(Constants.HEADER_KEY_BUILD, Constants.HEADER_VALUE_BUILD)
 				.addHeader(Constants.HEADER_KEY_USER_AGENT, Constants.HEADER_VALUE_USER_AGENT)
 				.addHeader(Constants.HEADER_KEY_CONTENT_TYPE, Constants.HEADER_VALUE_CONTENT_TYPE)
 				.build();

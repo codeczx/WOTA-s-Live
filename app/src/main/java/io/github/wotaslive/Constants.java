@@ -10,10 +10,12 @@ public class Constants {
 	public static final String HEADER_KEY_TOKEN = "token";
 	public static final String HEADER_KEY_OS = "os";
 	public static final String HEADER_KEY_VERSION = "version";
+	public static final String HEADER_KEY_BUILD = "build";
 	public static final String HEADER_KEY_USER_AGENT = "User-Agent";
 	public static final String HEADER_KEY_CONTENT_TYPE = "Content-Type";
 
 	public static final String HEADER_VALUE_VERSION = "5.0.0";
+	public static final String HEADER_VALUE_BUILD = "0";
 	public static final String HEADER_VALUE_OS = "android";
 	public static final String HEADER_VALUE_USER_AGENT = "Mobile_Pocket";
 	public static final String HEADER_VALUE_CONTENT_TYPE = "application/json;charset=utf-8";
