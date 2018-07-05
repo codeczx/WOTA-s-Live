@@ -40,7 +40,7 @@ public class AppRepository {
 	private static final String ROOM_BASE_URL = "https://pjuju.48.cn/";
 	private static final String USER_BASE_URL = "https://puser.48.cn/";
 
-	private static final int DEFAULT_LITMIT = 20;
+	private static final int DEFAULT_LITMIT = 10;
 	private volatile static AppRepository mInstance;
 	private ApiServices mLiveApi;
 	private ApiServices mOtherApi;

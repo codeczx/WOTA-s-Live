@@ -1,88 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/list_card_height"
-    android:background="@android:color/white"
-    app:cardCornerRadius="@dimen/list_card_radius"
-    app:cardElevation="@dimen/list_card_elevation">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.constraint.ConstraintLayout
+    <data>
+
+        <variable
+            name="show"
+            type="io.github.wotaslive.data.model.ShowInfo.ContentBean.ShowBean" />
+
+        <variable
+            name="eventHandler"
+            type="io.github.wotaslive.showlist.ShowListAdapter.Callback" />
+    </data>
+
+    <android.support.v7.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:background="@android:color/white"
+        app:cardCornerRadius="@dimen/list_card_radius"
+        app:cardElevation="@dimen/list_card_elevation">
 
-        <ImageView
-            android:id="@+id/iv_cover"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:contentDescription="@string/empty_value"
-            android:foreground="?android:attr/selectableItemBackground"
-            android:scaleType="centerCrop"
-            app:layout_constraintDimensionRatio="4:3"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/tv_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/cardMarginHorizontal"
-            android:layout_marginTop="@dimen/cardMarginVertical"
-            android:background="@drawable/bg_show_status"
-            android:padding="5dp"
-            android:textColor="@android:color/white"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            <ImageView
+                android:id="@+id/iv_cover"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/empty_value"
+                android:foreground="?android:attr/selectableItemBackground"
+                android:onClick="@{() -> eventHandler.onCoverClick(show)}"
+                android:scaleType="centerCrop"
+                app:layout_constraintDimensionRatio="4:3"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/cardMarginHorizontal"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/empty_value"
-            android:textColor="@android:color/black"
-            android:textSize="15sp"
-            app:layout_constraintBottom_toTopOf="@id/tv_subtitle"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_cover"/>
+            <TextView
+                android:id="@+id/tv_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/cardMarginHorizontal"
+                android:layout_marginTop="@dimen/cardMarginVertical"
+                android:background="@drawable/bg_show_status"
+                android:padding="5dp"
+                android:text="@{show.isOpen?@string/show_status_Streaming:@string/show_status_future}"
+                android:textColor="@android:color/white"
+                android:textSize="14sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
-        <TextView
-            android:id="@+id/tv_subtitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/cardMarginHorizontal"
-            android:ellipsize="end"
-            android:singleLine="true"
-            android:text="@string/empty_value"
-            android:textColor="#666"
-            android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_time"
-            app:layout_constraintHorizontal_weight="1"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_title"/>
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_marginStart="@dimen/cardMarginHorizontal"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:maxLength="30"
+                android:singleLine="true"
+                android:text="@{show.title}"
+                android:textColor="@android:color/black"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_subtitle"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_cover" />
 
-        <TextView
-            android:id="@+id/tv_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/cardMarginHorizontal"
-            android:singleLine="true"
-            android:text="@string/empty_value"
-            android:textColor="#999"
-            android:textSize="12sp"
-            app:layout_constraintBaseline_toBaselineOf="@+id/tv_subtitle"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/tv_subtitle"/>
+            <TextView
+                android:id="@+id/tv_subtitle"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="@dimen/cardMarginHorizontal"
+                android:ellipsize="end"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@{show.subTitle}"
+                android:textColor="#666"
+                android:textSize="14sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_time"
+                app:layout_constraintHorizontal_weight="1"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_title" />
 
-    </android.support.constraint.ConstraintLayout>
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="@dimen/cardMarginHorizontal"
+                android:text="@{@string/live_start_time(show.startTime)}"
+                android:textColor="#999"
+                android:textSize="12sp"
+                app:layout_constraintBaseline_toBaselineOf="@+id/tv_subtitle"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_subtitle" />
+        </android.support.constraint.ConstraintLayout>
 
-</android.support.v7.widget.CardView>
-
+    </android.support.v7.widget.CardView>
+</layout>

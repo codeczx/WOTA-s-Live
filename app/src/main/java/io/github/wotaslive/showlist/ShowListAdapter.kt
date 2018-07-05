@@ -1,77 +1,66 @@
 package io.github.wotaslive.showlist
 
+import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.request.target.Target
-import io.github.wotaslive.GlideApp
+import io.github.wotaslive.BR
 import io.github.wotaslive.R
-import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.ShowInfo
-import kotlinx.android.synthetic.main.item_show.view.*
+import io.github.wotaslive.databinding.ItemShowBinding
+import io.github.wotaslive.utils.loadImage
 import java.util.*
 
 /**
  * Created by Tony on 2017/10/22 21:10.
  * Class description:
  */
-class ShowListAdapter(callbacks: Callbacks) : RecyclerView.Adapter<ShowListAdapter.ShowViewHolder>() {
-    private var mList: ArrayList<ShowInfo.ContentBean.ShowBean> = ArrayList()
-    private var mCallbacks: Callbacks = callbacks
+class ShowListAdapter(val callback: Callback) : RecyclerView.Adapter<ShowViewHolder>() {
+    private var data: ArrayList<ShowInfo.ContentBean.ShowBean> = ArrayList()
 
-    interface Callbacks {
+    interface Callback {
         fun onCoverClick(show: ShowInfo.ContentBean.ShowBean)
     }
 
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
+        return ShowViewHolder(DataBindingUtil.bind(LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_show, parent, false)), callback)
+    }
+
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
-        holder.bind(mList[position])
+        holder.bind(data[position])
     }
 
     override fun getItemCount(): Int {
-        return mList.size
+        return data.size
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
-        return ShowViewHolder.newInstance(parent, mCallbacks)
-    }
-
-    fun updateShowList(list: List<ShowInfo.ContentBean.ShowBean>?) {
-        mList.clear()
-        if (list != null) {
-            mList.addAll(list)
+    fun addNewData(list: List<ShowInfo.ContentBean.ShowBean>?) {
+        list?.let {
+            data.clear()
+            data.addAll(it)
             notifyDataSetChanged()
         }
     }
 
-    class ShowViewHolder private constructor(itemView: View, callbacks: Callbacks) : RecyclerView.ViewHolder(itemView) {
-        private val mCallbacks: Callbacks = callbacks
-
-        companion object {
-            fun newInstance(viewGroup: ViewGroup?, callbacks: Callbacks): ShowViewHolder {
-                val view = LayoutInflater.from(viewGroup?.context).inflate(R.layout.item_show, viewGroup, false)
-                return ShowViewHolder(view, callbacks)
-            }
+    fun addMoreData(list: List<ShowInfo.ContentBean.ShowBean>?) {
+        list?.let {
+            val size = data.size
+            data.addAll(it)
+            notifyItemRangeInserted(size + 1, it.size)
         }
+    }
+}
 
-        fun bind(show: ShowInfo.ContentBean.ShowBean) {
-            itemView.tv_title.text = show.title
-            itemView.tv_subtitle.text = show.subTitle
-            itemView.tv_status.setText(if (show.isIsOpen) R.string.show_status_Streaming else R.string.show_status_future)
-            itemView.tv_time.text = String.format(Locale.US,
-                    itemView.resources.getString(R.string.live_start_time), show.startTime)
-            var path = show.picPath
-            if (path.contains(",")) {
-                val paths = path.split(",".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
-                path = paths[0]
-            }
-            GlideApp.with(itemView.context)
-                    .load(AppRepository.IMG_BASE_URL + path)
-                    .override(Target.SIZE_ORIGINAL)
-                    .into(itemView.iv_cover)
-            itemView.iv_cover.setOnClickListener {
-                mCallbacks.onCoverClick(show)
-            }
+class ShowViewHolder(private val binding: ItemShowBinding?, val callback: ShowListAdapter.Callback) : RecyclerView.ViewHolder(binding?.root) {
+    fun bind(show: ShowInfo.ContentBean.ShowBean) {
+        binding?.setVariable(BR.eventHandler, callback)
+        binding?.setVariable(BR.show, show)
+        var imgUrl = show.picPath
+        if (imgUrl.indexOf(',') != -1) {
+            imgUrl = imgUrl.substring(0, imgUrl.indexOf(','))
         }
+        binding?.ivCover?.loadImage(imgUrl)
+        binding?.executePendingBindings()
     }
 }

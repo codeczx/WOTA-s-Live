@@ -25,13 +25,18 @@ import io.github.wotaslive.utils.setClipboard
 
 
 class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
-    private lateinit var viewDataBinding: FragLiveListBinding
-
     lateinit var viewModel: LiveListViewModel
+    private lateinit var viewDataBinding: FragLiveListBinding
     private val adapter = LiveListAdapter(this)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewDataBinding = FragLiveListBinding.inflate(inflater, container, false)
         return viewDataBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.start()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -80,11 +85,6 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
                 viewModel.loadLives(false)
             }
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.start()
     }
 
     override fun onCoverClick(room: LiveInfo.ContentBean.RoomBean) {

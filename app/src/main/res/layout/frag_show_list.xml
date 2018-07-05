@@ -1,20 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             xmlns:tools="http://schemas.android.com/tools"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent"
-             tools:context=".showlist.ShowListFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/srl_show"
+    <data>
+
+        <variable
+            name="viewModel"
+            type="io.github.wotaslive.showlist.ShowListViewModel" />
+    </data>
+
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        tools:context=".showlist.ShowListFragment">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_show"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/srl_show"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent">
 
-    </android.support.v4.widget.SwipeRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_show"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
-</FrameLayout>
+    </FrameLayout>
+</layout>

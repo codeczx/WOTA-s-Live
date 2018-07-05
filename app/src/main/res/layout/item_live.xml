@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="android.view.View" />
-
         <variable
             name="room"
             type="io.github.wotaslive.data.model.LiveInfo.ContentBean.RoomBean" />

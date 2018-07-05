@@ -1,82 +1,77 @@
 package io.github.wotaslive.showlist
 
-
+import android.arch.lifecycle.Observer
 import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v4.widget.SwipeRefreshLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
+import com.scwang.smartrefresh.header.MaterialHeader
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ShowInfo
-import kotlinx.android.synthetic.main.frag_show_list.*
+import io.github.wotaslive.databinding.FragShowListBinding
+import io.github.wotaslive.main.MainActivity
+import io.github.wotaslive.utils.obtainViewModel
 
-class ShowListFragment : Fragment(), ShowListContract.ShowListView, SwipeRefreshLayout.OnRefreshListener {
-    private lateinit var mPresenter: ShowListContract.ShowListPresenter
-    private lateinit var mShowAdapter: ShowListAdapter
+class ShowListFragment : Fragment(), ShowListAdapter.Callback {
+    lateinit var viewModel: ShowListViewModel
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.frag_show_list, container, false)
+    private lateinit var viewDataBinding: FragShowListBinding
+    private val adapter = ShowListAdapter(this)
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        viewDataBinding = FragShowListBinding.inflate(inflater, container, false)
+        return viewDataBinding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.start()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        ShowListPresenterImpl(context, this)
-        initView()
-        initData()
+        viewModel = (activity as MainActivity).obtainViewModel(ShowListViewModel::class.java).also {
+            viewDataBinding.viewModel = it
+        }
+        viewModel.showListData.observe(this, Observer {
+            adapter.addNewData(it)
+            viewDataBinding.srlShow.finishRefresh()
+        })
+        setupAdapter()
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        mPresenter.unSubscribe()
-    }
-
-    private fun initView() {
-        mShowAdapter = ShowListAdapter(mPresenter)
-        rv_show.layoutManager = LinearLayoutManager(context)
-        rv_show.addItemDecoration(MaterialViewPagerHeaderDecorator())
-        val verticalSpace = context?.resources?.getDimensionPixelOffset(R.dimen.cardMarginVertical)
-        val horizontalSpace = context?.resources?.getDimensionPixelOffset(R.dimen.cardMarginHorizontal)
-        rv_show.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+    private fun setupAdapter() {
+        // recycler view
+        val verticalSpace = resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+        val horizontalSpace = resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal)
+        viewDataBinding.rvShow.layoutManager = LinearLayoutManager(context)
+        viewDataBinding.rvShow.addItemDecoration(MaterialViewPagerHeaderDecorator())
+        viewDataBinding.rvShow.addItemDecoration(object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
                 super.getItemOffsets(outRect, view, parent, state)
-                outRect.bottom = 0
-                outRect.left = horizontalSpace!!
-                outRect.right = horizontalSpace
-                outRect.top = if (parent.getChildAdapterPosition(view) == 0) 0 else verticalSpace!!
+                outRect?.bottom = 0
+                outRect?.left = horizontalSpace
+                outRect?.right = horizontalSpace
+                outRect?.top = if (parent?.getChildAdapterPosition(view) == 0) 0 else verticalSpace
             }
         })
-        rv_show.adapter = mShowAdapter
-        srl_show.setOnRefreshListener(this)
+        viewDataBinding.rvShow.adapter = adapter
+
+        // refresh layout
+        viewDataBinding.srlShow.setEnableLoadMore(false)
+        viewDataBinding.srlShow.setRefreshHeader(MaterialHeader(context))
+        viewDataBinding.srlShow.setOnRefreshListener { viewModel.start() }
     }
 
-    private fun initData() {
-        mPresenter.getShowList()
-        srl_show.isRefreshing = true
+    override fun onCoverClick(show: ShowInfo.ContentBean.ShowBean) {
+        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun setPresenter(presenter: ShowListContract.ShowListPresenter) {
-        mPresenter = presenter
+    companion object {
+        fun newInstance() = ShowListFragment()
     }
-
-    override fun onRefresh() {
-        mPresenter.getShowList()
-    }
-
-    override fun refreshUI() {
-        srl_show.isRefreshing = false
-    }
-
-    override fun updateShow(list: List<ShowInfo.ContentBean.ShowBean>?) {
-        mShowAdapter.updateShowList(list)
-    }
-
-    override fun showMenu() {
-    }
-
 }
