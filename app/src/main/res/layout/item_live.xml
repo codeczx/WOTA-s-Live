@@ -95,7 +95,6 @@
                 android:textColor="#999"
                 android:textSize="12sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tv_subtitle"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_subtitle" />
         </android.support.constraint.ConstraintLayout>
