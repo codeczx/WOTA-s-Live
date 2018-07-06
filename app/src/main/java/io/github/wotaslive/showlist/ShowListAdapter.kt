@@ -4,11 +4,9 @@ import android.databinding.DataBindingUtil
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import io.github.wotaslive.BR
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ShowInfo
 import io.github.wotaslive.databinding.ItemShowBinding
-import io.github.wotaslive.utils.loadImage
 import java.util.*
 
 /**
@@ -23,8 +21,13 @@ class ShowListAdapter(val callback: Callback) : RecyclerView.Adapter<ShowViewHol
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ShowViewHolder {
-        return ShowViewHolder(DataBindingUtil.bind(LayoutInflater.from(parent.context)
-                .inflate(R.layout.item_show, parent, false)), callback)
+        return ShowViewHolder(
+                DataBindingUtil.inflate(
+                        LayoutInflater.from(parent.context),
+                        R.layout.item_show,
+                        parent,
+                        false),
+                callback)
     }
 
     override fun onBindViewHolder(holder: ShowViewHolder, position: Int) {
@@ -52,15 +55,12 @@ class ShowListAdapter(val callback: Callback) : RecyclerView.Adapter<ShowViewHol
     }
 }
 
-class ShowViewHolder(private val binding: ItemShowBinding?, val callback: ShowListAdapter.Callback) : RecyclerView.ViewHolder(binding?.root) {
+class ShowViewHolder(private val binding: ItemShowBinding, val callback: ShowListAdapter.Callback) : RecyclerView.ViewHolder(binding.root) {
     fun bind(show: ShowInfo.ContentBean.ShowBean) {
-        binding?.setVariable(BR.eventHandler, callback)
-        binding?.setVariable(BR.show, show)
-        var imgUrl = show.picPath
-        if (imgUrl.indexOf(',') != -1) {
-            imgUrl = imgUrl.substring(0, imgUrl.indexOf(','))
+        with(binding) {
+            eventHandler = callback
+            viewModel = ShowItemViewModel(itemView.context, show)
+            executePendingBindings()
         }
-        binding?.ivCover?.loadImage(imgUrl)
-        binding?.executePendingBindings()
     }
 }

@@ -1,11 +1,9 @@
 package io.github.wotaslive.showlist
 
 import android.arch.lifecycle.Observer
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +14,7 @@ import io.github.wotaslive.data.model.ShowInfo
 import io.github.wotaslive.databinding.FragShowListBinding
 import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.utils.obtainViewModel
+import io.github.wotaslive.widget.SpaceItemDecoration
 
 class ShowListFragment : Fragment(), ShowListAdapter.Callback {
     lateinit var viewModel: ShowListViewModel
@@ -46,19 +45,14 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
 
     private fun setupAdapter() {
         // recycler view
-        val verticalSpace = resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
-        val horizontalSpace = resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal)
         viewDataBinding.rvShow.layoutManager = LinearLayoutManager(context)
         viewDataBinding.rvShow.addItemDecoration(MaterialViewPagerHeaderDecorator())
-        viewDataBinding.rvShow.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-                super.getItemOffsets(outRect, view, parent, state)
-                outRect?.bottom = 0
-                outRect?.left = horizontalSpace
-                outRect?.right = horizontalSpace
-                outRect?.top = if (parent?.getChildAdapterPosition(view) == 0) 0 else verticalSpace
-            }
-        })
+        viewDataBinding.rvShow.addItemDecoration(
+                SpaceItemDecoration(
+                        resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
+                        resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                )
+        )
         viewDataBinding.rvShow.adapter = adapter
 
         // refresh layout

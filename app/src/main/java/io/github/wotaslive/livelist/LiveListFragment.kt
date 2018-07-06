@@ -1,13 +1,11 @@
 package io.github.wotaslive.livelist
 
 import android.arch.lifecycle.Observer
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.view.ContextThemeWrapper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,6 +20,7 @@ import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.player.PlayerActivity
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setClipboard
+import io.github.wotaslive.widget.SpaceItemDecoration
 
 
 class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
@@ -58,19 +57,14 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
 
     private fun setupAdapter() {
         // recycler view
-        val verticalSpace = resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
-        val horizontalSpace = resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal)
         viewDataBinding.rvLive.layoutManager = LinearLayoutManager(context)
         viewDataBinding.rvLive.addItemDecoration(MaterialViewPagerHeaderDecorator())
-        viewDataBinding.rvLive.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect?, view: View?, parent: RecyclerView?, state: RecyclerView.State?) {
-                super.getItemOffsets(outRect, view, parent, state)
-                outRect?.bottom = 0
-                outRect?.left = horizontalSpace
-                outRect?.right = horizontalSpace
-                outRect?.top = if (parent?.getChildAdapterPosition(view) == 0) 0 else verticalSpace
-            }
-        })
+        viewDataBinding.rvLive.addItemDecoration(
+                SpaceItemDecoration(
+                        resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
+                        resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                )
+        )
         viewDataBinding.rvLive.adapter = adapter
 
         // refresh layout
@@ -91,7 +85,7 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
         PlayerActivity.startPlayerActivity(context, room.streamPath, room.liveType == 1)
     }
 
-    override fun onLongClick(room: LiveInfo.ContentBean.RoomBean, anchor: View):Boolean {
+    override fun onLongClick(room: LiveInfo.ContentBean.RoomBean, anchor: View): Boolean {
         val wrapper = ContextThemeWrapper(context, R.style.AppTheme_Menu)
         val popupMenu = PopupMenu(wrapper, anchor)
         popupMenu.inflate(R.menu.menu_list_more)

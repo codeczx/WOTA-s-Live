@@ -5,8 +5,8 @@
     <data>
 
         <variable
-            name="show"
-            type="io.github.wotaslive.data.model.ShowInfo.ContentBean.ShowBean" />
+            name="viewModel"
+            type="io.github.wotaslive.showlist.ShowItemViewModel" />
 
         <variable
             name="eventHandler"
@@ -30,8 +30,9 @@
                 android:layout_height="0dp"
                 android:contentDescription="@string/empty_value"
                 android:foreground="?android:attr/selectableItemBackground"
-                android:onClick="@{() -> eventHandler.onCoverClick(show)}"
+                android:onClick="@{() -> eventHandler.onCoverClick(viewModel.show)}"
                 android:scaleType="centerCrop"
+                app:imageUrl="@{viewModel.url}"
                 app:layout_constraintDimensionRatio="4:3"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
@@ -45,7 +46,7 @@
                 android:layout_marginTop="@dimen/cardMarginVertical"
                 android:background="@drawable/bg_show_status"
                 android:padding="5dp"
-                android:text="@{show.isOpen?@string/show_status_Streaming:@string/show_status_future}"
+                android:text="@{viewModel.status}"
                 android:textColor="@android:color/white"
                 android:textSize="14sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -60,7 +61,7 @@
                 android:gravity="center_vertical"
                 android:maxLength="30"
                 android:singleLine="true"
-                android:text="@{show.title}"
+                android:text="@{viewModel.title}"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
                 app:layout_constraintBottom_toTopOf="@id/tv_subtitle"
@@ -75,7 +76,7 @@
                 android:ellipsize="end"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="@{show.subTitle}"
+                android:text="@{viewModel.subTitle}"
                 android:textColor="#666"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -90,7 +91,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/cardMarginHorizontal"
-                android:text="@{@string/live_start_time(show.startTime)}"
+                android:text="@{viewModel.time}"
                 android:textColor="#999"
                 android:textSize="12sp"
                 app:layout_constraintBaseline_toBaselineOf="@+id/tv_subtitle"

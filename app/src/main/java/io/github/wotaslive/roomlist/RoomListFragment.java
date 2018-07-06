@@ -1,7 +1,6 @@
 package io.github.wotaslive.roomlist;
 
 
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -29,6 +28,7 @@ import io.github.wotaslive.R;
 import io.github.wotaslive.data.model.RoomInfo;
 import io.github.wotaslive.login.LoginFragment;
 import io.github.wotaslive.room.RoomDetailActivity;
+import io.github.wotaslive.widget.SpaceItemDecoration;
 
 public class RoomListFragment extends Fragment implements RoomListContract.RoomListView, SwipeRefreshLayout.OnRefreshListener {
 
@@ -47,7 +47,7 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-							 Bundle savedInstanceState) {
+	                         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.frag_room_list, container, false);
 		unbinder = ButterKnife.bind(this, view);
 		return view;
@@ -61,7 +61,8 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 		String token = spUtils.getString(Constants.HEADER_KEY_TOKEN, "");
 		if (TextUtils.isEmpty(token)) {
 			showLoginButton();
-		} else {
+		}
+		else {
 			showRoomList();
 		}
 	}
@@ -81,18 +82,8 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 				RoomDetailActivity.startRoomDetailActivity(getContext(), contentBean));
 		mRvRoom.setLayoutManager(new LinearLayoutManager(getContext()));
 		mRvRoom.addItemDecoration(new MaterialViewPagerHeaderDecorator());
-		int verticalSpace = getContext().getResources().getDimensionPixelOffset(R.dimen.cardMarginVertical);
-		int horizontalSpace = getContext().getResources().getDimensionPixelOffset(R.dimen.cardMarginHorizontal);
-		mRvRoom.addItemDecoration(new RecyclerView.ItemDecoration() {
-			@Override
-			public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
-				super.getItemOffsets(outRect, view, parent, state);
-				outRect.bottom = 0;
-				outRect.left = horizontalSpace;
-				outRect.right = horizontalSpace;
-				outRect.top = parent.getChildAdapterPosition(view) == 0 ? 0 : verticalSpace;
-			}
-		});
+		mRvRoom.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
+				getResources().getDimensionPixelOffset(R.dimen.cardMarginVertical)));
 		mRvRoom.setAdapter(mAdapter);
 		mSrlRoom.setOnRefreshListener(this);
 	}
