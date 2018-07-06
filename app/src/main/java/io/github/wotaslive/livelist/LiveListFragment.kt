@@ -42,6 +42,7 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as MainActivity).obtainViewModel(LiveListViewModel::class.java).also {
             viewDataBinding.viewModel = it
+            viewDataBinding.setLifecycleOwner(this@LiveListFragment)
         }
         viewModel.liveListData.observe(this, Observer {
             if (viewModel.isLoadMore) {

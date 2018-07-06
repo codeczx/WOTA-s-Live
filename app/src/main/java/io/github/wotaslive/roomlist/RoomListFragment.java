@@ -1,7 +1,10 @@
 package io.github.wotaslive.roomlist;
 
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -11,8 +14,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
 import com.blankj.utilcode.util.SPUtils;
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator;
@@ -21,12 +22,11 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import butterknife.Unbinder;
 import io.github.wotaslive.Constants;
 import io.github.wotaslive.R;
 import io.github.wotaslive.data.model.RoomInfo;
-import io.github.wotaslive.login.LoginFragment;
+import io.github.wotaslive.login.LoginActivity;
 import io.github.wotaslive.room.RoomDetailActivity;
 import io.github.wotaslive.widget.SpaceItemDecoration;
 
@@ -37,16 +37,12 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 	@BindView(R.id.srl_room)
 	SwipeRefreshLayout mSrlRoom;
 	Unbinder unbinder;
-	@BindView(R.id.btn_ask_login)
-	Button mBtnAskLogin;
-	@BindView(R.id.fl_login)
-	FrameLayout mFlLogin;
 
 	private RoomListContract.RoomListPresenter mPresenter;
 	private RoomListAdapter mAdapter;
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+	public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
 	                         Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.frag_room_list, container, false);
 		unbinder = ButterKnife.bind(this, view);
@@ -60,16 +56,19 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 		SPUtils spUtils = SPUtils.getInstance(Constants.SP_NAME);
 		String token = spUtils.getString(Constants.HEADER_KEY_TOKEN, "");
 		if (TextUtils.isEmpty(token)) {
-			showLoginButton();
+			LoginActivity.Companion.startLoginActivity(getActivity());
 		}
 		else {
 			showRoomList();
 		}
 	}
 
-	private void showLoginButton() {
-		mSrlRoom.setVisibility(View.GONE);
-		mFlLogin.setVisibility(View.VISIBLE);
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == LoginActivity.requestCode && resultCode == Activity.RESULT_OK) {
+			showRoomList();
+		}
 	}
 
 	private void initData() {
@@ -112,8 +111,6 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 
 	@Override
 	public void showRoomList() {
-		mSrlRoom.setVisibility(View.VISIBLE);
-		mFlLogin.setVisibility(View.GONE);
 		initView();
 		initData();
 	}
@@ -121,16 +118,6 @@ public class RoomListFragment extends Fragment implements RoomListContract.RoomL
 	@Override
 	public void onRefresh() {
 		mPresenter.getRoomList();
-	}
-
-	@OnClick(R.id.btn_ask_login)
-	public void onViewClicked() {
-		showLoginDialog();
-	}
-
-	private void showLoginDialog() {
-		LoginFragment loginFragment = new LoginFragment();
-		loginFragment.show(getChildFragmentManager(), LoginFragment.TAG);
 	}
 
 	@Override

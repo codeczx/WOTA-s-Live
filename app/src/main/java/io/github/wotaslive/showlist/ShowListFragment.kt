@@ -35,6 +35,7 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as MainActivity).obtainViewModel(ShowListViewModel::class.java).also {
             viewDataBinding.viewModel = it
+            viewDataBinding.setLifecycleOwner(this@ShowListFragment)
         }
         viewModel.showListData.observe(this, Observer {
             adapter.addNewData(it)

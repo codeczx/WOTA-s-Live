@@ -5,6 +5,7 @@ import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.livelist.LiveListViewModel
+import io.github.wotaslive.login.LoginViewModel
 import io.github.wotaslive.main.MainViewModel
 import io.github.wotaslive.showlist.ShowListViewModel
 import java.lang.IllegalArgumentException
@@ -24,6 +25,8 @@ class ViewModelFactory private constructor(
                         LiveListViewModel(application, appRepository)
                     isAssignableFrom(ShowListViewModel::class.java) ->
                         ShowListViewModel(application, appRepository)
+                    isAssignableFrom(LoginViewModel::class.java) ->
+                        LoginViewModel(application, appRepository)
                     else ->
                         throw IllegalArgumentException("Unknown ViewModel class:${modelClass.name}")
                 }

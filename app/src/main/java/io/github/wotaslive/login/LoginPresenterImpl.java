@@ -19,20 +19,16 @@ import io.reactivex.schedulers.Schedulers;
  * Created by codeczx on 2017/11/7 0:09.
  * Class description:
  */
-public class LoginPresenterImpl implements LoginContract.LoginPresenter {
+public class LoginPresenterImpl {
 
 	private Context mContext;
-	private LoginContract.LoginView mView;
 	private CompositeDisposable mCompositeDisposable;
 
-	LoginPresenterImpl(Context context, LoginContract.LoginView view) {
+	LoginPresenterImpl(Context context) {
 		mContext = context;
-		mView = view;
-		mView.setPresenter(this);
 		mCompositeDisposable = new CompositeDisposable();
 	}
 
-	@Override
 	public void performLogin(String username, String password) {
 		Disposable disposable = AppRepository.getInstance().login(username, password)
 				.subscribeOn(Schedulers.io())
@@ -42,12 +38,10 @@ public class LoginPresenterImpl implements LoginContract.LoginPresenter {
 					spUtils.put(Constants.HEADER_KEY_TOKEN, loginInfo.getContent().getToken());
 					spUtils.put(Constants.SP_FRIENDS, new Gson().toJson(loginInfo.getContent().getFriends()));
 					EventBus.getDefault().post(new LoginEvent());
-					mView.dismiss();
 				}, Throwable::printStackTrace);
 		mCompositeDisposable.add(disposable);
 	}
 
-	@Override
 	public void unSubscribe() {
 		if (!mCompositeDisposable.isDisposed()) {
 			mCompositeDisposable.dispose();
