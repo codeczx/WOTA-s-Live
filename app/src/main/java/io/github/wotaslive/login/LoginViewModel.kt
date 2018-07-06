@@ -3,6 +3,7 @@ package io.github.wotaslive.login
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.databinding.ObservableField
+import com.blankj.utilcode.util.RegexUtils
 import com.blankj.utilcode.util.SPUtils
 import com.google.gson.Gson
 import io.github.wotaslive.Constants
@@ -27,7 +28,17 @@ class LoginViewModel(application: Application, private val appRepository: AppRep
      * 200 success
      */
     fun login() {
-        appRepository.login(username.get(), password.get())
+        val un = username.get() ?: ""
+        val pw = password.get() ?: ""
+        if (!RegexUtils.isMobileSimple(un)) {
+            loginStatusCommand.value = R.string.username_format_error
+            return
+        }
+        if (pw.length < 6) {
+            loginStatusCommand.value = R.string.password_format_error
+            return
+        }
+        appRepository.login(un, pw)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
@@ -36,6 +47,8 @@ class LoginViewModel(application: Application, private val appRepository: AppRep
                             val spUtils = SPUtils.getInstance(Constants.SP_NAME)
                             spUtils.put(Constants.HEADER_KEY_TOKEN, it.content.token)
                             spUtils.put(Constants.SP_FRIENDS, Gson().toJson(it.content.friends))
+                            spUtils.put(Constants.SP_USERNAME, un)
+                            spUtils.put(Constants.SP_PASSWORD, pw)
                             loginSuccessCommand.call()
                         }
                         400 ->

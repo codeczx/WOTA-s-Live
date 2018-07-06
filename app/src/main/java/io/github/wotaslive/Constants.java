@@ -22,6 +22,8 @@ public class Constants {
 
 	public static final String SP_NAME = "wota";
 	public static final String SP_FRIENDS = "friends";
+	public static final String SP_USERNAME = "username";
+	public static final String SP_PASSWORD = "password";
 
 	public static final String URL = "url";
 	public static final String IS_LIVE = "is_live";

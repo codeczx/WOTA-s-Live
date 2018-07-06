@@ -6,17 +6,20 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.support.v7.graphics.Palette
+import android.text.TextUtils
+import com.blankj.utilcode.util.SPUtils
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.header.HeaderDesign
+import com.google.gson.Gson
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.github.wotaslive.Constants
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.RecommendInfo
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -44,7 +47,23 @@ class MainPresenterImpl(view: MainContract.MainView) : MainContract.MainPresente
             else
                 context.finish()
         }
+        refreshToken()
+    }
 
+    private fun refreshToken() {
+        val spUtils = SPUtils.getInstance(Constants.SP_NAME)
+        val username = spUtils.getString(Constants.SP_USERNAME)
+        val password = spUtils.getString(Constants.SP_PASSWORD)
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) return
+        AppRepository.getInstance().login(username, password)
+                .filter { it.status == 200 }
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({
+                    spUtils.put(Constants.HEADER_KEY_TOKEN, it.content.token)
+                    spUtils.put(Constants.SP_FRIENDS, Gson().toJson(it.content.friends))
+                },
+                        Throwable::printStackTrace)
     }
 
     private fun initHeader(context: Context) {
