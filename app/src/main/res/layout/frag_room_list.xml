@@ -1,19 +1,21 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-			 xmlns:tools="http://schemas.android.com/tools"
-			 android:layout_width="match_parent"
-			 android:layout_height="match_parent"
-			 tools:context=".roomlist.RoomListFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<android.support.v4.widget.SwipeRefreshLayout
-		android:id="@+id/srl_room"
-		android:layout_width="match_parent"
-		android:layout_height="match_parent">
+    <data>
 
-		<android.support.v7.widget.RecyclerView
-			android:id="@+id/rv_room"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"/>
+        <variable
+            name="viewModel"
+            type="io.github.wotaslive.roomlist.RoomListViewModel" />
+    </data>
 
-	</android.support.v4.widget.SwipeRefreshLayout>
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/srl_room"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-</FrameLayout>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_room"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</layout>

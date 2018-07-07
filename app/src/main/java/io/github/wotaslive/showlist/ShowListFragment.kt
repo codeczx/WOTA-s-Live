@@ -42,10 +42,10 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
             viewDataBinding.srlShow.finishRefresh()
         })
         setupAdapter()
+        setupRefresh()
     }
 
     private fun setupAdapter() {
-        // recycler view
         viewDataBinding.rvShow.layoutManager = LinearLayoutManager(context)
         viewDataBinding.rvShow.addItemDecoration(MaterialViewPagerHeaderDecorator())
         viewDataBinding.rvShow.addItemDecoration(
@@ -55,8 +55,9 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
                 )
         )
         viewDataBinding.rvShow.adapter = adapter
+    }
 
-        // refresh layout
+    private fun setupRefresh() {
         viewDataBinding.srlShow.setEnableLoadMore(false)
         viewDataBinding.srlShow.setRefreshHeader(MaterialHeader(context))
         viewDataBinding.srlShow.setOnRefreshListener { viewModel.start() }

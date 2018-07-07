@@ -54,10 +54,10 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
             }
         })
         setupAdapter()
+        setupRefresh()
     }
 
     private fun setupAdapter() {
-        // recycler view
         viewDataBinding.rvLive.layoutManager = LinearLayoutManager(context)
         viewDataBinding.rvLive.addItemDecoration(MaterialViewPagerHeaderDecorator())
         viewDataBinding.rvLive.addItemDecoration(
@@ -67,8 +67,9 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
                 )
         )
         viewDataBinding.rvLive.adapter = adapter
+    }
 
-        // refresh layout
+    private fun setupRefresh() {
         viewDataBinding.srlLive.setEnableAutoLoadMore(true)
         viewDataBinding.srlLive.setRefreshHeader(MaterialHeader(context))
         viewDataBinding.srlLive.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
