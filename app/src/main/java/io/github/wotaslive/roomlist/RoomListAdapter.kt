@@ -5,7 +5,6 @@ import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.orhanobut.logger.Logger
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.RoomInfo
 import io.github.wotaslive.databinding.ItemRoomBinding
@@ -23,7 +22,6 @@ class RoomListAdapter(private val callback: Callback) :
     }
 
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
-        Logger.d("bind")
         getItem(position).let {
             with(holder) {
                 bind(it)

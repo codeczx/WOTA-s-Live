@@ -61,7 +61,6 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
 
     private fun setupRefresh() {
         with(viewDataBinding.srlShow) {
-            setEnableLoadMore(false)
             setRefreshHeader(MaterialHeader(context))
             setOnRefreshListener { viewModel.start() }
         }

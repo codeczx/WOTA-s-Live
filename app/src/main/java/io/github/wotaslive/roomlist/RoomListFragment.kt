@@ -81,7 +81,6 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
 
     private fun setupRefresh() {
         with(viewDataBinding.srlRoom) {
-            setEnableAutoLoadMore(false)
             setRefreshHeader(MaterialHeader(context))
             setOnRefreshListener {
                 viewModel.start()
