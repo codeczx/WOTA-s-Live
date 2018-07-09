@@ -26,7 +26,7 @@ public class PlayerActivity extends AppCompatActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_player);
+		setContentView(R.layout.act_player);
 		ButterKnife.bind(this);
 		initView();
 	}

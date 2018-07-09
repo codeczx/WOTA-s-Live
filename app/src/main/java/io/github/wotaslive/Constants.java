@@ -30,6 +30,7 @@ public class Constants {
 	public static final String ROOM_ID = "room_id";
 	public static final String ROOM_NAME = "room_name";
 	public static final String ROOM_CREATOR = "room_creator";
+	public static final String ROOM_BG_PATH = "room_bg_path";
 
 	public static final String MESSAGE_TYPE_TEXT = "text";
 	public static final String MESSAGE_TYPE_IMAGE = "image";

@@ -10,7 +10,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
-import com.scwang.smartrefresh.header.MaterialHeader
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.github.wotaslive.R
@@ -73,7 +72,6 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
     private fun setupRefresh() {
         with(viewDataBinding.srlLive) {
             setEnableAutoLoadMore(true)
-            setRefreshHeader(MaterialHeader(context))
             setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
                 override fun onLoadMore(refreshLayout: RefreshLayout) {
                     viewModel.loadLives(true)

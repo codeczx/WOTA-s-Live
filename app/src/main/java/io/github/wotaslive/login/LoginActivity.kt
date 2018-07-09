@@ -20,14 +20,16 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = obtainViewModel(LoginViewModel::class.java)
         viewDataBinding = DataBindingUtil.setContentView(this, R.layout.act_login)
-        viewDataBinding.viewModel = viewModel
-        viewDataBinding.setLifecycleOwner(this)
-        viewDataBinding.fabLogin.setOnClickListener {
-            viewModel.login()
+        with(viewDataBinding) {
+            viewModel = viewModel
+            setLifecycleOwner(this@LoginActivity)
+            fabLogin.setOnClickListener {
+                this@LoginActivity.viewModel.login()
+            }
+            root.setupSnackbar(this@LoginActivity,
+                    this@LoginActivity.viewModel.loginStatusCommand,
+                    Snackbar.LENGTH_LONG)
         }
-        viewDataBinding.root.setupSnackbar(this,
-                viewModel.loginStatusCommand,
-                Snackbar.LENGTH_LONG)
         viewModel.loginSuccessCommand.observe(this, Observer {
             setResult(Activity.RESULT_OK)
             finish()

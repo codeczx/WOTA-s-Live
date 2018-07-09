@@ -12,7 +12,6 @@ import android.view.View
 import android.view.ViewGroup
 import com.blankj.utilcode.util.SPUtils
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
-import com.scwang.smartrefresh.header.MaterialHeader
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.RoomInfo
@@ -81,7 +80,6 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
 
     private fun setupRefresh() {
         with(viewDataBinding.srlRoom) {
-            setRefreshHeader(MaterialHeader(context))
             setOnRefreshListener {
                 viewModel.start()
             }
@@ -89,7 +87,9 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
     }
 
     override fun onRoomClick(content: RoomInfo.ContentBean) {
-        RoomDetailActivity.startRoomDetailActivity(context, content)
+        context?.let {
+            RoomDetailActivity.startRoomDetailActivity(it, content)
+        }
     }
 
     companion object {

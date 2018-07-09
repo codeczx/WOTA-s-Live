@@ -82,7 +82,6 @@ dependencies {
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'com.orhanobut:logger:2.1.1'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-10'
-    implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-10'
     //MaterialViewPager
     implementation 'com.github.florent37:materialviewpager:1.2.3'
     implementation 'com.flaviofaria:kenburnsview:1.0.7'

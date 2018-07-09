@@ -8,7 +8,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
-import com.scwang.smartrefresh.header.MaterialHeader
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ShowInfo
 import io.github.wotaslive.databinding.FragShowListBinding
@@ -61,7 +60,6 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
 
     private fun setupRefresh() {
         with(viewDataBinding.srlShow) {
-            setRefreshHeader(MaterialHeader(context))
             setOnRefreshListener { viewModel.start() }
         }
     }
