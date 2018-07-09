@@ -27,6 +27,12 @@ class LiveListViewModel(application: Application, private val appRepository: App
         compositeDisposable.add(appRepository.getLiveInfo(lastTime)
                 .map {
                     val list = ArrayList<LiveInfo.ContentBean.RoomBean>()
+                    val value = liveListData.value
+                    if (isLoadMore) {
+                        value?.let {
+                            list.addAll(it)
+                        }
+                    }
                     val live = it.content.liveList
                     val review = it.content.reviewList
                     live?.let {

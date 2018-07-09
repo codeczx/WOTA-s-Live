@@ -45,11 +45,10 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
             viewDataBinding.setLifecycleOwner(this@LiveListFragment)
         }
         viewModel.liveListData.observe(this, Observer {
+            adapter.submitList(it)
             if (viewModel.isLoadMore) {
-                adapter.addMoreData(it)
                 viewDataBinding.srlLive.finishLoadMore()
             } else {
-                adapter.addNewData(it)
                 viewDataBinding.srlLive.finishRefresh()
             }
         })
@@ -58,29 +57,33 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
     }
 
     private fun setupAdapter() {
-        viewDataBinding.rvLive.layoutManager = LinearLayoutManager(context)
-        viewDataBinding.rvLive.addItemDecoration(MaterialViewPagerHeaderDecorator())
-        viewDataBinding.rvLive.addItemDecoration(
-                SpaceItemDecoration(
-                        resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
-                        resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
-                )
-        )
-        viewDataBinding.rvLive.adapter = adapter
+        with(viewDataBinding.rvLive) {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(MaterialViewPagerHeaderDecorator())
+            addItemDecoration(
+                    SpaceItemDecoration(
+                            resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
+                            resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                    )
+            )
+            adapter = this@LiveListFragment.adapter
+        }
     }
 
     private fun setupRefresh() {
-        viewDataBinding.srlLive.setEnableAutoLoadMore(true)
-        viewDataBinding.srlLive.setRefreshHeader(MaterialHeader(context))
-        viewDataBinding.srlLive.setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
-            override fun onLoadMore(refreshLayout: RefreshLayout) {
-                viewModel.loadLives(true)
-            }
+        with(viewDataBinding.srlLive) {
+            setEnableAutoLoadMore(true)
+            setRefreshHeader(MaterialHeader(context))
+            setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+                override fun onLoadMore(refreshLayout: RefreshLayout) {
+                    viewModel.loadLives(true)
+                }
 
-            override fun onRefresh(refreshLayout: RefreshLayout) {
-                viewModel.loadLives(false)
-            }
-        })
+                override fun onRefresh(refreshLayout: RefreshLayout) {
+                    viewModel.loadLives(false)
+                }
+            })
+        }
     }
 
     override fun onCoverClick(room: LiveInfo.ContentBean.RoomBean) {
@@ -90,17 +93,19 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
     override fun onLongClick(room: LiveInfo.ContentBean.RoomBean, anchor: View): Boolean {
         val wrapper = ContextThemeWrapper(context, R.style.AppTheme_Menu)
         val popupMenu = PopupMenu(wrapper, anchor)
-        popupMenu.inflate(R.menu.menu_list_more)
-        popupMenu.setOnMenuItemClickListener { menuItem ->
-            when (menuItem.itemId) {
-                R.id.List_copy_address -> {
-                    context?.setClipboard(room.streamPath)
-                    return@setOnMenuItemClickListener true
+        with(popupMenu) {
+            inflate(R.menu.menu_list_more)
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.List_copy_address -> {
+                        context?.setClipboard(room.streamPath)
+                        return@setOnMenuItemClickListener true
+                    }
                 }
+                false
             }
-            false
+            show()
         }
-        popupMenu.show()
         return true
     }
 

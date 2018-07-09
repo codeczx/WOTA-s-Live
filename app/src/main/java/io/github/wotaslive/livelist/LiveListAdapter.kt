@@ -1,6 +1,7 @@
 package io.github.wotaslive.livelist
 
 import android.databinding.DataBindingUtil
+import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,8 +10,8 @@ import io.github.wotaslive.R
 import io.github.wotaslive.data.model.LiveInfo
 import io.github.wotaslive.databinding.ItemLiveBinding
 
-class LiveListAdapter(private val callback: CallBack) : RecyclerView.Adapter<LiveViewHolder>() {
-    private val data = ArrayList<LiveInfo.ContentBean.RoomBean>()
+class LiveListAdapter(private val callback: CallBack) :
+        ListAdapter<LiveInfo.ContentBean.RoomBean, LiveViewHolder>(LiveListDiffCallBack()) {
 
     interface CallBack {
         fun onCoverClick(room: LiveInfo.ContentBean.RoomBean)
@@ -22,27 +23,12 @@ class LiveListAdapter(private val callback: CallBack) : RecyclerView.Adapter<Liv
                 R.layout.item_live, parent, false), callback)
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
     override fun onBindViewHolder(holderLive: LiveViewHolder, position: Int) {
-        holderLive.bind(data[position])
-    }
-
-    fun addNewData(list: List<LiveInfo.ContentBean.RoomBean>?) {
-        list?.let {
-            data.clear()
-            data.addAll(it)
-            notifyDataSetChanged()
-        }
-    }
-
-    fun addMoreData(list: List<LiveInfo.ContentBean.RoomBean>?) {
-        list?.let {
-            val size = data.size
-            data.addAll(it)
-            notifyItemRangeInserted(size + 1, it.size)
+        getItem(position).let {
+            with(holderLive) {
+                bind(it)
+                itemView.tag = it
+            }
         }
     }
 }

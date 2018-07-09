@@ -1,15 +1,17 @@
 package io.github.wotaslive.roomlist
 
 import android.databinding.DataBindingUtil
+import android.support.v7.recyclerview.extensions.ListAdapter
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.orhanobut.logger.Logger
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.RoomInfo
 import io.github.wotaslive.databinding.ItemRoomBinding
 
-class RoomListAdapter(private val callback: Callback) : RecyclerView.Adapter<RoomViewHolder>() {
-    private val data = ArrayList<RoomInfo.ContentBean>()
+class RoomListAdapter(private val callback: Callback) :
+        ListAdapter<RoomInfo.ContentBean, RoomViewHolder>(RoomListDiffCallback()) {
 
     interface Callback {
         fun onRoomClick(content: RoomInfo.ContentBean)
@@ -20,19 +22,13 @@ class RoomListAdapter(private val callback: Callback) : RecyclerView.Adapter<Roo
                 R.layout.item_room, parent, false), callback)
     }
 
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
     override fun onBindViewHolder(holder: RoomViewHolder, position: Int) {
-        holder.bind(data[position])
-    }
-
-    fun addNewData(list: List<RoomInfo.ContentBean>?) {
-        list?.let {
-            data.clear()
-            data.addAll(it)
-            notifyDataSetChanged()
+        Logger.d("bind")
+        getItem(position).let {
+            with(holder) {
+                bind(it)
+                itemView.tag = it
+            }
         }
     }
 }
@@ -43,6 +39,7 @@ class RoomViewHolder(
     fun bind(content: RoomInfo.ContentBean) {
         with(binding) {
             viewModel = RoomItemViewModel(content)
+            eventHandler = callback
             executePendingBindings()
         }
     }

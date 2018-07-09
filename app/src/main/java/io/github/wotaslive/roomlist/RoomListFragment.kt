@@ -51,7 +51,7 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
             viewDataBinding.setLifecycleOwner(this@RoomListFragment)
         }
         viewModel.roomListData.observe(this, Observer {
-            adapter.addNewData(it)
+            adapter.submitList(it)
             viewDataBinding.srlRoom.finishRefresh()
         })
         setupAdapter()
@@ -66,22 +66,26 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
     }
 
     private fun setupAdapter() {
-        viewDataBinding.rvRoom.layoutManager = LinearLayoutManager(context)
-        viewDataBinding.rvRoom.addItemDecoration(MaterialViewPagerHeaderDecorator())
-        viewDataBinding.rvRoom.addItemDecoration(
-                SpaceItemDecoration(
-                        resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
-                        resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
-                )
-        )
-        viewDataBinding.rvRoom.adapter = adapter
+        with(viewDataBinding.rvRoom) {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(MaterialViewPagerHeaderDecorator())
+            addItemDecoration(
+                    SpaceItemDecoration(
+                            resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
+                            resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                    )
+            )
+            adapter = this@RoomListFragment.adapter
+        }
     }
 
     private fun setupRefresh() {
-        viewDataBinding.srlRoom.setEnableAutoLoadMore(false)
-        viewDataBinding.srlRoom.setRefreshHeader(MaterialHeader(context))
-        viewDataBinding.srlRoom.setOnRefreshListener {
-            viewModel.start()
+        with(viewDataBinding.srlRoom) {
+            setEnableAutoLoadMore(false)
+            setRefreshHeader(MaterialHeader(context))
+            setOnRefreshListener {
+                viewModel.start()
+            }
         }
     }
 

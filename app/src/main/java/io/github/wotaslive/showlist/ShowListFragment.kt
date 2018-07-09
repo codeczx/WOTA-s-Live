@@ -38,7 +38,7 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
             viewDataBinding.setLifecycleOwner(this@ShowListFragment)
         }
         viewModel.showListData.observe(this, Observer {
-            adapter.addNewData(it)
+            adapter.submitList(it)
             viewDataBinding.srlShow.finishRefresh()
         })
         setupAdapter()
@@ -46,21 +46,25 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
     }
 
     private fun setupAdapter() {
-        viewDataBinding.rvShow.layoutManager = LinearLayoutManager(context)
-        viewDataBinding.rvShow.addItemDecoration(MaterialViewPagerHeaderDecorator())
-        viewDataBinding.rvShow.addItemDecoration(
-                SpaceItemDecoration(
-                        resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
-                        resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
-                )
-        )
-        viewDataBinding.rvShow.adapter = adapter
+        with(viewDataBinding.rvShow) {
+            layoutManager = LinearLayoutManager(context)
+            addItemDecoration(MaterialViewPagerHeaderDecorator())
+            addItemDecoration(
+                    SpaceItemDecoration(
+                            resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
+                            resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                    )
+            )
+            adapter = this@ShowListFragment.adapter
+        }
     }
 
     private fun setupRefresh() {
-        viewDataBinding.srlShow.setEnableLoadMore(false)
-        viewDataBinding.srlShow.setRefreshHeader(MaterialHeader(context))
-        viewDataBinding.srlShow.setOnRefreshListener { viewModel.start() }
+        with(viewDataBinding.srlShow) {
+            setEnableLoadMore(false)
+            setRefreshHeader(MaterialHeader(context))
+            setOnRefreshListener { viewModel.start() }
+        }
     }
 
     override fun onCoverClick(show: ShowInfo.ContentBean.ShowBean) {
