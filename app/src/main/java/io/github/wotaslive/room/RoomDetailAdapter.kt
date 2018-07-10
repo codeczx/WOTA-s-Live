@@ -4,7 +4,6 @@ import android.arch.lifecycle.ViewModel
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -17,24 +16,23 @@ import io.github.wotaslive.room.viewmodel.ItemTextViewModel
 import io.github.wotaslive.room.viewmodel.ItemTimeViewModel
 
 class RoomDetailAdapter : ListAdapter<Any, RoomDetailAdapter.ItemViewHolder>(RoomDetailDiffCallback()) {
-    private val data = ArrayList<Any>()
 
     override fun getItemViewType(position: Int): Int {
-        val item = data[position]
+        val item = getItem(position)
         if (item is Long) {
             return R.layout.item_room_detail_time
-        } else {
-            when ((item as ExtInfo).messageObject) {
-                Constants.MESSAGE_TYPE_TEXT,
-                Constants.MESSAGE_TYPE_FANPAI_TEXT ->
-                    return R.layout.item_room_text
-                Constants.MESSAGE_TYPE_IMAGE ->
-                    return R.layout.item_room_detail_image
-                Constants.MESSAGE_TYPE_LIVE ->
-                    return R.layout.item_room_text
-            }
         }
-        return RecyclerView.INVALID_TYPE
+        return when ((item as ExtInfo).messageObject) {
+            Constants.MESSAGE_TYPE_TEXT,
+            Constants.MESSAGE_TYPE_FANPAI_TEXT ->
+                R.layout.item_room_text
+            Constants.MESSAGE_TYPE_IMAGE ->
+                R.layout.item_room_detail_image
+            Constants.MESSAGE_TYPE_LIVE ->
+                R.layout.item_room_text
+            else ->
+                R.layout.item_room_text
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
@@ -43,7 +41,7 @@ class RoomDetailAdapter : ListAdapter<Any, RoomDetailAdapter.ItemViewHolder>(Roo
     }
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
-        data[position].let {
+        getItem(position).let {
             with(holder) {
                 when (getItemViewType(position)) {
                     R.layout.item_room_text ->
@@ -55,17 +53,6 @@ class RoomDetailAdapter : ListAdapter<Any, RoomDetailAdapter.ItemViewHolder>(Roo
                 }
                 itemView.tag = it
             }
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return data.size
-    }
-
-    fun prepandData(list: List<Any>?) {
-        list?.let {
-            data.addAll(0, it)
-            notifyItemRangeInserted(0, it.size)
         }
     }
 

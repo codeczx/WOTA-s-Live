@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<dimen name="list_card_radius">5dp</dimen>
-	<dimen name="list_card_elevation">3dp</dimen>
-	<dimen name="list_card_height">360dp</dimen>
-	<dimen name="margin_horizontal">10dp</dimen>
-	<dimen name="margin_vertical">8dp</dimen>
-	<dimen name="margin_horizontal_large">16dp</dimen>
-	<dimen name="margin_vertical_large">16dp</dimen>
-	<dimen name="padding_bg_message_horizontal_large">20dp</dimen>
-	<dimen name="padding_bg_message_horizontal">12dp</dimen>
-	<dimen name="padding_bg_message_vertical">12dp</dimen>
-	<dimen name="popup_width">300dp</dimen>
-	<dimen name="popup_height">250dp</dimen>
+    <dimen name="list_card_radius">5dp</dimen>
+    <dimen name="list_card_elevation">3dp</dimen>
+    <dimen name="list_card_height">360dp</dimen>
+    <dimen name="margin_horizontal">10dp</dimen>
+    <dimen name="margin_vertical">8dp</dimen>
+    <dimen name="margin_horizontal_large">16dp</dimen>
+    <dimen name="margin_vertical_large">16dp</dimen>
+    <dimen name="padding_bg_message_horizontal_large">20dp</dimen>
+    <dimen name="padding_bg_message_horizontal">12dp</dimen>
+    <dimen name="padding_bg_message_vertical">12dp</dimen>
+    <dimen name="room_radius">10dp</dimen>
+    <dimen name="room_max_width">230dp</dimen>
+    <dimen name="room_max_img_width">150dp</dimen>
 </resources>

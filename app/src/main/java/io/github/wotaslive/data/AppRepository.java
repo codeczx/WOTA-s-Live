@@ -24,7 +24,6 @@ import io.github.wotaslive.data.model.RoomInfo;
 import io.github.wotaslive.data.model.RoomListRequestBody;
 import io.github.wotaslive.data.model.ShowInfo;
 import io.github.wotaslive.data.model.ShowRequestBody;
-
 import io.reactivex.Flowable;
 import okhttp3.OkHttpClient;
 import okhttp3.ResponseBody;
@@ -161,7 +160,7 @@ public class AppRepository {
 	}
 
 	public Flowable<RoomDetailInfo> getRoomDetailInfo(int roomId, long lastTime) {
-		RoomDetailRequestBody roomDetailRequestBody = new RoomDetailRequestBody(roomId, 0, lastTime, 20);
+		RoomDetailRequestBody roomDetailRequestBody = new RoomDetailRequestBody(roomId, 0, lastTime, DEFAULT_LITMIT);
 		return getRoomApi().getRoomDetail(roomDetailRequestBody);
 	}
 }

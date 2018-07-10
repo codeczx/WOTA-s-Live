@@ -60,6 +60,7 @@ public class ExtInfo {
 	private String senderLevel;
 	private String content;
 	private String text;
+	private String bodys;
 
 	public String getFaipaiName() {
 		return faipaiName;
@@ -267,5 +268,13 @@ public class ExtInfo {
 
 	public void setText(String text) {
 		this.text = text;
+	}
+
+	public String getBodys() {
+		return bodys;
+	}
+
+	public void setBodys(String bodys) {
+		this.bodys = bodys;
 	}
 }

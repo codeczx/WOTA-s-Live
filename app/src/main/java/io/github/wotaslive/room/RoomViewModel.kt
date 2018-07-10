@@ -35,13 +35,16 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .doFinally {
+                    list.addAll(0, roomDetailData.value.orEmpty())
                     roomDetailData.value = list
                 }
                 .subscribe {
                     if (firstSend - it.msgTime > defaultInterval) {
-                        list.add(0, firstSend)
+                        list.add(firstSend)
                     }
-                    list.add(0, gson.fromJson(it.extInfo, ExtInfo::class.java))
+                    val obj = gson.fromJson(it.extInfo, ExtInfo::class.java)
+                    obj.bodys = it.bodys
+                    list.add(obj)
                     firstSend = it.msgTime
                 }
         compositeDisposable.add(disposable)

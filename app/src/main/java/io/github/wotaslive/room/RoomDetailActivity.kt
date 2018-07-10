@@ -33,7 +33,7 @@ class RoomDetailActivity : AppCompatActivity() {
         viewModel.roomId = extras.getInt(Constants.ROOM_ID)
         viewModel.url.set(extras.getString(Constants.ROOM_BG_PATH))
         viewModel.roomDetailData.observe(this, Observer {
-            adapter.prepandData(it)
+            adapter.submitList(it)
             viewDataBinding.srlRoomDetail.finishRefresh()
         })
         viewModel.load()
@@ -49,8 +49,7 @@ class RoomDetailActivity : AppCompatActivity() {
                 }
             }
             with(rvRoomDetail) {
-                val llm = LinearLayoutManager(this@RoomDetailActivity)
-                layoutManager = llm
+                layoutManager = LinearLayoutManager(this@RoomDetailActivity, LinearLayoutManager.VERTICAL, true)
                 adapter = this@RoomDetailActivity.adapter
             }
         }
