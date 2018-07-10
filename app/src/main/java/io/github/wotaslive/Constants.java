@@ -35,6 +35,7 @@ public class Constants {
 	public static final String MESSAGE_TYPE_TEXT = "text";
 	public static final String MESSAGE_TYPE_IMAGE = "image";
 	public static final String MESSAGE_TYPE_LIVE = "live";
+	public static final String MESSAGE_TYPE_DIANTAI = "diantai";
 	public static final String MESSAGE_TYPE_IDOL_FLIP = "idolFlip";
 	public static final String MESSAGE_TYPE_FANPAI_TEXT = "faipaiText";
 }

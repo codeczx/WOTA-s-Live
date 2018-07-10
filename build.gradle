@@ -16,7 +16,7 @@ buildscript {
     }
 }
 
-ext{
+ext {
     minSdkVersion = 21
     targetSdkVersion = 28
     compileSdkVersion = 28
@@ -35,6 +35,7 @@ allprojects {
         google()
         jcenter()
         maven { url 'https://maven.google.com' }
+        maven { url "https://jitpack.io" }
     }
 }
 

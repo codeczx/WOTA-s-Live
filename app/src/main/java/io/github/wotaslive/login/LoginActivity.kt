@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.ActLoginBinding
 import io.github.wotaslive.utils.obtainViewModel
+import io.github.wotaslive.utils.setupActionBar
 import io.github.wotaslive.utils.setupSnackbar
 
 class LoginActivity : AppCompatActivity() {
@@ -20,6 +21,10 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         viewModel = obtainViewModel(LoginViewModel::class.java)
         viewDataBinding = DataBindingUtil.setContentView(this, R.layout.act_login)
+        setupActionBar(R.id.toolbar) {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         with(viewDataBinding) {
             viewModel = viewModel
             setLifecycleOwner(this@LoginActivity)

@@ -43,6 +43,10 @@ public class ExtInfo {
 	private String faipaiPortrait;
 	private String senderHonor;
 	private int referenceNumber;
+	private String referenceTitle;
+	private String referenceContent;
+	private String referencecoverImage;
+	private String referenceObjectId;
 	private String messageText;
 	private int dianzanNumber;
 	private int senderId;
@@ -276,5 +280,37 @@ public class ExtInfo {
 
 	public void setBodys(String bodys) {
 		this.bodys = bodys;
+	}
+
+	public String getReferenceTitle() {
+		return referenceTitle;
+	}
+
+	public void setReferenceTitle(String referenceTitle) {
+		this.referenceTitle = referenceTitle;
+	}
+
+	public String getReferenceContent() {
+		return referenceContent;
+	}
+
+	public void setReferenceContent(String referenceContent) {
+		this.referenceContent = referenceContent;
+	}
+
+	public String getReferencecoverImage() {
+		return referencecoverImage;
+	}
+
+	public void setReferencecoverImage(String referencecoverImage) {
+		this.referencecoverImage = referencecoverImage;
+	}
+
+	public String getReferenceObjectId() {
+		return referenceObjectId;
+	}
+
+	public void setReferenceObjectId(String referenceObjectId) {
+		this.referenceObjectId = referenceObjectId;
 	}
 }

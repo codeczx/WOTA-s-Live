@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="eventHandler"
+            type="io.github.wotaslive.room.RoomDetailAdapter.Callback" />
+
+        <variable
+            name="viewModel"
+            type="io.github.wotaslive.room.viewmodel.ItemImageViewModel" />
+    </data>
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/padding_bg_message_vertical"
+        android:paddingEnd="@dimen/margin_horizontal"
+        android:paddingStart="@dimen/margin_horizontal">
+
+        <ImageView
+            android:id="@+id/iv_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:contentDescription="@string/empty_value"
+            android:scaleType="centerCrop"
+            app:avatarUrl="@{viewModel.avatar}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tv_sender_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/margin_vertical"
+            android:text="@{viewModel.senderLevel}"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@id/iv_avatar"
+            app:layout_constraintStart_toStartOf="@id/iv_avatar"
+            app:layout_constraintTop_toBottomOf="@id/iv_avatar" />
+
+        <TextView
+            android:id="@+id/tv_sender_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_horizontal"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/margin_vertical"
+            android:text="@{viewModel.senderName}"
+            android:textSize="12sp"
+            app:layout_constraintStart_toEndOf="@+id/iv_avatar"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/iv_image"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/room_max_img_width"
+            android:layout_below="@id/tv_sender_name"
+            android:layout_marginStart="@dimen/margin_horizontal"
+            android:adjustViewBounds="true"
+            android:contentDescription="@string/empty_value"
+            android:maxWidth="@dimen/room_max_img_width"
+            android:onClick="@{()->eventHandler.onImageClick(viewModel.image)}"
+            android:scaleType="fitStart"
+            app:layout_constraintStart_toEndOf="@id/iv_avatar"
+            app:layout_constraintTop_toBottomOf="@id/tv_sender_name"
+            app:roundImageUrl="@{viewModel.image}" />
+    </android.support.constraint.ConstraintLayout>
+</layout>

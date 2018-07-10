@@ -8,12 +8,17 @@ import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentTransaction
 import android.support.v7.app.ActionBar
 import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.Toolbar
 import io.github.wotaslive.ViewModelFactory
 
 fun AppCompatActivity.setupActionBar(@IdRes toolbarId: Int, action: ActionBar.() -> Unit) {
-    setSupportActionBar(findViewById(toolbarId))
+    val toolbar: Toolbar = findViewById(toolbarId)
+    setSupportActionBar(toolbar)
     supportActionBar?.run {
         action()
+    }
+    toolbar.setNavigationOnClickListener {
+        onBackPressed()
     }
 }
 

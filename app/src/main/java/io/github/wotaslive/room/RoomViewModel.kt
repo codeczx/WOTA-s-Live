@@ -17,6 +17,7 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
     val url = ObservableField<String>()
     val roomDetailData = MutableLiveData<List<Any>>()
     var roomId = 0
+    val imageUrl = ObservableField<String>()
     private var firstSend = 0L
     private val compositeDisposable = CompositeDisposable()
     private var lastTime = 0L

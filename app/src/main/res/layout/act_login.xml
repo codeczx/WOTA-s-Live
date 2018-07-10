@@ -18,6 +18,21 @@
         android:fitsSystemWindows="false"
         tools:context=".login.LoginActivity">
 
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                android:text="@string/login" />
+        </android.support.design.widget.AppBarLayout>
+
         <android.support.design.widget.TextInputLayout
             android:id="@+id/til_username"
             android:layout_width="match_parent"
@@ -27,7 +42,7 @@
             app:counterMaxLength="11"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/appBar">
 
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
