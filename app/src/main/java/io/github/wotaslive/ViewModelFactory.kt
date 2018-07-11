@@ -22,7 +22,7 @@ class ViewModelFactory private constructor(
             with(modelClass) {
                 when {
                     isAssignableFrom(MainViewModel::class.java) ->
-                        MainViewModel(application)
+                        MainViewModel(application, appRepository)
                     isAssignableFrom(LiveListViewModel::class.java) ->
                         LiveListViewModel(application, appRepository)
                     isAssignableFrom(ShowListViewModel::class.java) ->

@@ -56,11 +56,12 @@
         <ImageView
             android:id="@+id/iv_image"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/room_max_img_width"
+            android:layout_height="wrap_content"
             android:layout_below="@id/tv_sender_name"
             android:layout_marginStart="@dimen/margin_horizontal"
             android:adjustViewBounds="true"
             android:contentDescription="@string/empty_value"
+            android:foreground="?android:attr/selectableItemBackground"
             android:maxWidth="@dimen/room_max_img_width"
             android:onClick="@{()->eventHandler.onImageClick(viewModel.image)}"
             android:scaleType="fitStart"

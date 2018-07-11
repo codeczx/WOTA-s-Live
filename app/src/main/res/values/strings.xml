@@ -29,4 +29,6 @@
     <string name="password_is_null">密码不能为空</string>
     <string name="password_wrong"> 密码错误</string>
 
+    <string name="friend_reload">已更新关注列表</string>
+
 </resources>

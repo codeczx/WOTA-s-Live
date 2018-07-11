@@ -1,6 +1,8 @@
 package io.github.wotaslive.utils;
 
 import android.databinding.BindingAdapter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.widget.ImageView;
 
@@ -31,10 +33,18 @@ public class ImageViewDataBinding {
 	@BindingAdapter("imageUrl")
 	public static void setImageUrl(ImageView imageView, String url) {
 		if (TextUtils.isEmpty(url)) return;
-		GlideApp.with(imageView.getContext())
-				.load(checkUrl(url))
-				.override(Target.SIZE_ORIGINAL)
-				.into(imageView);
+		if (url.startsWith("#")) {
+			GlideApp.with(imageView.getContext())
+					.load(new ColorDrawable(Color.parseColor(url)))
+					.into(imageView);
+		}
+		else {
+			GlideApp.with(imageView.getContext())
+					.load(checkUrl(url))
+					.override(Target.SIZE_ORIGINAL)
+					.dontAnimate()
+					.into(imageView);
+		}
 	}
 
 	@BindingAdapter("roundImageUrl")

@@ -17,6 +17,11 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/white"
+        android:clickable="true"
+        android:focusable="true"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{() -> eventHandler.onCoverClick(viewModel.room)}"
+        android:onLongClick="@{(v)->eventHandler.onLongClick(viewModel.room,v)}"
         app:cardCornerRadius="@dimen/list_card_radius"
         app:cardElevation="@dimen/list_card_elevation">
 
@@ -29,9 +34,6 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:contentDescription="@string/empty_value"
-                android:foreground="?android:attr/selectableItemBackground"
-                android:onClick="@{() -> eventHandler.onCoverClick(viewModel.room)}"
-                android:onLongClick="@{(v)->eventHandler.onLongClick(viewModel.room,v)}"
                 android:scaleType="centerCrop"
                 app:imageUrl="@{viewModel.url}"
                 app:layout_constraintDimensionRatio="4:3"

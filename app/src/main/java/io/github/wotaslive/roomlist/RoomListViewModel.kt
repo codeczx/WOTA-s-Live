@@ -8,7 +8,6 @@ import io.github.wotaslive.data.model.RoomInfo
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
-import java.util.*
 
 class RoomListViewModel(application: Application, private val appRepository: AppRepository) :
         AndroidViewModel(application) {
@@ -20,7 +19,9 @@ class RoomListViewModel(application: Application, private val appRepository: App
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    it.content.sortWith(Comparator { o1, o2 -> (o2.commentTimeMs - o1.commentTimeMs).toInt() })
+                    it.content.sortByDescending {
+                        it.commentTimeMs
+                    }
                     roomListData.value = it.content
                 }, Throwable::printStackTrace))
     }
