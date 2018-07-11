@@ -25,11 +25,6 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
         return viewDataBinding.root
     }
 
-    override fun onResume() {
-        super.onResume()
-        viewModel.start()
-    }
-
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as MainActivity).obtainViewModel(ShowListViewModel::class.java).also {
@@ -42,11 +37,13 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
         })
         setupAdapter()
         setupRefresh()
+        viewModel.start()
     }
 
     private fun setupAdapter() {
         with(viewDataBinding.rvShow) {
             layoutManager = LinearLayoutManager(context)
+            isNestedScrollingEnabled = false
             addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(

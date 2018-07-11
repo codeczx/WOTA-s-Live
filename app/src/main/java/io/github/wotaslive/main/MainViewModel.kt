@@ -2,6 +2,7 @@ package io.github.wotaslive.main
 
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.MutableLiveData
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
@@ -32,17 +33,25 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
     private val mHeaderArray = ArrayList<HeaderDesign>()
     private var maxImgSize = 3L
+    private val spUtils = SPUtils.getInstance(Constants.SP_NAME)
     val headerRefreshCommand = SingleLiveEvent<MaterialViewPager.Listener>()
     val friendsReloadCommand = SingleLiveEvent<Void>()
     val friendMessageCommand = SingleLiveEvent<Int>()
+    var isLogin = MutableLiveData<Boolean>()
+    lateinit var nickname: String
 
     fun start() {
         initHeader()
         refreshToken()
     }
 
+    fun loadInfo() {
+        nickname = spUtils.getString(Constants.SP_NICKNAME)
+        isLogin.value = spUtils.getString(Constants.HEADER_KEY_TOKEN).isNotEmpty()
+        friendsReloadCommand.call()
+    }
+
     private fun refreshToken() {
-        val spUtils = SPUtils.getInstance(Constants.SP_NAME)
         val username = spUtils.getString(Constants.SP_USERNAME)
         val password = spUtils.getString(Constants.SP_PASSWORD)
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) return
@@ -50,7 +59,7 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
                 .delay(1, TimeUnit.SECONDS)
                 .filter { it.status == 200 }
                 .flatMap {
-                    checkFriends(it.content, spUtils)
+                    checkFriends(it.content)
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -64,14 +73,14 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
         compositeDisposable.add(disposable)
     }
 
-    private fun checkFriends(content: LoginInfo.ContentBean, spUtils: SPUtils): Flowable<Boolean> {
+    private fun checkFriends(content: LoginInfo.ContentBean): Flowable<Boolean> {
         val gson = com.google.gson.Gson()
         return Flowable.create({
             with(content) {
                 val oldFriends = spUtils.getString(io.github.wotaslive.Constants.SP_FRIENDS)
                 val newFriends = gson.toJson(friends)
-                spUtils.put(io.github.wotaslive.Constants.HEADER_KEY_TOKEN, token)
-                spUtils.put(io.github.wotaslive.Constants.SP_FRIENDS, newFriends)
+                spUtils.put(Constants.HEADER_KEY_TOKEN, token)
+                spUtils.put(Constants.SP_FRIENDS, newFriends)
                 if (android.text.TextUtils.isEmpty(oldFriends)) {
                     it.onNext(true)
                 } else {

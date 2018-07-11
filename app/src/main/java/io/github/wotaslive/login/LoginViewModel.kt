@@ -15,8 +15,8 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class LoginViewModel(application: Application, private val appRepository: AppRepository) : AndroidViewModel(application) {
-    val username = ObservableField<String>("")
-    val password = ObservableField<String>("")
+    val username = ObservableField<String>()
+    val password = ObservableField<String>()
     val loginStatusCommand = SingleLiveEvent<Int>()
     val loginSuccessCommand = SingleLiveEvent<Void>()
     private val compositeDisposable = CompositeDisposable()
@@ -49,6 +49,7 @@ class LoginViewModel(application: Application, private val appRepository: AppRep
                             spUtils.put(Constants.SP_FRIENDS, Gson().toJson(it.content.friends))
                             spUtils.put(Constants.SP_USERNAME, un)
                             spUtils.put(Constants.SP_PASSWORD, pw)
+                            spUtils.put(Constants.SP_NICKNAME, it.content.userInfo.nickName)
                             loginSuccessCommand.call()
                         }
                         400 ->

@@ -38,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:theme="@style/AppTheme.Input"
             app:counterEnabled="true"
             app:counterMaxLength="11"
             app:layout_constraintEnd_toEndOf="parent"
@@ -47,6 +48,7 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_account_box_24px"
                 android:hint="@string/hint_username"
                 android:imeOptions="actionNext"
                 android:inputType="number"
@@ -58,6 +60,7 @@
             android:id="@+id/til_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:theme="@style/AppTheme.Input"
             app:counterEnabled="true"
             app:counterMaxLength="16"
             app:layout_constraintEnd_toEndOf="parent"
@@ -68,6 +71,7 @@
             <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:drawableStart="@drawable/ic_baseline_lock_24px"
                 android:hint="@string/hint_password"
                 android:imeOptions="actionDone"
                 android:inputType="textPassword"

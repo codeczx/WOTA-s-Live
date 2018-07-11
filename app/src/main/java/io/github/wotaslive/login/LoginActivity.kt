@@ -26,7 +26,7 @@ class LoginActivity : AppCompatActivity() {
             setDisplayShowHomeEnabled(true)
         }
         with(viewDataBinding) {
-            viewModel = viewModel
+            viewModel = this@LoginActivity.viewModel
             setLifecycleOwner(this@LoginActivity)
             fabLogin.setOnClickListener {
                 this@LoginActivity.viewModel.login()
