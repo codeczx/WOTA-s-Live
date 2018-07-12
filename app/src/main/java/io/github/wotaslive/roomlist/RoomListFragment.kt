@@ -29,6 +29,11 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
         return viewDataBinding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.start()
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as MainActivity).obtainViewModel(RoomListViewModel::class.java).also {
@@ -57,7 +62,6 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
         })
         setupAdapter()
         setupRefresh()
-        viewModel.start()
     }
 
     private fun setupAdapter() {
