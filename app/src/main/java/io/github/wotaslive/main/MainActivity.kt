@@ -42,6 +42,7 @@ class MainActivity : AppCompatActivity() {
         }
         subscribeUIBinding()
         initView()
+        viewModel.loadInfo()
         checkPermissions()
     }
 

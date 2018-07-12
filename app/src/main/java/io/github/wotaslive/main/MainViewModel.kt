@@ -56,7 +56,6 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
         val password = spUtils.getString(Constants.SP_PASSWORD)
         if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) return
         val disposable = appRepository.login(username, password)
-                .delay(1, TimeUnit.SECONDS)
                 .filter { it.status == 200 }
                 .flatMap {
                     checkFriends(it.content)
@@ -95,6 +94,7 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
 
     private fun initHeader() {
         val disposable = Flowable.mergeArray(appRepository.recommendList
+                .delay(3, TimeUnit.SECONDS)
                 .flatMap { t: RecommendInfo -> Flowable.fromIterable(t.content) }
                 .take(maxImgSize)
                 .flatMap { t -> Flowable.just(AppRepository.IMG_BASE_URL + t.picPath) }

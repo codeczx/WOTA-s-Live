@@ -3,6 +3,7 @@ package io.github.wotaslive.livelist
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.view.ContextThemeWrapper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
 import android.view.LayoutInflater
@@ -85,22 +86,20 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
     }
 
     override fun onLongClick(room: LiveInfo.ContentBean.RoomBean, anchor: View): Boolean {
-//        val wrapper = ContextThemeWrapper(context, R.style.AppTheme_Menu)
-        context?.let {
-            val popupMenu = PopupMenu(it, anchor)
-            with(popupMenu) {
-                inflate(R.menu.menu_list_more)
-                setOnMenuItemClickListener { menuItem ->
-                    when (menuItem.itemId) {
-                        R.id.List_copy_address -> {
-                            context?.setClipboard(room.streamPath)
-                            return@setOnMenuItemClickListener true
-                        }
+        val wrapper = ContextThemeWrapper(context, R.style.AppTheme_Menu)
+        val popupMenu = PopupMenu(wrapper, anchor)
+        with(popupMenu) {
+            inflate(R.menu.menu_list_more)
+            setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.List_copy_address -> {
+                        context?.setClipboard(room.streamPath)
+                        return@setOnMenuItemClickListener true
                     }
-                    false
                 }
-                show()
+                false
             }
+            show()
         }
         return true
     }
