@@ -1,5 +1,7 @@
 package io.github.wotaslive.data;
 
+import io.github.wotaslive.data.model.BoardPageInfo;
+import io.github.wotaslive.data.model.BoardPageRequestBody;
 import io.github.wotaslive.data.model.LiveInfo;
 import io.github.wotaslive.data.model.LiveOneRequestBody;
 import io.github.wotaslive.data.model.LiveRequestBody;
@@ -39,4 +41,10 @@ public interface ApiServices {
 
 	@POST("imsystem/api/im/v1/member/room/message/mainpage")
 	Flowable<RoomDetailInfo> getRoomDetail(@Body RoomDetailRequestBody roomDetailRequestBody);
+
+//	@POST("https://ppayqa.48.cn/idolanswersystem/api/idolanswer/v1/question_answer/detail")
+//	Flowable<String> getFanpaiAnswer(@Body )
+
+	@POST("imsystem/api/im/v1/member/room/message/boardpage")
+	Flowable<BoardPageInfo> getRoomBoard(@Body BoardPageRequestBody boardPageRequestBody);
 }

@@ -65,6 +65,34 @@ public class ExtInfo {
 	private String content;
 	private String text;
 	private String bodys;
+	private String phoneName;
+	private long msgTime;
+
+	public long getMsgTime() {
+		return msgTime;
+	}
+
+	public void setMsgTime(long msgTime) {
+		this.msgTime = msgTime;
+	}
+
+	public String getPhoneName() {
+		return phoneName;
+	}
+
+	public void setPhoneName(String phoneName) {
+		this.phoneName = phoneName;
+	}
+
+	public String getPhoneSystemVersion() {
+		return phoneSystemVersion;
+	}
+
+	public void setPhoneSystemVersion(String phoneSystemVersion) {
+		this.phoneSystemVersion = phoneSystemVersion;
+	}
+
+	private String phoneSystemVersion;
 
 	public String getFaipaiName() {
 		return faipaiName;

@@ -28,20 +28,20 @@ android {
         javaMaxHeapSize "3g"
         dexInProcess = true
     }
-    signingConfigs {
-        debug {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('/debug.keystore')
-            storePassword 'android'
-        }
-        release {
-            keyAlias 'androiddebugkey'
-            keyPassword 'android'
-            storeFile file('/debug.keystore')
-            storePassword 'android'
-        }
-    }
+//    signingConfigs {
+//        debug {
+//            keyAlias 'androiddebugkey'
+//            keyPassword 'android'
+//            storeFile file('/debug.keystore')
+//            storePassword 'android'
+//        }
+//        release {
+//            keyAlias 'androiddebugkey'
+//            keyPassword 'android'
+//            storeFile file('/debug.keystore')
+//            storePassword 'android'
+//        }
+//    }
     dataBinding {
         enabled = true
     }
