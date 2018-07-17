@@ -29,33 +29,61 @@
 
         <ImageView
             android:id="@+id/iv_bg"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/empty_value"
             android:scaleType="centerCrop"
             app:imageUrl="@{viewModel.url}"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appBar" />
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/srl_room_detail"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
+            app:layout_constrainedHeight="true"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBar"
-            app:srlAccentColor="@color/colorAccent"
-            app:srlEnableLoadMore="false"
-            app:srlPrimaryColor="@color/colorPrimary">
+            app:layout_constraintVertical_weight="1" />
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/rv_room_detail"
+        <android.support.v4.widget.DrawerLayout
+            android:id="@+id/drawer"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constrainedHeight="true"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBar"
+            app:layout_constraintVertical_weight="1">
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/srl_room_detail"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:srlAccentColor="@color/colorAccent"
+                app:srlEnableLoadMore="false"
+                app:srlPrimaryColor="@color/colorPrimary">
 
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_room_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/srl_room_board"
+                android:layout_width="300dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="end"
+                android:background="@android:color/white"
+                app:srlAccentColor="@color/colorAccent"
+                app:srlEnableAutoLoadMore="true"
+                app:srlPrimaryColor="@color/colorPrimary">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/rv_room_board"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        </android.support.v4.widget.DrawerLayout>
     </android.support.constraint.ConstraintLayout>
 </layout>

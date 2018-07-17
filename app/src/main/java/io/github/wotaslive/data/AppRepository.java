@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.github.wotaslive.Constants;
+import io.github.wotaslive.data.model.BoardPageInfo;
+import io.github.wotaslive.data.model.BoardPageRequestBody;
 import io.github.wotaslive.data.model.LiveInfo;
 import io.github.wotaslive.data.model.LiveOneRequestBody;
 import io.github.wotaslive.data.model.LiveRequestBody;
@@ -38,6 +40,7 @@ public class AppRepository {
 	private static final String OTHER_BASE_URL = "https://pother.48.cn/";
 	private static final String ROOM_BASE_URL = "https://pjuju.48.cn/";
 	private static final String USER_BASE_URL = "https://puser.48.cn/";
+	private static final String JUJU_BASE_URL = "https://pjuju.48.cn/";
 
 	private static final int DEFAULT_LITMIT = 10;
 	private volatile static AppRepository mInstance;
@@ -45,6 +48,7 @@ public class AppRepository {
 	private ApiServices mOtherApi;
 	private ApiServices mRoomApi;
 	private ApiServices mUserApi;
+	private ApiServices mJujuApi;
 
 	private AppRepository() {
 	}
@@ -112,6 +116,19 @@ public class AppRepository {
 		return mInstance.mUserApi;
 	}
 
+	private ApiServices getJujuApi() {
+		if (mInstance.mJujuApi == null) {
+			Retrofit retrofit = new Retrofit.Builder()
+					.client(getOkHttpClient())
+					.baseUrl(JUJU_BASE_URL)
+					.addConverterFactory(GsonConverterFactory.create())
+					.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+					.build();
+			mInstance.mJujuApi = retrofit.create(ApiServices.class);
+		}
+		return mInstance.mJujuApi;
+	}
+
 	private static OkHttpClient getOkHttpClient() {
 		return new OkHttpClient.Builder()
 				.addInterceptor(new HeaderInterceptor())
@@ -162,5 +179,10 @@ public class AppRepository {
 	public Flowable<RoomDetailInfo> getRoomDetailInfo(int roomId, long lastTime) {
 		RoomDetailRequestBody roomDetailRequestBody = new RoomDetailRequestBody(roomId, 0, lastTime, DEFAULT_LITMIT);
 		return getRoomApi().getRoomDetail(roomDetailRequestBody);
+	}
+
+	public Flowable<BoardPageInfo> getRoomBoard(int roomId, long lastTime) {
+		BoardPageRequestBody boardPageRequestBody = new BoardPageRequestBody(roomId, lastTime, DEFAULT_LITMIT, false);
+		return getJujuApi().getRoomBoard(boardPageRequestBody);
 	}
 }

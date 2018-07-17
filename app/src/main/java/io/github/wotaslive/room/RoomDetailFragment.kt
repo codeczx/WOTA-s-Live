@@ -18,6 +18,7 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
     private lateinit var viewModel: RoomViewModel
     private lateinit var viewDataBinding: FragRoomDetailBinding
     private val adapter = RoomDetailAdapter(this)
+    private val boardAdapter = RoomBoardAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewDataBinding = FragRoomDetailBinding.inflate(inflater, container, false)
@@ -39,16 +40,24 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
             val extras = it.intent.extras
             viewModel.roomId = extras.getInt(Constants.ROOM_ID)
             viewModel.url.set(extras.getString(Constants.ROOM_BG_PATH))
-            viewModel.roomDetailData.observe(this, Observer {
-                adapter.submitList(it)
-                viewDataBinding.srlRoomDetail.finishRefresh()
-            })
             it.setupActionBar(R.id.toolbar) {
                 title = extras.getString(Constants.ROOM_CREATOR) + ":" + extras.getString(Constants.ROOM_NAME)
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
         }
+        viewModel.roomDetailData.observe(this, Observer {
+            adapter.submitList(it)
+            viewDataBinding.srlRoomDetail.finishRefresh()
+        })
+        viewModel.roomBoardData.observe(this, Observer {
+            boardAdapter.submitList(it)
+            if (viewModel.isLoadMore) {
+                viewDataBinding.srlRoomBoard.finishLoadMore()
+            } else {
+                viewDataBinding.srlRoomBoard.finishRefresh()
+            }
+        })
         setupBinding()
     }
 
@@ -56,15 +65,27 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
         with(viewDataBinding) {
             viewModel = this@RoomDetailFragment.viewModel
             setLifecycleOwner(this@RoomDetailFragment)
-            with(srlRoomDetail) {
-                setOnRefreshListener {
-                    this@RoomDetailFragment.viewModel.load()
-                }
+        }
+        with(viewDataBinding.srlRoomDetail) {
+            setOnRefreshListener {
+                viewModel.loadRoom()
             }
-            with(rvRoomDetail) {
-                layoutManager = LinearLayoutManager(context, LinearLayoutManager.VERTICAL, true)
-                adapter = this@RoomDetailFragment.adapter
+        }
+        with(viewDataBinding.rvRoomDetail) {
+            layoutManager = android.support.v7.widget.LinearLayoutManager(context, android.support.v7.widget.LinearLayoutManager.VERTICAL, true)
+            adapter = this@RoomDetailFragment.adapter
+        }
+        with(viewDataBinding.srlRoomBoard) {
+            setOnRefreshListener {
+                viewModel.loadBoard(false)
             }
+            setOnLoadMoreListener {
+                viewModel.loadBoard(true)
+            }
+        }
+        with(viewDataBinding.rvRoomBoard) {
+            layoutManager = android.support.v7.widget.LinearLayoutManager(context)
+            adapter = boardAdapter
         }
     }
 
