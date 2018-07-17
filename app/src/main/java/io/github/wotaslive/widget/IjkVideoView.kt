@@ -56,7 +56,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
 
     // All the stuff we need for playing and showing a video
     private var mSurfaceHolder: IRenderView.ISurfaceHolder? = null
-    private lateinit var mMediaPlayer: IMediaPlayer
+    private var mMediaPlayer: IMediaPlayer? = null
     // private int         mAudioSession;
     private var mVideoWidth: Int = 0
     private var mVideoHeight: Int = 0
@@ -306,10 +306,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     }
 
     private val isInPlaybackState: Boolean
-        get() = mMediaPlayer != null &&
-                mCurrentState != STATE_ERROR &&
-                mCurrentState != STATE_IDLE &&
-                mCurrentState != STATE_PREPARING
+        get() = mCurrentState != STATE_ERROR && mCurrentState != STATE_IDLE && mCurrentState != STATE_PREPARING
     private var mCurrentAspectRatioIndex = 1
     private var mCurrentAspectRatio = s_allAspectRatio[1]
 
@@ -371,7 +368,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     fun setRenderView(renderView: IRenderView?) {
         if (mRenderView != null) {
             if (mMediaPlayer != null)
-                mMediaPlayer.setDisplay(null)
+                mMediaPlayer?.setDisplay(null)
 
             val renderUIView = mRenderView!!.view
             mRenderView!!.removeRenderCallback(mSHCallback)
@@ -443,8 +440,9 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     // REMOVED: mPendingSubtitleTracks
 
     fun stopPlayback() {
-        mMediaPlayer.stop()
-        mMediaPlayer.release()
+        mMediaPlayer?.stop()
+        mMediaPlayer?.release()
+        mMediaPlayer = null
         mCurrentState = STATE_IDLE
         mTargetState = STATE_IDLE
         val am = mAppContext!!.getSystemService(Context.AUDIO_SERVICE) as AudioManager
@@ -469,21 +467,21 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
 
             // 断网自动重新连接
             (mMediaPlayer as IjkMediaPlayer).setOnNativeInvokeListener { i, bundle -> true }
-            mMediaPlayer.setOnPreparedListener(mPreparedListener)
-            mMediaPlayer.setOnVideoSizeChangedListener(mSizeChangedListener)
-            mMediaPlayer.setOnCompletionListener(mCompletionListener)
-            mMediaPlayer.setOnErrorListener(mErrorListener)
-            mMediaPlayer.setOnInfoListener(mInfoListener)
-            mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener)
-            mMediaPlayer.setOnSeekCompleteListener(mSeekCompleteListener)
-            mMediaPlayer.setOnTimedTextListener(mOnTimedTextListener)
+            mMediaPlayer?.setOnPreparedListener(mPreparedListener)
+            mMediaPlayer?.setOnVideoSizeChangedListener(mSizeChangedListener)
+            mMediaPlayer?.setOnCompletionListener(mCompletionListener)
+            mMediaPlayer?.setOnErrorListener(mErrorListener)
+            mMediaPlayer?.setOnInfoListener(mInfoListener)
+            mMediaPlayer?.setOnBufferingUpdateListener(mBufferingUpdateListener)
+            mMediaPlayer?.setOnSeekCompleteListener(mSeekCompleteListener)
+            mMediaPlayer?.setOnTimedTextListener(mOnTimedTextListener)
             mCurrentBufferPercentage = 0
-            mMediaPlayer.setDataSource(mAppContext, mUri, mHeaders)
+            mMediaPlayer?.setDataSource(mAppContext, mUri, mHeaders)
             bindSurfaceHolder(mMediaPlayer, mSurfaceHolder)
-            mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC)
-            mMediaPlayer.setScreenOnWhilePlaying(true)
+            mMediaPlayer?.setAudioStreamType(AudioManager.STREAM_MUSIC)
+            mMediaPlayer?.setScreenOnWhilePlaying(true)
             mPrepareStartTime = System.currentTimeMillis()
-            mMediaPlayer.prepareAsync()
+            mMediaPlayer?.prepareAsync()
 
             // REMOVED: mPendingSubtitleTracks
 
@@ -590,16 +588,15 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     }
 
     fun releaseWithoutStop() {
-        if (mMediaPlayer != null)
-            mMediaPlayer.setDisplay(null)
+        mMediaPlayer?.setDisplay(null)
     }
 
     /*
 	 * release the media player in any state
 	 */
     fun release(cleartargetstate: Boolean) {
-        mMediaPlayer.reset()
-        mMediaPlayer.release()
+        mMediaPlayer?.reset()
+        mMediaPlayer?.release()
         // REMOVED: mPendingSubtitleTracks.clear();
         mCurrentState = STATE_IDLE
         if (cleartargetstate) {
@@ -633,7 +630,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
                 keyCode != KeyEvent.KEYCODE_ENDCALL
         if (isInPlaybackState && isKeyCodeSupported && mMediaController != null) {
             if (keyCode == KeyEvent.KEYCODE_HEADSETHOOK || keyCode == KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE) {
-                if (mMediaPlayer.isPlaying) {
+                if (mMediaPlayer?.isPlaying == true) {
                     pause()
                     mMediaController!!.show()
                 } else {
@@ -642,13 +639,13 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
                 }
                 return true
             } else if (keyCode == KeyEvent.KEYCODE_MEDIA_PLAY) {
-                if (!mMediaPlayer.isPlaying) {
+                if (mMediaPlayer?.isPlaying == false) {
                     start()
                     mMediaController!!.hide()
                 }
                 return true
             } else if (keyCode == KeyEvent.KEYCODE_MEDIA_STOP || keyCode == KeyEvent.KEYCODE_MEDIA_PAUSE) {
-                if (mMediaPlayer.isPlaying) {
+                if (mMediaPlayer?.isPlaying == true) {
                     pause()
                     mMediaController!!.show()
                 }
@@ -671,7 +668,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
 
     override fun start() {
         if (isInPlaybackState) {
-            mMediaPlayer.start()
+            mMediaPlayer?.start()
             mCurrentState = STATE_PLAYING
         }
         mTargetState = STATE_PLAYING
@@ -679,8 +676,8 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
 
     override fun pause() {
         if (isInPlaybackState) {
-            if (mMediaPlayer.isPlaying) {
-                mMediaPlayer.pause()
+            if (mMediaPlayer?.isPlaying == true) {
+                mMediaPlayer?.pause()
                 mCurrentState = STATE_PAUSED
             }
         }
@@ -697,21 +694,21 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
 
     override fun getDuration(): Int {
         return if (isInPlaybackState) {
-            mMediaPlayer.duration.toInt()
+            mMediaPlayer?.duration?.toInt() ?: 0
         } else -1
 
     }
 
     override fun getCurrentPosition(): Int {
         return if (isInPlaybackState) {
-            mMediaPlayer.currentPosition.toInt()
+            mMediaPlayer?.currentPosition?.toInt() ?: 0
         } else 0
     }
 
     override fun seekTo(msec: Int) {
         if (isInPlaybackState) {
             mSeekStartTime = System.currentTimeMillis()
-            mMediaPlayer.seekTo(msec.toLong())
+            mMediaPlayer?.seekTo(msec.toLong())
             mSeekWhenPrepared = 0
         } else {
             mSeekWhenPrepared = msec
@@ -719,7 +716,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     }
 
     override fun isPlaying(): Boolean {
-        return isInPlaybackState && mMediaPlayer.isPlaying
+        return isInPlaybackState && (mMediaPlayer?.isPlaying ?: false)
     }
 
     override fun getBufferPercentage(): Int {
@@ -772,27 +769,29 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
 
     private fun initBackground() {
         MediaPlayerService.intentToStart(context)
-        mMediaPlayer = MediaPlayerService.getMediaPlayer()
+        MediaPlayerService.mediaPlayer?.let {
+            mMediaPlayer = it
+        }
     }
 
     fun enterBackground() {
-        MediaPlayerService.setMediaPlayer(mMediaPlayer)
+        MediaPlayerService.mediaPlayer = mMediaPlayer
     }
 
     fun stopBackgroundPlay() {
-        MediaPlayerService.setMediaPlayer(null)
+        MediaPlayerService.mediaPlayer = null
     }
 
     companion object {
 
         // all possible internal states
-        private val STATE_ERROR = -1
-        private val STATE_IDLE = 0
-        private val STATE_PREPARING = 1
-        private val STATE_PREPARED = 2
-        private val STATE_PLAYING = 3
-        private val STATE_PAUSED = 4
-        private val STATE_PLAYBACK_COMPLETED = 5
+        private const val STATE_ERROR = -1
+        private const val STATE_IDLE = 0
+        private const val STATE_PREPARING = 1
+        private const val STATE_PREPARED = 2
+        private const val STATE_PLAYING = 3
+        private const val STATE_PAUSED = 4
+        private const val STATE_PLAYBACK_COMPLETED = 5
 
         // REMOVED: getAudioSessionId();
         // REMOVED: onAttachedToWindow();

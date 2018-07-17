@@ -25,10 +25,9 @@ class RoomListViewModel(application: Application, private val appRepository: App
                     if (it.status == 401) {
                         roomMessageCommand.value = R.string.auth_fail
                     } else {
-                        it.content.sortByDescending {
+                        roomListData.value = it.content?.sortedByDescending {
                             it.commentTimeMs
                         }
-                        roomListData.value = it.content
                     }
                 }, Throwable::printStackTrace))
     }

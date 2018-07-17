@@ -13,6 +13,7 @@ import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.MaterialViewPager
 import com.github.florent37.materialviewpager.header.HeaderDesign
+import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import io.github.wotaslive.Constants
 import io.github.wotaslive.GlideApp
@@ -58,7 +59,7 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
         val disposable = appRepository.login(username, password)
                 .filter { it.status == 200 }
                 .flatMap {
-                    checkFriends(it.content)
+                    checkFriends(it.content!!)
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,12 +74,12 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     }
 
     private fun checkFriends(content: LoginInfo.ContentBean): Flowable<Boolean> {
-        val gson = com.google.gson.Gson()
+        val gson = Gson()
         return Flowable.create({
             with(content) {
                 val oldFriends = spUtils.getString(io.github.wotaslive.Constants.SP_FRIENDS)
                 val newFriends = gson.toJson(friends)
-                spUtils.put(Constants.HEADER_KEY_TOKEN, token)
+                spUtils.put(Constants.HEADER_KEY_TOKEN, token!!)
                 spUtils.put(Constants.SP_FRIENDS, newFriends)
                 if (android.text.TextUtils.isEmpty(oldFriends)) {
                     it.onNext(true)

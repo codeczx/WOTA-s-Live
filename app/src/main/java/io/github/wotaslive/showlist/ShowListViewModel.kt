@@ -14,11 +14,11 @@ class ShowListViewModel(application: Application, private val appRepository: App
     private val compositeDisposable = CompositeDisposable()
 
     fun start() {
-        val disposable = AppRepository.getInstance().getOpenLiveInfo(0, 0, 0, 0)
+        val disposable = AppRepository.instance.getOpenLiveInfo(0, 0, 0, 0)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ t ->
-                    showListData.value = t.content.showList
+                    showListData.value = t.content?.showList
                 }, Throwable::printStackTrace)
         compositeDisposable.add(disposable)
     }

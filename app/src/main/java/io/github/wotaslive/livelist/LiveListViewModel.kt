@@ -26,20 +26,20 @@ class LiveListViewModel(application: Application, private val appRepository: App
                     if (isLoadMore) {
                         list.addAll(liveListData.value.orEmpty())
                     }
-                    val live = it.content.liveList
-                    val review = it.content.reviewList
+                    val live = it.content?.liveList
+                    val review = it.content?.reviewList
                     live?.let {
                         it.forEach {
                             it.liveType = 1
                         }
+                        list.addAll(it)
                     }
                     review?.let {
                         it.forEach {
                             it.liveType = 2
                         }
+                        list.addAll(it)
                     }
-                    list.addAll(live)
-                    list.addAll(review)
                     return@map list
                 }
                 .subscribeOn(Schedulers.io())

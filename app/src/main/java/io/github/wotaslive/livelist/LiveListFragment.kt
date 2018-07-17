@@ -90,7 +90,9 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
     }
 
     override fun onCoverClick(room: LiveInfo.ContentBean.RoomBean) {
-        PlayerActivity.startPlayerActivity(context, room.streamPath, room.liveType == 1)
+        room.streamPath?.let {
+            PlayerActivity.startPlayerActivity(context, it, room.liveType == 1)
+        }
     }
 
     override fun onLongClick(room: LiveInfo.ContentBean.RoomBean, anchor: View): Boolean {
@@ -101,7 +103,9 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
             setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     R.id.List_copy_address -> {
-                        context?.setClipboard(room.streamPath)
+                        room.streamPath?.let {
+                            context?.setClipboard(it)
+                        }
                         return@setOnMenuItemClickListener true
                     }
                 }

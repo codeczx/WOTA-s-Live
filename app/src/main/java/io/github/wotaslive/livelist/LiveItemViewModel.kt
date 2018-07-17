@@ -21,8 +21,10 @@ class LiveItemViewModel(context: Context, val room: LiveInfo.ContentBean.RoomBea
     }
     private val urlString by lazy {
         var imgUrl = room.picPath
-        if (imgUrl.indexOf(',') != -1) {
-            imgUrl = imgUrl.substring(0, imgUrl.indexOf(','))
+        imgUrl?.let {
+            if (it.indexOf(',') != -1) {
+                imgUrl = it.substring(0, it.indexOf(','))
+            }
         }
         imgUrl
     }

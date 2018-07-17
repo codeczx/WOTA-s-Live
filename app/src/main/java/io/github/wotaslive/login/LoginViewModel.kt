@@ -45,11 +45,15 @@ class LoginViewModel(application: Application, private val appRepository: AppRep
                     when (it.status) {
                         200 -> {
                             val spUtils = SPUtils.getInstance(Constants.SP_NAME)
-                            spUtils.put(Constants.HEADER_KEY_TOKEN, it.content.token)
-                            spUtils.put(Constants.SP_FRIENDS, Gson().toJson(it.content.friends))
+                            it.content?.token?.let {
+                                spUtils.put(Constants.HEADER_KEY_TOKEN, it)
+                            }
+                            spUtils.put(Constants.SP_FRIENDS, Gson().toJson(it.content?.friends))
                             spUtils.put(Constants.SP_USERNAME, un)
                             spUtils.put(Constants.SP_PASSWORD, pw)
-                            spUtils.put(Constants.SP_NICKNAME, it.content.userInfo.nickName)
+                            it.content?.userInfo?.nickName?.let {
+                                spUtils.put(Constants.SP_NICKNAME, it)
+                            }
                             loginSuccessCommand.call()
                         }
                         400 ->
