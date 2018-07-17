@@ -32,18 +32,21 @@ android {
         debug {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('/debug.keystore')
+            storeFile file('../debug.keystore')
             storePassword 'android'
         }
         release {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
-            storeFile file('/debug.keystore')
+            storeFile file('../debug.keystore')
             storePassword 'android'
         }
     }
     dataBinding {
         enabled = true
+    }
+    kapt {
+        generateStubs = true
     }
 }
 
