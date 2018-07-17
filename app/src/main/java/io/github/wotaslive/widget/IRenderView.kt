@@ -44,12 +44,12 @@ interface IRenderView {
 
     interface ISurfaceHolder {
 
-        val renderView: IRenderView
+        val renderView: IRenderView?
 
         val surfaceHolder: SurfaceHolder?
 
         val surfaceTexture: SurfaceTexture?
-        fun bindToMediaPlayer(mp: IMediaPlayer)
+        fun bindToMediaPlayer(mp: IMediaPlayer?)
 
         fun openSurface(): Surface?
     }
