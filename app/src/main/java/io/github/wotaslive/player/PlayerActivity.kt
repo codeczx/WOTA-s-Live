@@ -21,40 +21,31 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun initView() {
         with(viewDataBinding) {
-            url = intent.getStringExtra(Constants.URL)
-            isLive = intent.getBooleanExtra(Constants.IS_LIVE, false)
-            vvLive.checkSystemWritePermission()
+            player.setFullScreen(this@PlayerActivity)
+            player.setVideoPath(intent.getStringExtra(Constants.URL))
+            player.start()
+//            isLive = intent.getBooleanExtra(Constants.IS_LIVE, false)
         }
-    }
-
-    override fun onRestart() {
-        super.onRestart()
-        viewDataBinding.vvLive.restart()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewDataBinding.vvLive.start()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        viewDataBinding.vvLive.pause()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        viewDataBinding.vvLive.stop()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewDataBinding.vvLive.release()
     }
 
     override fun onBackPressed() {
         super.onBackPressed()
-        viewDataBinding.vvLive.release()
+        viewDataBinding.player.stopPlayback()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewDataBinding.player.resume()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewDataBinding.player.stopPlayback()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        viewDataBinding.player.release(true)
     }
 
     companion object {
