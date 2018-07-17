@@ -5,6 +5,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.databinding.BindingAdapter;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -70,6 +71,16 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 
 	}
 
+	@BindingAdapter("videoUrl")
+	public static void setVideoUrl(VideoView videoView, String url) {
+		videoView.mUrl = url;
+	}
+
+	@BindingAdapter("isLive")
+	public static void setIsLive(VideoView videoView, boolean isLive) {
+		videoView.mIsLive = isLive;
+	}
+
 	private void initView() {
 		LayoutInflater.from(mContext).inflate(R.layout.video_view, this);
 		ButterKnife.bind(this);
@@ -108,7 +119,8 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 				Settings.System.putInt(contentResolver, Settings.System.SCREEN_BRIGHTNESS_MODE,
 						Settings.System.SCREEN_BRIGHTNESS_MODE_MANUAL);
 			}
-		} catch (Settings.SettingNotFoundException e) {
+		}
+		catch (Settings.SettingNotFoundException e) {
 			e.printStackTrace();
 		}
 		// 用window的方式来调整亮度，lp.screenBrightness的亮度默认是-1，需要初始化为当前系统亮度
@@ -120,13 +132,14 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 		window.setAttributes(lp);
 	}
 
-	private void checkSystemWritePermission() {
+	public void checkSystemWritePermission() {
 		boolean retVal;
 		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
 			retVal = Settings.System.canWrite(mContext);
 			if (retVal) {
 				openVideo();
-			} else {
+			}
+			else {
 				Intent intent = new Intent(android.provider.Settings.ACTION_MANAGE_WRITE_SETTINGS);
 				intent.setData(Uri.parse("package:" + mContext.getPackageName()));
 				intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -193,7 +206,8 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 		mPlayer = new IjkMediaPlayer();
 		try {
 			mPlayer.setDataSource(mUrl);
-		} catch (IOException e) {
+		}
+		catch (IOException e) {
 			e.printStackTrace();
 		}
 		mPlayer.setOnPreparedListener(mPrepareListener);
@@ -214,7 +228,8 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 			mLayoutParams.height = mHeight;
 			setLayoutParams(mLayoutParams);
 			mActivity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
-		} else {
+		}
+		else {
 			activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 			mLayoutParams = getLayoutParams();
 			mWidth = mLayoutParams.width;
@@ -237,6 +252,7 @@ public class VideoView extends FrameLayout implements MediaPlayerControl {
 			mUrl = null;
 			mCurrentPosition = 0;
 		}
+		resumeBrightnessMode();
 		mMediaViewControl.cancelPolling();
 	}
 
