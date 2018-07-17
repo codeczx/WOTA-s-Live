@@ -2,12 +2,12 @@ package io.github.wotaslive.showlist
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
+import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ShowInfo
 import io.github.wotaslive.databinding.FragShowListBinding
@@ -15,7 +15,7 @@ import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.widget.SpaceItemDecoration
 
-class ShowListFragment : Fragment(), ShowListAdapter.Callback {
+class ShowListFragment : BaseLazyFragment(), ShowListAdapter.Callback {
     lateinit var viewModel: ShowListViewModel
 
     private lateinit var viewDataBinding: FragShowListBinding
@@ -26,7 +26,6 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         viewModel = (activity as MainActivity).obtainViewModel(ShowListViewModel::class.java).also {
             viewDataBinding.viewModel = it
             viewDataBinding.setLifecycleOwner(this@ShowListFragment)
@@ -37,6 +36,10 @@ class ShowListFragment : Fragment(), ShowListAdapter.Callback {
         })
         setupAdapter()
         setupRefresh()
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun initData() {
         viewModel.start()
     }
 

@@ -2,7 +2,6 @@ package io.github.wotaslive.livelist
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.support.v7.view.ContextThemeWrapper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
@@ -12,6 +11,7 @@ import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
+import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.LiveInfo
 import io.github.wotaslive.databinding.FragLiveListBinding
@@ -22,7 +22,7 @@ import io.github.wotaslive.utils.setClipboard
 import io.github.wotaslive.widget.SpaceItemDecoration
 
 
-class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
+class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
     lateinit var viewModel: LiveListViewModel
     private lateinit var viewDataBinding: FragLiveListBinding
     private val adapter = LiveListAdapter(this)
@@ -33,7 +33,6 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         viewModel = (activity as MainActivity).obtainViewModel(LiveListViewModel::class.java).also {
             viewDataBinding.viewModel = it
             viewDataBinding.setLifecycleOwner(this@LiveListFragment)
@@ -48,7 +47,16 @@ class LiveListFragment : Fragment(), LiveListAdapter.CallBack {
         })
         setupAdapter()
         setupRefresh()
-        viewModel.start()
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun initData() {
+        viewModel.loadLives(false)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        initData()
     }
 
     private fun setupAdapter() {

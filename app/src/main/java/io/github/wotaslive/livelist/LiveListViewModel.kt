@@ -15,10 +15,6 @@ class LiveListViewModel(application: Application, private val appRepository: App
     private val compositeDisposable = CompositeDisposable()
     private var lastTime = 0L
 
-    fun start() {
-        loadLives(false)
-    }
-
     fun loadLives(isLoadMore: Boolean) {
         this.isLoadMore = isLoadMore
         if (!isLoadMore) {

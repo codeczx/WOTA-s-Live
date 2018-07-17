@@ -3,12 +3,12 @@ package io.github.wotaslive.roomlist
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
+import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.RoomInfo
 import io.github.wotaslive.databinding.FragRoomListBinding
@@ -19,7 +19,7 @@ import io.github.wotaslive.room.RoomDetailActivity
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.widget.SpaceItemDecoration
 
-class RoomListFragment : Fragment(), RoomListAdapter.Callback {
+class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
     private lateinit var viewDataBinding: FragRoomListBinding
     private lateinit var viewModel: RoomListViewModel
     private val adapter = RoomListAdapter(this)
@@ -31,11 +31,14 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
 
     override fun onResume() {
         super.onResume()
+        initData()
+    }
+
+    override fun initData() {
         viewModel.start()
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        super.onActivityCreated(savedInstanceState)
         viewModel = (activity as MainActivity).obtainViewModel(RoomListViewModel::class.java).also {
             viewDataBinding.viewModel = it
             viewDataBinding.setLifecycleOwner(this@RoomListFragment)
@@ -58,10 +61,11 @@ class RoomListFragment : Fragment(), RoomListAdapter.Callback {
         })
         (activity as MainActivity).obtainViewModel(MainViewModel::class.java)
                 .friendsReloadCommand.observe(this, Observer {
-            viewModel.start()
+            initData()
         })
         setupAdapter()
         setupRefresh()
+        super.onActivityCreated(savedInstanceState)
     }
 
     private fun setupAdapter() {

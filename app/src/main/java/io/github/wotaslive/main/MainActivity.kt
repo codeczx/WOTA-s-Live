@@ -42,8 +42,12 @@ class MainActivity : AppCompatActivity() {
         }
         subscribeUIBinding()
         initView()
-        viewModel.loadInfo()
         checkPermissions()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.loadInfo()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -87,7 +91,7 @@ class MainActivity : AppCompatActivity() {
             if (it)
                 viewModel.start()
             else
-                finish()
+                checkPermissions()
         }
     }
 
