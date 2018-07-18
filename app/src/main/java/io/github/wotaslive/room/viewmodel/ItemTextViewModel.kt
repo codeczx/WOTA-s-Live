@@ -12,9 +12,11 @@ class ItemTextViewModel(obj: Any) : ViewModel() {
     }
     private val textContent: String by lazy {
         when {
-            Constants.MESSAGE_TYPE_IDOL_FLIP == extInfo.messageObject -> return@lazy extInfo.bodys!!
-            Constants.MESSAGE_TYPE_FANPAI_TEXT == extInfo.messageObject -> return@lazy extInfo.messageText!!
-            else -> return@lazy extInfo.text!!
+            Constants.MESSAGE_TYPE_IDOL_FLIP == extInfo.messageObject -> return@lazy extInfo.bodys
+                    ?: ""
+            Constants.MESSAGE_TYPE_FANPAI_TEXT == extInfo.messageObject -> return@lazy extInfo.messageText
+                    ?: ""
+            else -> return@lazy extInfo.text ?: ""
         }
     }
     val avatar = ObservableField<String>(extInfo.senderAvatar)

@@ -35,31 +35,26 @@ import java.lang.ref.WeakReference
 import java.util.concurrent.ConcurrentHashMap
 
 class SurfaceRenderView : SurfaceView, IRenderView {
-    private var mMeasureHelper: MeasureHelper? = null
+
+    private lateinit var mSurfaceCallback: SurfaceCallback
+    private lateinit var mMeasureHelper: MeasureHelper
 
     override val view: View
         get() = this
 
-    private var mSurfaceCallback: SurfaceCallback? = null
-
     constructor(context: Context) : super(context) {
-        initView(context)
+        initView()
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initView(context)
+        initView()
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int) : super(context, attrs, defStyleAttr) {
-        initView(context)
+        initView()
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    constructor(context: Context, attrs: AttributeSet, defStyleAttr: Int, defStyleRes: Int) : super(context, attrs, defStyleAttr, defStyleRes) {
-        initView(context)
-    }
-
-    private fun initView(context: Context) {
+    private fun initView() {
         mMeasureHelper = MeasureHelper(this)
         mSurfaceCallback = SurfaceCallback(this)
         holder.addCallback(mSurfaceCallback)
@@ -74,7 +69,7 @@ class SurfaceRenderView : SurfaceView, IRenderView {
     //--------------------
     override fun setVideoSize(videoWidth: Int, videoHeight: Int) {
         if (videoWidth > 0 && videoHeight > 0) {
-            mMeasureHelper!!.setVideoSize(videoWidth, videoHeight)
+            mMeasureHelper.setVideoSize(videoWidth, videoHeight)
             holder.setFixedSize(videoWidth, videoHeight)
             requestLayout()
         }
@@ -82,7 +77,7 @@ class SurfaceRenderView : SurfaceView, IRenderView {
 
     override fun setVideoSampleAspectRatio(videoSarNum: Int, videoSarDen: Int) {
         if (videoSarNum > 0 && videoSarDen > 0) {
-            mMeasureHelper!!.setVideoSampleAspectRatio(videoSarNum, videoSarDen)
+            mMeasureHelper.setVideoSampleAspectRatio(videoSarNum, videoSarDen)
             requestLayout()
         }
     }
@@ -92,13 +87,13 @@ class SurfaceRenderView : SurfaceView, IRenderView {
     }
 
     override fun setAspectRatio(aspectRatio: Int) {
-        mMeasureHelper!!.setAspectRatio(aspectRatio)
+        mMeasureHelper.setAspectRatio(aspectRatio)
         requestLayout()
     }
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        mMeasureHelper!!.doMeasure(widthMeasureSpec, heightMeasureSpec)
-        setMeasuredDimension(mMeasureHelper!!.measuredWidth, mMeasureHelper!!.measuredHeight)
+        mMeasureHelper.doMeasure(widthMeasureSpec, heightMeasureSpec)
+        setMeasuredDimension(mMeasureHelper.measuredWidth, mMeasureHelper.measuredHeight)
     }
 
     //--------------------
@@ -134,11 +129,11 @@ class SurfaceRenderView : SurfaceView, IRenderView {
     //-------------------------
 
     override fun addRenderCallback(callback: IRenderView.IRenderCallback) {
-        mSurfaceCallback!!.addRenderCallback(callback)
+        mSurfaceCallback.addRenderCallback(callback)
     }
 
     override fun removeRenderCallback(callback: IRenderView.IRenderCallback) {
-        mSurfaceCallback!!.removeRenderCallback(callback)
+        mSurfaceCallback.removeRenderCallback(callback)
     }
 
     private class SurfaceCallback(surfaceView: SurfaceRenderView) : SurfaceHolder.Callback {
@@ -148,12 +143,8 @@ class SurfaceRenderView : SurfaceView, IRenderView {
         private var mWidth: Int = 0
         private var mHeight: Int = 0
 
-        private val mWeakSurfaceView: WeakReference<SurfaceRenderView>
+        private val mWeakSurfaceView: WeakReference<SurfaceRenderView> = WeakReference(surfaceView)
         private val mRenderCallbackMap = ConcurrentHashMap<IRenderView.IRenderCallback, Any>()
-
-        init {
-            mWeakSurfaceView = WeakReference(surfaceView)
-        }
 
         fun addRenderCallback(callback: IRenderView.IRenderCallback) {
             mRenderCallbackMap[callback] = callback

@@ -59,7 +59,7 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
         val disposable = appRepository.login(username, password)
                 .filter { it.status == 200 }
                 .flatMap {
-                    checkFriends(it.content!!)
+                    checkFriends(it.content)
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -73,13 +73,13 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
         compositeDisposable.add(disposable)
     }
 
-    private fun checkFriends(content: LoginInfo.ContentBean): Flowable<Boolean> {
+    private fun checkFriends(content: LoginInfo.ContentBean?): Flowable<Boolean> {
         val gson = Gson()
         return Flowable.create({
             with(content) {
                 val oldFriends = spUtils.getString(io.github.wotaslive.Constants.SP_FRIENDS)
-                val newFriends = gson.toJson(friends)
-                spUtils.put(Constants.HEADER_KEY_TOKEN, token!!)
+                val newFriends = gson.toJson(this?.friends)
+                this?.token?.let { it1 -> spUtils.put(Constants.HEADER_KEY_TOKEN, it1) }
                 spUtils.put(Constants.SP_FRIENDS, newFriends)
                 if (android.text.TextUtils.isEmpty(oldFriends)) {
                     it.onNext(true)

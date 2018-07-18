@@ -44,9 +44,9 @@ object ChatDateTime {
      * @param time 需要转换的时间
      * @return 时间描述
      */
-    fun getNiceTime(time: Long?): String {
+    fun getNiceTime(time: Long): String {
         val pointText: String
-        val date = Date(time!!)
+        val date = Date(time)
         val df: DateFormat
         if (time < startTimeOfDay) {
             return when {

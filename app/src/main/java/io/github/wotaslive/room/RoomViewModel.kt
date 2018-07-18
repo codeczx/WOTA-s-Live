@@ -39,8 +39,8 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                     it.status == 200
                 }
                 .flatMap {
-                    this@RoomViewModel.lastTime = it.content?.lastTime!!
-                    return@flatMap Flowable.fromIterable(it.content?.data!!)
+                    this@RoomViewModel.lastTime = it.content?.lastTime ?: 0
+                    return@flatMap Flowable.fromIterable(it.content?.data)
                 }
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -71,7 +71,7 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                     it.status == 200
                 }
                 .flatMap {
-                    boardLastTime = it.content?.lastTime!!
+                    boardLastTime = it.content?.lastTime ?: 0
                     return@flatMap Flowable.fromIterable(it.content?.data)
                 }
                 .subscribeOn(Schedulers.io())
