@@ -18,7 +18,7 @@ abstract class BaseLazyFragment : Fragment() {
     abstract fun initData()
 
     /*懒加载方法*/
-    private fun lazyInitData() {
+    fun lazyInitData() {
         if (!isInitData && isVisibleToUser && isPrepareView) {
             isInitData = true
             initData()

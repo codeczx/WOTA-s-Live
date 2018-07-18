@@ -54,11 +54,6 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
         viewModel.loadLives(false)
     }
 
-    override fun onResume() {
-        super.onResume()
-        initData()
-    }
-
     private fun setupAdapter() {
         with(viewDataBinding.rvLive) {
             layoutManager = LinearLayoutManager(context)

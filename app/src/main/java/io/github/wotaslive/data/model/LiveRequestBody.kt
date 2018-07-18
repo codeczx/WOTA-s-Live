@@ -1,6 +1,6 @@
 package io.github.wotaslive.data.model
 
-class LiveRequestBody(
+data class LiveRequestBody(
         /**
          * lastTime : 0
          * groupId : 0

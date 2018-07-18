@@ -36,7 +36,6 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     private var maxImgSize = 3L
     private val spUtils = SPUtils.getInstance(Constants.SP_NAME)
     val headerRefreshCommand = SingleLiveEvent<MaterialViewPager.Listener>()
-    val friendsReloadCommand = SingleLiveEvent<Void>()
     val friendMessageCommand = SingleLiveEvent<Int>()
     var isLogin = MutableLiveData<Boolean>()
     lateinit var nickname: String
@@ -49,7 +48,6 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     fun loadInfo() {
         nickname = spUtils.getString(Constants.SP_NICKNAME)
         isLogin.value = spUtils.getString(Constants.HEADER_KEY_TOKEN).isNotEmpty()
-        friendsReloadCommand.call()
     }
 
     private fun refreshToken() {
@@ -65,9 +63,6 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
                     friendMessageCommand.value = R.string.friend_reload
-                    if (it) {
-                        friendsReloadCommand.call()
-                    }
                 },
                         Throwable::printStackTrace)
         compositeDisposable.add(disposable)

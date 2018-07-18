@@ -5,11 +5,10 @@ package io.github.wotaslive.data.model
  * Class description:
  */
 
-class LiveOneRequestBody(
-        /**
-         * type : 0
-         * userId : 594709
-         * liveId : 59dda14b0cf2d32740bafa6d
-         */
-
+/**
+ * type : 0
+ * userId : 594709
+ * liveId : 59dda14b0cf2d32740bafa6d
+ */
+data class LiveOneRequestBody(
         var type: Int, var userId: Int, var liveId: String?)
