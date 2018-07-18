@@ -8,10 +8,12 @@ import android.support.v7.app.AppCompatActivity
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.ActPlayerBinding
+import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 class PlayerActivity : AppCompatActivity() {
 
     private lateinit var viewDataBinding: ActPlayerBinding
+    private var backPressed = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +31,13 @@ class PlayerActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
+        backPressed = true
         super.onBackPressed()
-        viewDataBinding.player.stopPlayback()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        viewDataBinding.player.suspend()
     }
 
     override fun onResume() {
@@ -40,12 +47,16 @@ class PlayerActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        viewDataBinding.player.stopPlayback()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        viewDataBinding.player.release(true)
+        with(viewDataBinding.player) {
+            if (backPressed || !isBackgroundPlayEnabled) {
+                stopPlayback()
+                release(true)
+                stopBackgroundPlay()
+            } else {
+                enterBackground()
+            }
+        }
+        IjkMediaPlayer.native_profileEnd()
     }
 
     companion object {

@@ -398,7 +398,8 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     // REMOVED: mPendingSubtitleTracks
 
     fun stopPlayback() {
-        mMediaPlayer?.stop()
+        if (mMediaPlayer?.isPlaying == true)
+            mMediaPlayer?.stop()
         mMediaPlayer?.release()
         mMediaPlayer = null
         mCurrentState = STATE_IDLE
