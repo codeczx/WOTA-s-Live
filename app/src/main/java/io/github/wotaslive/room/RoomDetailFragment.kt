@@ -60,7 +60,7 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
             viewModel.roomId = extras.getInt(Constants.ROOM_ID)
             viewModel.memberId = extras.getInt(Constants.MEMBER_ID)
             viewModel.url.set(extras.getString(Constants.ROOM_BG_PATH))
-            it.setupActionBar(R.id.toolbar) {
+            this.setupActionBar(viewDataBinding.toolbar) {
                 title = extras.getString(Constants.ROOM_CREATOR) + ":" + extras.getString(Constants.ROOM_NAME)
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)

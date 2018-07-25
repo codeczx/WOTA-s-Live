@@ -24,7 +24,7 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?android:attr/actionBarSize"
-                android:text="@string/login" />
+                app:title="@string/login" />
         </android.support.design.widget.AppBarLayout>
 
         <LinearLayout

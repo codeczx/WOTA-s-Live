@@ -41,6 +41,10 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
             adapter.submitList(it)
         })
         viewDataBinding.setLifecycleOwner(this)
+        setupActionBar(viewDataBinding.toolbar) {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         setupBinding()
     }
 
