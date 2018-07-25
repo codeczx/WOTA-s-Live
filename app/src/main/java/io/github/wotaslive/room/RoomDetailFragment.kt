@@ -4,13 +4,12 @@ import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import com.orhanobut.logger.Logger
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragRoomDetailBinding
+import io.github.wotaslive.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
 
@@ -22,12 +21,32 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewDataBinding = FragRoomDetailBinding.inflate(inflater, container, false)
+        setHasOptionsMenu(true)
         return viewDataBinding.root
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.load()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_room, menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.menu_pics) {
+            fragmentManager?.run {
+                beginTransaction()
+                        .add(R.id.container, DynamicPicturesFragment.newInstance())
+                        .hide(this@RoomDetailFragment)
+                        .addToBackStack(this@RoomDetailFragment.javaClass.name)
+                        .commit()
+            }
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {

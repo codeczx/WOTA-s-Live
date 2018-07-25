@@ -48,4 +48,6 @@
     <string name="resize_250">/resize_250X250/</string>
     <string name="resize_160">/resize_160X160/</string>
     <string name="resize_100">/resize_100X100/</string>
+
+    <string name="photo_album">相册</string>
 </resources>

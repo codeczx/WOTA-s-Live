@@ -5,6 +5,7 @@ import io.reactivex.Flowable
 import okhttp3.ResponseBody
 import retrofit2.http.Body
 import retrofit2.http.POST
+import retrofit2.http.Path
 
 interface ApiServices {
 
@@ -34,4 +35,8 @@ interface ApiServices {
 
     @POST("imsystem/api/im/v1/member/room/message/boardpage")
     fun getRoomBoard(@Body boardPageRequestBody: BoardPageRequestBody): Flowable<BoardPageInfo>
+
+    @POST("dynamicsystem/api/picture/v1/list/{memberId}")
+    fun getDynamicPictures(@Path("memberId") memberId: Int, @Body dynamicPictureRequestBody: DynamicPictureRequestBody):
+            Flowable<DynamicPictureInfo>
 }

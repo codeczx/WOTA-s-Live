@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="io.github.wotaslive.room.pictures.ItemViewModel" />
+
+        <variable
+            name="eventHandler"
+            type="io.github.wotaslive.room.pictures.DynamicPicturesAdapter.Callback" />
+    </data>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/empty_value"
+        android:foreground="?android:attr/selectableItemBackground"
+        android:onClick="@{()->eventHandler.onImageClick(viewModel.url)}"
+        app:imageUrl="@{@string/resize_250+viewModel.url}" />
+</layout>

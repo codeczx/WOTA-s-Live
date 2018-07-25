@@ -10,6 +10,7 @@ import io.github.wotaslive.data.model.*
 import io.reactivex.Flowable
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
@@ -60,6 +61,16 @@ class AppRepository private constructor() {
         val retrofit = Retrofit.Builder()
                 .client(okHttpClient)
                 .baseUrl(JUJU_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+        retrofit.create(ApiServices::class.java)
+    }
+
+    private val dynamicApi: ApiServices by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        val retrofit = Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(DYNAMIC_BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .build()
@@ -117,6 +128,11 @@ class AppRepository private constructor() {
         return jujuApi.getRoomBoard(boardPageRequestBody)
     }
 
+    fun getDynamicPictures(roomId: Int, lastTime: Long): Flowable<DynamicPictureInfo> {
+        val dynamicPictureRequestBody = DynamicPictureRequestBody(lastTime, 21)
+        return dynamicApi.getDynamicPictures(roomId, dynamicPictureRequestBody)
+    }
+
     companion object {
 
         const val IMG_BASE_URL = "https://source.48.cn/"
@@ -125,6 +141,7 @@ class AppRepository private constructor() {
         private const val ROOM_BASE_URL = "https://pjuju.48.cn/"
         private const val USER_BASE_URL = "https://puser.48.cn/"
         private const val JUJU_BASE_URL = "https://pjuju.48.cn/"
+        private const val DYNAMIC_BASE_URL = "https://pdynamic.48.cn/"
 
         private const val DEFAULT_LITMIT = 10
 
@@ -134,7 +151,11 @@ class AppRepository private constructor() {
 
         private val okHttpClient: OkHttpClient
             get() = OkHttpClient.Builder()
+//                    .protocols(Arrays.asList(Protocol.HTTP_1_1))
                     .addInterceptor(HeaderInterceptor())
+                    .addInterceptor(HttpLoggingInterceptor().also {
+                        it.level = HttpLoggingInterceptor.Level.HEADERS
+                    })
                     .build()
     }
 }

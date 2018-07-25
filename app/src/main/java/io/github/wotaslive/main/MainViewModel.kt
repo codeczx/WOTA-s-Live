@@ -15,6 +15,7 @@ import com.github.florent37.materialviewpager.MaterialViewPager
 import com.github.florent37.materialviewpager.header.HeaderDesign
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.orhanobut.logger.Logger
 import io.github.wotaslive.Constants
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.R
@@ -48,6 +49,7 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     fun loadInfo() {
         nickname = spUtils.getString(Constants.SP_NICKNAME)
         isLogin.value = spUtils.getString(Constants.HEADER_KEY_TOKEN).isNotEmpty()
+        Logger.d(spUtils.getString(Constants.HEADER_KEY_TOKEN))
     }
 
     private fun refreshToken() {
