@@ -84,13 +84,13 @@ class AppRepository private constructor() {
         get() {
             val friendsStr = SPUtils.getInstance(Constants.SP_NAME).getString(Constants.SP_FRIENDS, "")
             val friends: List<Int>
-            if (TextUtils.isEmpty(friendsStr)) {
-                friends = ArrayList()
+            friends = if (TextUtils.isEmpty(friendsStr)) {
+                ArrayList()
             } else {
                 val listType = object : TypeToken<ArrayList<Int>>() {
 
                 }.type
-                friends = Gson().fromJson(friendsStr, listType)
+                Gson().fromJson(friendsStr, listType)
             }
             val roomListRequestBody = RoomListRequestBody(friends)
             return roomApi.getRoomList(roomListRequestBody)
@@ -151,10 +151,9 @@ class AppRepository private constructor() {
 
         private val okHttpClient: OkHttpClient
             get() = OkHttpClient.Builder()
-//                    .protocols(Arrays.asList(Protocol.HTTP_1_1))
                     .addInterceptor(HeaderInterceptor())
                     .addInterceptor(HttpLoggingInterceptor().also {
-                        it.level = HttpLoggingInterceptor.Level.HEADERS
+                        it.level = HttpLoggingInterceptor.Level.BASIC
                     })
                     .build()
     }

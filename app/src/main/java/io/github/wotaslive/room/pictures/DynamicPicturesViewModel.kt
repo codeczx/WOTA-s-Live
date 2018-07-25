@@ -19,7 +19,7 @@ class DynamicPicturesViewModel(application: Application, private val appReposito
 
     fun load(load: Boolean) {
         isLoadMore = load
-        if (isLoadMore) lastTime = 0
+        if (!isLoadMore) lastTime = 0
         val list = ArrayList<Data>()
         val disposable = appRepository.getDynamicPictures(roomId, lastTime)
                 .subscribeOn(Schedulers.io())

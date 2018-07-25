@@ -10,7 +10,7 @@ import io.github.wotaslive.GlideApp
 import io.github.wotaslive.R
 import io.github.wotaslive.data.AppRepository
 
-private fun checkUrl(originUrl: String): String {
+fun checkUrl(originUrl: String): String {
     var url = originUrl
     if (url.startsWith("http")) {
         // 网易NOS的证书Glide不认可，替换成http
@@ -20,6 +20,8 @@ private fun checkUrl(originUrl: String): String {
         if (url.contains("?")) {
             url = url.substring(0, url.indexOf("?"))
         }
+    } else if (url.endsWith(".gif") && url.contains("resize_", true)) {
+        url = AppRepository.IMG_BASE_URL + url.substring(url.indexOf("/") + 1)
     } else {
         url = AppRepository.IMG_BASE_URL + url
     }
@@ -51,6 +53,12 @@ fun ImageView.loadImage(url: String) {
     if (url.startsWith("#")) {
         GlideApp.with(context)
                 .load(ColorDrawable(Color.parseColor(url)))
+                .into(this)
+    } else if (url.endsWith("gif")) {
+        GlideApp.with(context)
+                .asBitmap()
+                .load(checkUrl(url))
+                .dontAnimate()
                 .into(this)
     } else {
         GlideApp.with(context)

@@ -1,22 +1,21 @@
 package io.github.wotaslive.room
 
-import android.arch.lifecycle.ViewModel
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.recyclerview.extensions.ListAdapter
-import android.support.v7.widget.RecyclerView.ViewHolder
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.android.databinding.library.baseAdapters.BR
 import io.github.wotaslive.Constants
+import io.github.wotaslive.DataBindingViewHolder
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ExtInfo
+import io.github.wotaslive.databinding.ItemRoomImageBinding
 import io.github.wotaslive.room.viewmodel.ItemImageViewModel
 import io.github.wotaslive.room.viewmodel.ItemLiveViewModel
 import io.github.wotaslive.room.viewmodel.ItemTextViewModel
 import io.github.wotaslive.room.viewmodel.ItemTimeViewModel
 
-class RoomDetailAdapter(private val callback: Callback) : ListAdapter<Any, RoomDetailAdapter.ItemViewHolder>(RoomDetailDiffCallback()) {
+class RoomDetailAdapter(private val callback: Callback) : ListAdapter<Any, DataBindingViewHolder>(RoomDetailDiffCallback()) {
 
     interface Callback {
         fun onImageClick(url: String)
@@ -42,12 +41,15 @@ class RoomDetailAdapter(private val callback: Callback) : ListAdapter<Any, RoomD
         }
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
-        return ItemViewHolder(DataBindingUtil.inflate(
-                LayoutInflater.from(parent.context), viewType, parent, false), callback)
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
+        val binding: ViewDataBinding = DataBindingUtil.inflate(LayoutInflater.from(parent.context), viewType, parent, false)
+        if (binding is ItemRoomImageBinding) {
+            binding.eventHandler = callback
+        }
+        return DataBindingViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
         getItem(position).let {
             with(holder) {
                 when (getItemViewType(position)) {
@@ -61,17 +63,6 @@ class RoomDetailAdapter(private val callback: Callback) : ListAdapter<Any, RoomD
                         bind(ItemLiveViewModel(it))
                 }
                 itemView.tag = it
-            }
-        }
-    }
-
-    class ItemViewHolder(private val binding: ViewDataBinding, private val callback: Callback) :
-            ViewHolder(binding.root) {
-        fun bind(viewModel: ViewModel) {
-            with(binding) {
-                setVariable(BR.viewModel, viewModel)
-                setVariable(BR.eventHandler, callback)
-                executePendingBindings()
             }
         }
     }

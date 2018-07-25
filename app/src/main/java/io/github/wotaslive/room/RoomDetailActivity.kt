@@ -33,6 +33,7 @@ class RoomDetailActivity : AppCompatActivity() {
     companion object {
         fun startRoomDetailActivity(context: Context, content: RoomInfo.ContentBean) {
             val intent = Intent(context, RoomDetailActivity::class.java)
+            intent.putExtra(Constants.MEMBER_ID, content.creatorId)
             intent.putExtra(Constants.ROOM_ID, content.roomId)
             intent.putExtra(Constants.ROOM_NAME, content.roomName)
             intent.putExtra(Constants.ROOM_CREATOR, content.creatorName)

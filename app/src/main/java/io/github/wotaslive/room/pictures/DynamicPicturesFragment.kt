@@ -4,7 +4,7 @@ package io.github.wotaslive.room.pictures
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.StaggeredGridLayoutManager
+import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -31,8 +31,7 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as RoomDetailActivity).obtainViewModel(DynamicPicturesViewModel::class.java)
-        viewModel.roomId = (activity as RoomDetailActivity).obtainViewModel(RoomViewModel::class.java).roomId
-        viewModel.roomId = 6738
+        viewModel.roomId = (activity as RoomDetailActivity).obtainViewModel(RoomViewModel::class.java).memberId
         viewModel.picsData.observe(this, Observer {
             if (viewModel.isLoadMore) {
                 viewDataBinding.srlPics.finishLoadMore()
@@ -55,7 +54,7 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
             }
         }
         with(viewDataBinding.rvPics) {
-            layoutManager = StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = this@DynamicPicturesFragment.adapter
         }
         with(activity as RoomDetailActivity) {

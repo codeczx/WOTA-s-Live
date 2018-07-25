@@ -32,6 +32,7 @@ object Constants {
     const val ROOM_NAME = "room_name"
     const val ROOM_CREATOR = "room_creator"
     const val ROOM_BG_PATH = "room_bg_path"
+    const val MEMBER_ID = "member_id"
 
     const val MESSAGE_TYPE_TEXT = "text"
     const val MESSAGE_TYPE_IMAGE = "image"

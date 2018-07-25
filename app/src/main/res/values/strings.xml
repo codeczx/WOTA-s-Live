@@ -45,9 +45,10 @@
     <string name="VideoView_error_text_unknown">Unknown</string>
     <string name="VideoView_error_button">OK</string>
 
-    <string name="resize_250">/resize_250X250/</string>
-    <string name="resize_160">/resize_160X160/</string>
-    <string name="resize_100">/resize_100X100/</string>
+    <string name="resize_250">resize_250X250</string>
+    <string name="resize_160">resize_160X160</string>
+    <string name="resize_100">resize_100X100</string>
 
     <string name="photo_album">相册</string>
+    <string name="pic_save">保存到本地</string>
 </resources>

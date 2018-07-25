@@ -58,6 +58,7 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
         (activity as RoomDetailActivity).let {
             val extras = it.intent.extras
             viewModel.roomId = extras.getInt(Constants.ROOM_ID)
+            viewModel.memberId = extras.getInt(Constants.MEMBER_ID)
             viewModel.url.set(extras.getString(Constants.ROOM_BG_PATH))
             it.setupActionBar(R.id.toolbar) {
                 title = extras.getString(Constants.ROOM_CREATOR) + ":" + extras.getString(Constants.ROOM_NAME)

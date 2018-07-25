@@ -1,13 +1,22 @@
 package io.github.wotaslive.room
 
+import android.Manifest
 import android.app.Application
 import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.databinding.ObservableField
+import android.os.Environment
+import android.support.v4.app.FragmentActivity
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.Gson
+import com.tbruyelle.rxpermissions2.RxPermissions
+import io.github.wotaslive.GlideApp
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.ExtInfo
+import io.github.wotaslive.utils.checkUrl
 import io.reactivex.Flowable
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
@@ -20,6 +29,7 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
     val roomBoardData = MutableLiveData<List<ExtInfo>>()
     var isLoadMore = false
     var roomId = 0
+    var memberId = 0
     private var firstSend = 0L
     private val compositeDisposable = CompositeDisposable()
     private var lastTime = 0L
@@ -91,5 +101,31 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
     override fun onCleared() {
         super.onCleared()
         compositeDisposable.clear()
+    }
+
+    fun saveToLocal(activity: FragmentActivity) {
+        val url = imageUrl.get() ?: ""
+        checkPermission(activity).subscribe {
+            if (it) {
+                val worker = Schedulers.io().createWorker()
+                worker.schedule {
+                    val file = GlideApp.with(activity)
+                            .downloadOnly()
+                            .load(checkUrl(url))
+                            .submit()
+                            .get()
+                    val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    val fileName = path.absolutePath + "/" + url.substring(url.lastIndexOf("/") + 1)
+                    FileUtils.copyFile(file.absolutePath, fileName, null)
+                    ToastUtils.showShort("已保存到:$fileName")
+                }
+            }
+        }
+
+    }
+
+    private fun checkPermission(activity: FragmentActivity): Observable<Boolean> {
+        val rxPermissions = RxPermissions(activity)
+        return rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     }
 }
