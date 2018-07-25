@@ -34,7 +34,7 @@
                 android:contentDescription="@string/empty_value"
                 android:scaleType="centerCrop"
                 android:src="@color/white"
-                app:imageUrl="@{viewModel.url}"
+                app:imageUrl="@{@string/resize_250+viewModel.url}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
