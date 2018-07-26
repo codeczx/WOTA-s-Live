@@ -1,4 +1,4 @@
-package io.github.wotaslive.room.pictures
+package io.github.wotaslive.roomlist.room.pictures
 
 
 import android.arch.lifecycle.Observer
@@ -10,9 +10,9 @@ import android.view.View
 import android.view.ViewGroup
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragPicsBinding
-import io.github.wotaslive.room.PhotoFragment
-import io.github.wotaslive.room.RoomDetailActivity
-import io.github.wotaslive.room.RoomViewModel
+import io.github.wotaslive.roomlist.room.PhotoFragment
+import io.github.wotaslive.roomlist.room.RoomDetailActivity
+import io.github.wotaslive.roomlist.room.RoomViewModel
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
 

@@ -1,13 +1,13 @@
-package io.github.wotaslive.room.pictures
+package io.github.wotaslive.roomlist.room.pictures
 
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import io.github.wotaslive.DataBindingViewHolder
-import io.github.wotaslive.data.model.Data
+import io.github.wotaslive.data.model.DynamicPictureInfo
 import io.github.wotaslive.databinding.ItemDynamicPicBinding
 
-class DynamicPicturesAdapter(private val callback: Callback) : ListAdapter<Data, DataBindingViewHolder>(DynamicPictureDiffCallback()) {
+class DynamicPicturesAdapter(private val callback: Callback) : ListAdapter<DynamicPictureInfo.Content.Data, DataBindingViewHolder>(DynamicPictureDiffCallback()) {
 
     interface Callback {
         fun onImageClick(url: String)

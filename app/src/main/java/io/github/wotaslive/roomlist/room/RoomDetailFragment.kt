@@ -1,4 +1,4 @@
-package io.github.wotaslive.room
+package io.github.wotaslive.roomlist.room
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
@@ -9,7 +9,7 @@ import com.orhanobut.logger.Logger
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragRoomDetailBinding
-import io.github.wotaslive.room.pictures.DynamicPicturesFragment
+import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
 

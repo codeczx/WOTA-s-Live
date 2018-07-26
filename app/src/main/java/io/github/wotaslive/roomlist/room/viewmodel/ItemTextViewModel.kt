@@ -1,4 +1,4 @@
-package io.github.wotaslive.room.viewmodel
+package io.github.wotaslive.roomlist.room.viewmodel
 
 import android.arch.lifecycle.ViewModel
 import android.databinding.ObservableBoolean

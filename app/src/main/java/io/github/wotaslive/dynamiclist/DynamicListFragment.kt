@@ -1,0 +1,67 @@
+package io.github.wotaslive.dynamiclist
+
+
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import com.scwang.smartrefresh.layout.api.RefreshLayout
+import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
+import io.github.wotaslive.BaseLazyFragment
+import io.github.wotaslive.databinding.FragDynamicListBinding
+import io.github.wotaslive.main.MainActivity
+import io.github.wotaslive.utils.obtainViewModel
+
+class DynamicListFragment : BaseLazyFragment() {
+    private lateinit var viewModel: DynamicListViewModel
+    private lateinit var viewDataBinding: FragDynamicListBinding
+    private val adapter = DynamicAdapter()
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
+                              savedInstanceState: Bundle?): View? {
+        viewDataBinding = FragDynamicListBinding.inflate(inflater, container, false)
+        return viewDataBinding.root
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        viewModel = (activity as MainActivity).obtainViewModel(DynamicListViewModel::class.java)
+        viewDataBinding.setLifecycleOwner(this)
+        subscribeUi()
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    override fun initData() {
+        viewModel.load(false)
+    }
+
+    private fun subscribeUi() {
+        with(viewDataBinding.srlDynamic) {
+            setEnableAutoLoadMore(true)
+            setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {
+                override fun onLoadMore(refreshLayout: RefreshLayout) {
+                    viewModel.load(true)
+                }
+
+                override fun onRefresh(refreshLayout: RefreshLayout) {
+                    viewModel.load(false)
+                }
+            })
+        }
+        with(viewDataBinding.rvDynamic) {
+            layoutManager = android.support.v7.widget.LinearLayoutManager(context)
+            isNestedScrollingEnabled = false
+            addItemDecoration(com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator())
+            addItemDecoration(
+                    io.github.wotaslive.widget.SpaceItemDecoration(
+                            resources.getDimensionPixelOffset(io.github.wotaslive.R.dimen.cardMarginHorizontal),
+                            resources.getDimensionPixelOffset(io.github.wotaslive.R.dimen.cardMarginVertical)
+                    )
+            )
+            adapter = this@DynamicListFragment.adapter
+        }
+    }
+
+    companion object {
+        fun newInstance() = DynamicListFragment()
+    }
+}

@@ -1,4 +1,4 @@
-package io.github.wotaslive.room
+package io.github.wotaslive.roomlist.room
 
 import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
@@ -10,10 +10,10 @@ import io.github.wotaslive.DataBindingViewHolder
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ExtInfo
 import io.github.wotaslive.databinding.ItemRoomImageBinding
-import io.github.wotaslive.room.viewmodel.ItemImageViewModel
-import io.github.wotaslive.room.viewmodel.ItemLiveViewModel
-import io.github.wotaslive.room.viewmodel.ItemTextViewModel
-import io.github.wotaslive.room.viewmodel.ItemTimeViewModel
+import io.github.wotaslive.roomlist.room.viewmodel.ItemImageViewModel
+import io.github.wotaslive.roomlist.room.viewmodel.ItemLiveViewModel
+import io.github.wotaslive.roomlist.room.viewmodel.ItemTextViewModel
+import io.github.wotaslive.roomlist.room.viewmodel.ItemTimeViewModel
 
 class RoomDetailAdapter(private val callback: Callback) : ListAdapter<Any, DataBindingViewHolder>(RoomDetailDiffCallback()) {
 

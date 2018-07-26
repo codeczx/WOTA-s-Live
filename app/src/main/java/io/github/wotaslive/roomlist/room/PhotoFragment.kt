@@ -1,4 +1,4 @@
-package io.github.wotaslive.room
+package io.github.wotaslive.roomlist.room
 
 
 import android.os.Bundle

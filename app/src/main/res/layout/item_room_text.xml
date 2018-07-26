@@ -8,7 +8,7 @@
 
         <variable
             name="viewModel"
-            type="io.github.wotaslive.room.viewmodel.ItemTextViewModel" />
+            type="io.github.wotaslive.roomlist.room.viewmodel.ItemTextViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout

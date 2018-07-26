@@ -14,7 +14,7 @@ import io.github.wotaslive.data.model.RoomInfo
 import io.github.wotaslive.databinding.FragRoomListBinding
 import io.github.wotaslive.login.LoginActivity
 import io.github.wotaslive.main.MainActivity
-import io.github.wotaslive.room.RoomDetailActivity
+import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.widget.SpaceItemDecoration
 

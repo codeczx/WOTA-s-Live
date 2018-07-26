@@ -6,11 +6,11 @@
 
         <variable
             name="viewModel"
-            type="io.github.wotaslive.room.RoomViewModel" />
+            type="io.github.wotaslive.roomlist.room.RoomViewModel" />
 
         <variable
             name="eventHandler"
-            type="io.github.wotaslive.room.PhotoFragment" />
+            type="io.github.wotaslive.roomlist.room.PhotoFragment" />
     </data>
 
     <com.github.chrisbanes.photoview.PhotoView

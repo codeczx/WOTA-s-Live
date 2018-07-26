@@ -59,6 +59,7 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
         val disposable = appRepository.login(username, password)
                 .filter { it.status == 200 }
                 .flatMap {
+                    spUtils.put(Constants.SP_NICKNAME, it.content?.userInfo?.nickName.orEmpty())
                     checkFriends(it.content)
                 }
                 .subscribeOn(Schedulers.io())

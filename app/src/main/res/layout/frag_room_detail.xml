@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="io.github.wotaslive.room.RoomViewModel" />
+            type="io.github.wotaslive.roomlist.room.RoomViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout

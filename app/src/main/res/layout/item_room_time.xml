@@ -5,7 +5,7 @@
 
         <variable
             name="viewModel"
-            type="io.github.wotaslive.room.viewmodel.ItemTimeViewModel" />
+            type="io.github.wotaslive.roomlist.room.viewmodel.ItemTimeViewModel" />
     </data>
 
     <FrameLayout

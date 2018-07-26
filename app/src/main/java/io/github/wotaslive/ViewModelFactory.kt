@@ -4,12 +4,13 @@ import android.app.Application
 import android.arch.lifecycle.ViewModel
 import android.arch.lifecycle.ViewModelProvider
 import io.github.wotaslive.data.AppRepository
+import io.github.wotaslive.dynamiclist.DynamicListViewModel
 import io.github.wotaslive.livelist.LiveListViewModel
 import io.github.wotaslive.login.LoginViewModel
 import io.github.wotaslive.main.MainViewModel
-import io.github.wotaslive.room.RoomViewModel
-import io.github.wotaslive.room.pictures.DynamicPicturesViewModel
 import io.github.wotaslive.roomlist.RoomListViewModel
+import io.github.wotaslive.roomlist.room.RoomViewModel
+import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesViewModel
 import io.github.wotaslive.showlist.ShowListViewModel
 import java.lang.IllegalArgumentException
 
@@ -36,6 +37,8 @@ class ViewModelFactory private constructor(
                         RoomViewModel(application, appRepository)
                     isAssignableFrom(DynamicPicturesViewModel::class.java) ->
                         DynamicPicturesViewModel(application, appRepository)
+                    isAssignableFrom(DynamicListViewModel::class.java) ->
+                        DynamicListViewModel(application, appRepository)
                     else ->
                         throw IllegalArgumentException("Unknown ViewModel class:${modelClass.name}")
                 }

@@ -39,4 +39,14 @@ interface ApiServices {
     @POST("dynamicsystem/api/picture/v1/list/{memberId}")
     fun getDynamicPictures(@Path("memberId") memberId: Int, @Body dynamicPictureRequestBody: DynamicPictureRequestBody):
             Flowable<DynamicPictureInfo>
+
+    @POST("dynamicsystem/api/dynamic/v1/list/friends")
+    fun getDynamicList(@Body dynamicListRequestBody: DynamicListRequestBody): Flowable<DynamicInfo>
+
+    @POST("dynamicsystem/api/dynamic/v1/list/member/{memberId}")
+    fun getDynamicOfMember(@Path("memberId") memberId: Int, @Body dynamicListRequestBody: DynamicListRequestBody):
+            Flowable<DynamicInfo>
+
+    @POST("dynamicsystem/api/comment/v1/list")
+    fun getCommit(@Body commitRequestBody: CommitRequestBody): Flowable<CommitInfo>
 }

@@ -51,8 +51,9 @@ class LoginViewModel(application: Application, private val appRepository: AppRep
                             spUtils.put(Constants.SP_FRIENDS, Gson().toJson(it.content?.friends))
                             spUtils.put(Constants.SP_USERNAME, un)
                             spUtils.put(Constants.SP_PASSWORD, pw)
-                            it.content?.userInfo?.nickName?.let {
-                                spUtils.put(Constants.SP_NICKNAME, it)
+                            it.content?.userInfo?.let {
+                                spUtils.put(Constants.SP_NICKNAME, it.nickName.orEmpty())
+                                spUtils.put(Constants.SP_USER_ID, it.userId)
                             }
                             loginSuccessCommand.call()
                         }

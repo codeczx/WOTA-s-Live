@@ -82,18 +82,7 @@ class AppRepository private constructor() {
 
     val roomList: Flowable<RoomInfo>
         get() {
-            val friendsStr = SPUtils.getInstance(Constants.SP_NAME).getString(Constants.SP_FRIENDS, "")
-            val friends: List<Int>
-            friends = if (TextUtils.isEmpty(friendsStr)) {
-                ArrayList()
-            } else {
-                val listType = object : TypeToken<ArrayList<Int>>() {
-
-                }.type
-                Gson().fromJson(friendsStr, listType)
-            }
-            val roomListRequestBody = RoomListRequestBody(friends)
-            return roomApi.getRoomList(roomListRequestBody)
+            return roomApi.getRoomList(RoomListRequestBody(friends))
         }
 
     fun getLiveInfo(lastTime: Long): Flowable<LiveInfo> {
@@ -133,6 +122,17 @@ class AppRepository private constructor() {
         return dynamicApi.getDynamicPictures(roomId, dynamicPictureRequestBody)
     }
 
+    fun getDynamicList(lastTime: Long): Flowable<DynamicInfo> =
+            dynamicApi.getDynamicList(DynamicListRequestBody(lastTime, DEFAULT_LITMIT, userId, friends))
+
+    fun getMemberDynamic(memberId: Int, lastTime: Long): Flowable<DynamicInfo> {
+        return dynamicApi.getDynamicOfMember(memberId, DynamicListRequestBody(lastTime, DEFAULT_LITMIT, userId, friends))
+    }
+
+    fun getCommit(lastTime: Long, dynamicId: Int): Flowable<CommitInfo> {
+        return dynamicApi.getCommit(CommitRequestBody(lastTime, dynamicId, DEFAULT_LITMIT))
+    }
+
     companion object {
 
         const val IMG_BASE_URL = "https://source.48.cn/"
@@ -147,6 +147,24 @@ class AppRepository private constructor() {
 
         val instance: AppRepository by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             AppRepository()
+        }
+
+        private val friends: List<Int> by lazy {
+            val friendsStr = SPUtils.getInstance(Constants.SP_NAME).getString(Constants.SP_FRIENDS, "")
+            val list: List<Int>
+            list = if (TextUtils.isEmpty(friendsStr)) {
+                ArrayList()
+            } else {
+                val listType = object : TypeToken<ArrayList<Int>>() {
+
+                }.type
+                Gson().fromJson(friendsStr, listType)
+            }
+            list
+        }
+
+        private val userId: Int by lazy {
+            SPUtils.getInstance(Constants.SP_NAME).getInt(Constants.SP_USER_ID)
         }
 
         private val okHttpClient: OkHttpClient

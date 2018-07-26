@@ -6,11 +6,11 @@
 
         <variable
             name="viewModel"
-            type="io.github.wotaslive.room.pictures.ItemViewModel" />
+            type="io.github.wotaslive.roomlist.room.pictures.ItemViewModel" />
 
         <variable
             name="eventHandler"
-            type="io.github.wotaslive.room.pictures.DynamicPicturesAdapter.Callback" />
+            type="io.github.wotaslive.roomlist.room.pictures.DynamicPicturesAdapter.Callback" />
     </data>
 
     <android.support.constraint.ConstraintLayout

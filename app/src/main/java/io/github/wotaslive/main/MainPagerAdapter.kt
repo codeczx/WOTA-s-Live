@@ -5,6 +5,7 @@ import android.support.v4.app.Fragment
 import android.support.v4.app.FragmentManager
 import android.support.v4.app.FragmentPagerAdapter
 import io.github.wotaslive.R
+import io.github.wotaslive.dynamiclist.DynamicListFragment
 import io.github.wotaslive.livelist.LiveListFragment
 import io.github.wotaslive.roomlist.RoomListFragment
 import io.github.wotaslive.showlist.ShowListFragment
@@ -24,10 +25,12 @@ class MainPagerAdapter internal constructor(context: Context, fm: FragmentManage
         mFragments.add(LiveListFragment.newInstance())
         mFragments.add(ShowListFragment.newInstance())
         mFragments.add(RoomListFragment.newInstance())
+        mFragments.add(DynamicListFragment.newInstance())
         mTitles = ArrayList()
         mTitles.add(context.getString(R.string.tab_stream))
         mTitles.add(context.getString(R.string.tab_show))
         mTitles.add(context.getString(R.string.tab_room))
+        mTitles.add(context.getString(R.string.tab_dynamic))
     }
 
     override fun getItem(position: Int): Fragment {

@@ -25,6 +25,7 @@ object Constants {
     const val SP_USERNAME = "username"
     const val SP_PASSWORD = "password"
     const val SP_NICKNAME = "nickname"
+    const val SP_USER_ID = "user_id"
 
     const val URL = "url"
     const val IS_LIVE = "is_live"

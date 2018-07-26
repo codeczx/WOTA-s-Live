@@ -6,7 +6,7 @@
 
         <variable
             name="viewModel"
-            type="io.github.wotaslive.room.viewmodel.ItemBoardViewModel" />
+            type="io.github.wotaslive.roomlist.room.viewmodel.ItemBoardViewModel" />
     </data>
 
     <android.support.constraint.ConstraintLayout

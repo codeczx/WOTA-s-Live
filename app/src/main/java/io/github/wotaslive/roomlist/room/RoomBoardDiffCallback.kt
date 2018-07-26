@@ -1,4 +1,4 @@
-package io.github.wotaslive.room
+package io.github.wotaslive.roomlist.room
 
 import android.support.v7.util.DiffUtil
 import io.github.wotaslive.data.model.ExtInfo
