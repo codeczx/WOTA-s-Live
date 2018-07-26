@@ -19,9 +19,9 @@ import io.github.wotaslive.utils.setupActionBar
 
 class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
     private lateinit var viewDataBinding: FragPicsBinding
-
     private lateinit var viewModel: DynamicPicturesViewModel
     private val adapter = DynamicPicturesAdapter(this)
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         viewDataBinding = FragPicsBinding.inflate(inflater, container, false)
@@ -31,7 +31,7 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as RoomDetailActivity).obtainViewModel(DynamicPicturesViewModel::class.java)
-        viewModel.roomId = (activity as RoomDetailActivity).obtainViewModel(RoomViewModel::class.java).memberId
+        viewModel.memberId = (activity as RoomDetailActivity).obtainViewModel(RoomViewModel::class.java).memberId
         viewModel.picsData.observe(this, Observer {
             if (viewModel.isLoadMore) {
                 viewDataBinding.srlPics.finishLoadMore()

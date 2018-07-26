@@ -11,7 +11,7 @@ import io.reactivex.schedulers.Schedulers
 
 class DynamicPicturesViewModel(application: Application, private val appRepository: AppRepository) :
         AndroidViewModel(application) {
-    var roomId: Int = 0
+    var memberId: Int = 0
     var isLoadMore = false
     val picsData = MutableLiveData<List<Data>>()
     private var lastTime = 0L
@@ -21,7 +21,7 @@ class DynamicPicturesViewModel(application: Application, private val appReposito
         isLoadMore = load
         if (!isLoadMore) lastTime = 0
         val list = ArrayList<Data>()
-        val disposable = appRepository.getDynamicPictures(roomId, lastTime)
+        val disposable = appRepository.getDynamicPictures(memberId, lastTime)
                 .subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
