@@ -32,7 +32,7 @@
         <activity
             android:name=".player.PlayerActivity"
             android:screenOrientation="portrait" />
-        <activity android:name=".room.RoomDetailActivity" />
+        <activity android:name=".roomlist.room.RoomDetailActivity" />
         <activity android:name=".login.LoginActivity" />
 
         <service

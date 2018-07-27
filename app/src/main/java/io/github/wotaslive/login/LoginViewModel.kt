@@ -10,9 +10,8 @@ import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.SingleLiveEvent
 import io.github.wotaslive.data.AppRepository
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.github.wotaslive.utils.RxJavaUtil
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class LoginViewModel(application: Application, private val appRepository: AppRepository) : AndroidViewModel(application) {
     val username = ObservableField<String>()
@@ -39,8 +38,7 @@ class LoginViewModel(application: Application, private val appRepository: AppRep
             return
         }
         appRepository.login(un, pw)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxJavaUtil.flowableNetworkScheduler())
                 .subscribe({
                     when (it.status) {
                         200 -> {

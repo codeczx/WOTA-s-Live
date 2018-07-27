@@ -5,9 +5,8 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.ShowInfo
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.github.wotaslive.utils.RxJavaUtil
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class ShowListViewModel(application: Application, private val appRepository: AppRepository) : AndroidViewModel(application) {
     val showListData = MutableLiveData<List<ShowInfo.ContentBean.ShowBean>>()
@@ -15,8 +14,7 @@ class ShowListViewModel(application: Application, private val appRepository: App
 
     fun start() {
         val disposable = AppRepository.instance.getOpenLiveInfo(0, 0, 0, 0)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxJavaUtil.flowableNetworkScheduler())
                 .subscribe({ t ->
                     showListData.value = t.content?.showList
                 }, Throwable::printStackTrace)

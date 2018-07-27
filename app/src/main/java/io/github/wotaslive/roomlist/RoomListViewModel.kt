@@ -7,9 +7,8 @@ import io.github.wotaslive.R
 import io.github.wotaslive.SingleLiveEvent
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.RoomInfo
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.github.wotaslive.utils.RxJavaUtil
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class RoomListViewModel(application: Application, private val appRepository: AppRepository) :
         AndroidViewModel(application) {
@@ -19,8 +18,7 @@ class RoomListViewModel(application: Application, private val appRepository: App
 
     fun start() {
         compositeDisposable.add(appRepository.roomList
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxJavaUtil.flowableNetworkScheduler())
                 .subscribe({
                     if (it.status == 401) {
                         roomMessageCommand.value = R.string.auth_fail

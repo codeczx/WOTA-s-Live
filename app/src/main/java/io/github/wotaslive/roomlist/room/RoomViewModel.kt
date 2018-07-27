@@ -14,10 +14,10 @@ import com.tbruyelle.rxpermissions2.RxPermissions
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.ExtInfo
+import io.github.wotaslive.utils.RxJavaUtil
 import io.github.wotaslive.utils.checkUrl
 import io.reactivex.Flowable
 import io.reactivex.Observable
-import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
@@ -45,6 +45,7 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
     fun loadRoom() {
         val list = ArrayList<Any>()
         val disposable = appRepository.getRoomDetailInfo(roomId, lastTime)
+                .compose(RxJavaUtil.flowableNetworkScheduler())
                 .filter {
                     it.status == 200
                 }
@@ -52,8 +53,6 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                     this@RoomViewModel.lastTime = it.content?.lastTime ?: 0
                     return@flatMap Flowable.fromIterable(it.content?.data)
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doFinally {
                     list.addAll(0, roomDetailData.value.orEmpty())
                     roomDetailData.value = list
@@ -77,6 +76,7 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
             boardLastTime = 0
         val list = ArrayList(roomBoardData.value.orEmpty())
         val disposable = appRepository.getRoomBoard(roomId, boardLastTime)
+                .compose(RxJavaUtil.flowableNetworkScheduler())
                 .filter {
                     it.status == 200
                 }
@@ -84,8 +84,6 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                     boardLastTime = it.content?.lastTime ?: 0
                     return@flatMap Flowable.fromIterable(it.content?.data)
                 }
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
                 .doFinally {
                     roomBoardData.value = list
                 }

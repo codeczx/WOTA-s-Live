@@ -5,9 +5,8 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.DynamicPictureInfo
-import io.reactivex.android.schedulers.AndroidSchedulers
+import io.github.wotaslive.utils.RxJavaUtil
 import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class DynamicPicturesViewModel(application: Application, private val appRepository: AppRepository) :
         AndroidViewModel(application) {
@@ -22,9 +21,7 @@ class DynamicPicturesViewModel(application: Application, private val appReposito
         if (!isLoadMore) lastTime = 0
         val list = ArrayList<DynamicPictureInfo.Content.Data>()
         val disposable = appRepository.getDynamicPictures(memberId, lastTime)
-                .subscribeOn(Schedulers.io())
-                .unsubscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
+                .compose(RxJavaUtil.flowableNetworkScheduler())
                 .doFinally {
                     if (isLoadMore)
                         list.addAll(0, picsData.value.orEmpty())
