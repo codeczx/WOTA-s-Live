@@ -1,5 +1,8 @@
 package io.github.wotaslive.data.model
 
+import android.arch.persistence.room.Entity
+import android.arch.persistence.room.PrimaryKey
+
 
 data class SyncInfo(
         val status: Int, // 200
@@ -26,7 +29,10 @@ data class SyncInfo(
             val needUpateMusic: Boolean // false
     ) {
 
+        @Entity(tableName = "team")
         data class Team(
+                @PrimaryKey(autoGenerate = true)
+                val id: Int,
                 val team_id: Int, // 1403
                 val group_id: Int, // 14
                 val team_name: String, // 预备生
@@ -40,8 +46,10 @@ data class SyncInfo(
                 val utime: String // 2018-04-09 17:43:00
         )
 
-
+        // 传入的数据包含不少脏数据，无法使用外键
+        @Entity(tableName = "member")
         data class MemberInfo(
+                @PrimaryKey
                 val member_id: Int, // 844552
                 val ctime: String, // 2018-07-24 14:42:09
                 val utime: String, // 2018-07-24 14:46:00
@@ -56,25 +64,26 @@ data class SyncInfo(
                 val wb_name: String, // SHY48星梦剧院
                 val city: Int, // 13
                 val height: Int, // 0
-                val blood_type: String,
-                val birthday: String,
-                val constellation: String,
-                val star_region: String,
-                val birthplace: String,
-                val specialty: String,
-                val hobbies: String,
-                val full_photo_1: String,
-                val full_photo_2: String,
-                val full_photo_3: String,
-                val full_photo_4: String,
+                val blood_type: String?,
+                val birthday: String?,
+                val constellation: String?,
+                val star_region: String?,
+                val birthplace: String?,
+                val specialty: String?,
+                val hobbies: String?,
+                val full_photo_1: String?,
+                val full_photo_2: String?,
+                val full_photo_3: String?,
+                val full_photo_4: String?,
                 val status: Int, // 1
                 val first_team: Int, // 0
                 val sid: Int, // 0
                 val sno: Int // 0
         )
 
-
+        @Entity(tableName = "group")
         data class Group(
+                @PrimaryKey
                 val group_id: Int, // 14
                 val group_name: String, // CKG48
                 val ctime: String, // 2017-10-17 17:27:00
@@ -82,8 +91,9 @@ data class SyncInfo(
                 val info: String // CKG48
         )
 
-
+        @Entity(tableName = "url")
         data class Url(
+                @PrimaryKey
                 val url_key: String, // UNBOUNDSTATE
                 val url_name: String, // 帐号绑定解除说明
                 val url_info: String, // https://h5.48.cn/2018apppage/nutie/rule.html
@@ -92,8 +102,9 @@ data class SyncInfo(
                 val utime: String // 2018-05-18 12:37:41
         )
 
-
+        @Entity(tableName = "period")
         data class Period(
+                @PrimaryKey
                 val period_id: Int, // 1402
                 val group_id: Int, // 14
                 val period_name: String, // CKG48 二期生
@@ -101,8 +112,9 @@ data class SyncInfo(
                 val utime: String // 2018-04-09 18:02:00
         )
 
-
+        @Entity(tableName = "function")
         data class Function(
+                @PrimaryKey
                 val func_id: Int, // 3004
                 val func_type_id: Int, // 3
                 val func_type_name: String, // 活动任务

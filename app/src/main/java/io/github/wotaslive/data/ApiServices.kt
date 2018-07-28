@@ -49,4 +49,7 @@ interface ApiServices {
 
     @POST("dynamicsystem/api/comment/v1/list")
     fun getCommit(@Body commitRequestBody: CommitRequestBody): Flowable<CommitInfo>
+
+    @POST("syncsystem/api/cache/v1/update/overview")
+    fun sync(@Body syncRequestBody: SyncRequestBody): Flowable<SyncInfo>
 }

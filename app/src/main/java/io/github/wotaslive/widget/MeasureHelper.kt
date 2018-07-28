@@ -68,26 +68,26 @@ class MeasureHelper(view: View) {
      * @param heightMeasureSpec
      */
     fun doMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
-        var widthMeasureSpec = widthMeasureSpec
-        var heightMeasureSpec = heightMeasureSpec
+        var widthSpec = widthMeasureSpec
+        var heightSpec = heightMeasureSpec
         //Log.i("@@@@", "onMeasure(" + MeasureSpec.toString(widthMeasureSpec) + ", "
         //        + MeasureSpec.toString(heightMeasureSpec) + ")");
         if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) {
-            val tempSpec = widthMeasureSpec
-            widthMeasureSpec = heightMeasureSpec
-            heightMeasureSpec = tempSpec
+            val tempSpec = widthSpec
+            widthSpec = heightSpec
+            heightSpec = tempSpec
         }
 
-        var width = View.getDefaultSize(mVideoWidth, widthMeasureSpec)
-        var height = View.getDefaultSize(mVideoHeight, heightMeasureSpec)
+        var width = View.getDefaultSize(mVideoWidth, widthSpec)
+        var height = View.getDefaultSize(mVideoHeight, heightSpec)
         if (mCurrentAspectRatio == IRenderView.AR_MATCH_PARENT) {
-            width = widthMeasureSpec
-            height = heightMeasureSpec
+            width = widthSpec
+            height = heightSpec
         } else if (mVideoWidth > 0 && mVideoHeight > 0) {
-            val widthSpecMode = View.MeasureSpec.getMode(widthMeasureSpec)
-            val widthSpecSize = View.MeasureSpec.getSize(widthMeasureSpec)
-            val heightSpecMode = View.MeasureSpec.getMode(heightMeasureSpec)
-            val heightSpecSize = View.MeasureSpec.getSize(heightMeasureSpec)
+            val widthSpecMode = View.MeasureSpec.getMode(widthSpec)
+            val widthSpecSize = View.MeasureSpec.getSize(widthSpec)
+            val heightSpecMode = View.MeasureSpec.getMode(heightSpec)
+            val heightSpecSize = View.MeasureSpec.getSize(heightSpec)
 
             if (widthSpecMode == View.MeasureSpec.AT_MOST && heightSpecMode == View.MeasureSpec.AT_MOST) {
                 val specAspectRatio = widthSpecSize.toFloat() / heightSpecSize.toFloat()
@@ -211,17 +211,15 @@ class MeasureHelper(view: View) {
     companion object {
 
         fun getAspectRatioText(context: Context, aspectRatio: Int): String {
-            val text: String
-            when (aspectRatio) {
-                IRenderView.AR_ASPECT_FIT_PARENT -> text = context.getString(R.string.VideoView_ar_aspect_fit_parent)
-                IRenderView.AR_ASPECT_FILL_PARENT -> text = context.getString(R.string.VideoView_ar_aspect_fill_parent)
-                IRenderView.AR_ASPECT_WRAP_CONTENT -> text = context.getString(R.string.VideoView_ar_aspect_wrap_content)
-                IRenderView.AR_MATCH_PARENT -> text = context.getString(R.string.VideoView_ar_match_parent)
-                IRenderView.AR_16_9_FIT_PARENT -> text = context.getString(R.string.VideoView_ar_16_9_fit_parent)
-                IRenderView.AR_4_3_FIT_PARENT -> text = context.getString(R.string.VideoView_ar_4_3_fit_parent)
-                else -> text = context.getString(R.string.N_A)
+            return when (aspectRatio) {
+                IRenderView.AR_ASPECT_FIT_PARENT -> context.getString(R.string.VideoView_ar_aspect_fit_parent)
+                IRenderView.AR_ASPECT_FILL_PARENT -> context.getString(R.string.VideoView_ar_aspect_fill_parent)
+                IRenderView.AR_ASPECT_WRAP_CONTENT -> context.getString(R.string.VideoView_ar_aspect_wrap_content)
+                IRenderView.AR_MATCH_PARENT -> context.getString(R.string.VideoView_ar_match_parent)
+                IRenderView.AR_16_9_FIT_PARENT -> context.getString(R.string.VideoView_ar_16_9_fit_parent)
+                IRenderView.AR_4_3_FIT_PARENT -> context.getString(R.string.VideoView_ar_4_3_fit_parent)
+                else -> context.getString(R.string.N_A)
             }
-            return text
         }
     }
 }

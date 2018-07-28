@@ -6,7 +6,6 @@ import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
-import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
@@ -16,7 +15,6 @@ import io.github.wotaslive.R
 import io.github.wotaslive.databinding.ActMainBinding
 import io.github.wotaslive.login.LoginActivity
 import io.github.wotaslive.utils.obtainViewModel
-import io.github.wotaslive.utils.setupSnackbar
 
 
 class MainActivity : AppCompatActivity() {
@@ -105,9 +103,6 @@ class MainActivity : AppCompatActivity() {
         viewModel.isLogin.observe(this, Observer {
             invalidateOptionsMenu()
         })
-        viewDataBinding.root.setupSnackbar(this,
-                viewModel.friendMessageCommand,
-                Snackbar.LENGTH_LONG)
     }
 
     private fun initView() {

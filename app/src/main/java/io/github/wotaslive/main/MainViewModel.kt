@@ -7,23 +7,23 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.support.v7.graphics.Palette
-import android.text.TextUtils
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.blankj.utilcode.util.SPUtils
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
 import com.bumptech.glide.request.transition.Transition
 import com.github.florent37.materialviewpager.MaterialViewPager
 import com.github.florent37.materialviewpager.header.HeaderDesign
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import com.orhanobut.logger.Logger
 import io.github.wotaslive.Constants
 import io.github.wotaslive.GlideApp
-import io.github.wotaslive.R
 import io.github.wotaslive.SingleLiveEvent
 import io.github.wotaslive.data.AppRepository
-import io.github.wotaslive.data.model.LoginInfo
-import io.github.wotaslive.utils.RxJavaUtil
+import io.github.wotaslive.data.RefreshWorker
+import io.github.wotaslive.data.SyncWorker
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
@@ -37,57 +37,35 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     private var maxImgSize = 5L
     private val spUtils = SPUtils.getInstance(Constants.SP_NAME)
     val headerRefreshCommand = SingleLiveEvent<MaterialViewPager.Listener>()
-    val friendMessageCommand = SingleLiveEvent<Int>()
     var isLogin = MutableLiveData<Boolean>()
     lateinit var nickname: String
 
     fun start() {
+        sync()
         initHeader()
-        refreshToken()
+    }
+
+    private fun sync() {
+        val constraints = Constraints.Builder()
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+//        val sync = PeriodicWorkRequest.Builder(SyncWorker::class.java, 1, TimeUnit.DAYS)
+//                .setConstraints(constraints)
+//                .build()
+        val sync = OneTimeWorkRequest.Builder(SyncWorker::class.java)
+                .setConstraints(constraints)
+                .build()
+        val refresh = OneTimeWorkRequest.Builder(RefreshWorker::class.java)
+                .setConstraints(constraints)
+                .build()
+        WorkManager.getInstance().enqueue(sync)
+        WorkManager.getInstance().enqueue(refresh)
     }
 
     fun loadInfo() {
         nickname = spUtils.getString(Constants.SP_NICKNAME)
         isLogin.value = spUtils.getString(Constants.HEADER_KEY_TOKEN).isNotEmpty()
         Logger.d(spUtils.getString(Constants.HEADER_KEY_TOKEN))
-    }
-
-    private fun refreshToken() {
-        val username = spUtils.getString(Constants.SP_USERNAME)
-        val password = spUtils.getString(Constants.SP_PASSWORD)
-        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) return
-        val disposable = appRepository.login(username, password)
-                .compose(RxJavaUtil.flowableNetworkScheduler())
-                .filter { it.status == 200 }
-                .flatMap {
-                    spUtils.put(Constants.SP_NICKNAME, it.content?.userInfo?.nickName.orEmpty())
-                    checkFriends(it.content)
-                }
-                .subscribe({
-                    friendMessageCommand.value = R.string.friend_reload
-                },
-                        Throwable::printStackTrace)
-        compositeDisposable.add(disposable)
-    }
-
-    private fun checkFriends(content: LoginInfo.ContentBean?): Flowable<Boolean> {
-        val gson = Gson()
-        return Flowable.create({
-            with(content) {
-                val oldFriends = spUtils.getString(io.github.wotaslive.Constants.SP_FRIENDS)
-                val newFriends = gson.toJson(this?.friends)
-                this?.token?.let { it1 -> spUtils.put(Constants.HEADER_KEY_TOKEN, it1) }
-                spUtils.put(Constants.SP_FRIENDS, newFriends)
-                if (android.text.TextUtils.isEmpty(oldFriends)) {
-                    it.onNext(true)
-                } else {
-                    val listType = object : TypeToken<ArrayList<Int>>() {}.type
-                    val newFriendlist: ArrayList<Int> = gson.fromJson(newFriends, listType)
-                    val oldFriendList: ArrayList<Int> = gson.fromJson(oldFriends, listType)
-                    it.onNext(!TextUtils.equals(newFriendlist.sort().toString(), oldFriendList.sort().toString()))
-                }
-            }
-        }, BackpressureStrategy.BUFFER)
     }
 
     private fun initHeader() {

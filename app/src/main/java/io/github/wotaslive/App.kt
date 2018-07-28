@@ -1,7 +1,6 @@
 package io.github.wotaslive
 
 import android.app.Application
-
 import com.blankj.utilcode.util.Utils
 import com.orhanobut.logger.AndroidLogAdapter
 import com.orhanobut.logger.Logger

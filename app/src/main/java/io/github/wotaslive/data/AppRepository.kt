@@ -14,7 +14,6 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
-import java.util.*
 
 class AppRepository private constructor() {
     private val liveApi: ApiServices by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -77,6 +76,16 @@ class AppRepository private constructor() {
         retrofit.create(ApiServices::class.java)
     }
 
+    private val syncApi: ApiServices by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        val retrofit = Retrofit.Builder()
+                .client(okHttpClient)
+                .baseUrl(SYNC_BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .build()
+        retrofit.create(ApiServices::class.java)
+    }
+
     val recommendList: Flowable<RecommendInfo>
         get() = otherApi.recommendList
 
@@ -87,13 +96,13 @@ class AppRepository private constructor() {
 
     fun getLiveInfo(lastTime: Long): Flowable<LiveInfo> {
         val requestBody = LiveRequestBody(
-                lastTime, 0, 0, 0, DEFAULT_LITMIT, System.currentTimeMillis())
+                lastTime, 0, 0, 0, DEFAULT_LIMIT, System.currentTimeMillis())
         return liveApi.getMemberLive(requestBody)
     }
 
     fun getOpenLiveInfo(isReview: Int, groupId: Int, lastGroupId: Int, lastTime: Long): Flowable<ShowInfo> {
         val showRequestBody = ShowRequestBody(
-                isReview, groupId, lastGroupId, lastTime, DEFAULT_LITMIT, System.currentTimeMillis())
+                isReview, groupId, lastGroupId, lastTime, DEFAULT_LIMIT, System.currentTimeMillis())
         return liveApi.getOpenLive(showRequestBody)
     }
 
@@ -108,12 +117,12 @@ class AppRepository private constructor() {
     }
 
     fun getRoomDetailInfo(roomId: Int, lastTime: Long): Flowable<RoomDetailInfo> {
-        val roomDetailRequestBody = RoomDetailRequestBody(roomId, 0, lastTime, DEFAULT_LITMIT)
+        val roomDetailRequestBody = RoomDetailRequestBody(roomId, 0, lastTime, DEFAULT_LIMIT)
         return roomApi.getRoomDetail(roomDetailRequestBody)
     }
 
     fun getRoomBoard(roomId: Int, lastTime: Long): Flowable<BoardPageInfo> {
-        val boardPageRequestBody = BoardPageRequestBody(roomId, lastTime, DEFAULT_LITMIT, false)
+        val boardPageRequestBody = BoardPageRequestBody(roomId, lastTime, DEFAULT_LIMIT, false)
         return jujuApi.getRoomBoard(boardPageRequestBody)
     }
 
@@ -123,14 +132,29 @@ class AppRepository private constructor() {
     }
 
     fun getDynamicList(lastTime: Long): Flowable<DynamicInfo> =
-            dynamicApi.getDynamicList(DynamicListRequestBody(lastTime, DEFAULT_LITMIT, userId, friends))
+            dynamicApi.getDynamicList(DynamicListRequestBody(lastTime, DEFAULT_LIMIT, userId, friends))
 
     fun getMemberDynamic(memberId: Int, lastTime: Long): Flowable<DynamicInfo> {
-        return dynamicApi.getDynamicOfMember(memberId, DynamicListRequestBody(lastTime, DEFAULT_LITMIT, userId, friends))
+        return dynamicApi.getDynamicOfMember(memberId, DynamicListRequestBody(lastTime, DEFAULT_LIMIT, userId, friends))
+    }
+
+    fun getSync(): Flowable<SyncInfo> {
+        val sync: SyncRequestBody
+        val spUtils = SPUtils.getInstance(Constants.SP_NAME)
+        val cache: String = spUtils.getString(Constants.SP_SYNC)
+        sync = if (cache.isEmpty()) {
+            val date = String.format("%tY-%<tm-%<td %<tH:%<tM:%<tS", 0L)
+            SyncRequestBody(date, date, date, date, date, date).also {
+                spUtils.put(Constants.SP_SYNC, GSON.toJson(it))
+            }
+        } else {
+            GSON.fromJson(cache, SyncRequestBody::class.java)
+        }
+        return syncApi.sync(sync)
     }
 
     fun getCommit(lastTime: Long, dynamicId: Int): Flowable<CommitInfo> {
-        return dynamicApi.getCommit(CommitRequestBody(lastTime, dynamicId, DEFAULT_LITMIT))
+        return dynamicApi.getCommit(CommitRequestBody(lastTime, dynamicId, DEFAULT_LIMIT))
     }
 
     companion object {
@@ -142,23 +166,26 @@ class AppRepository private constructor() {
         private const val USER_BASE_URL = "https://puser.48.cn/"
         private const val JUJU_BASE_URL = "https://pjuju.48.cn/"
         private const val DYNAMIC_BASE_URL = "https://pdynamic.48.cn/"
+        private const val SYNC_BASE_URL = "https://psync.48.cn/"
 
-        private const val DEFAULT_LITMIT = 10
+        private const val DEFAULT_LIMIT = 10
+
+        private val GSON = Gson()
 
         val instance: AppRepository by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             AppRepository()
         }
 
-        private val friends: List<Int> by lazy {
+        val friends: ArrayList<Int> by lazy {
             val friendsStr = SPUtils.getInstance(Constants.SP_NAME).getString(Constants.SP_FRIENDS, "")
-            val list: List<Int>
+            val list: ArrayList<Int>
             list = if (TextUtils.isEmpty(friendsStr)) {
                 ArrayList()
             } else {
                 val listType = object : TypeToken<ArrayList<Int>>() {
 
                 }.type
-                Gson().fromJson(friendsStr, listType)
+                GSON.fromJson(friendsStr, listType)
             }
             list
         }

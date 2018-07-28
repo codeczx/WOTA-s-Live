@@ -12,6 +12,13 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "1.0"
+
+        //指定room.schemaLocation生成的文件路径
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments = ["room.schemaLocation": "$projectDir/schemas".toString()]
+            }
+        }
     }
     buildTypes {
         release {
@@ -57,10 +64,12 @@ dependencies {
     implementation "com.android.support:palette-v7:$rootProject.supportLibraryVersion"
 
     // Architecture Components
-//    implementation "android.arch.persistence.room:runtime:$rootProject.roomVersion"
-//    kapt "android.arch.persistence.room:compiler:$rootProject.roomVersion"
+    implementation "android.arch.persistence.room:runtime:$rootProject.archLifecycleVersion"
+    implementation "android.arch.persistence.room:rxjava2:$rootProject.archLifecycleVersion"
+    kapt "android.arch.persistence.room:compiler:$rootProject.archLifecycleVersion"
     implementation "android.arch.lifecycle:extensions:$rootProject.archLifecycleVersion"
     kapt "android.arch.lifecycle:compiler:$rootProject.archLifecycleVersion"
+    implementation "android.arch.work:work-runtime-ktx:1.0.0-alpha05"
 
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
