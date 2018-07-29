@@ -33,6 +33,7 @@ fun ImageView.loadAvatar(url: String) {
     if (TextUtils.isEmpty(url)) return
     GlideApp.with(context)
             .load(checkUrl(url))
+            .dontAnimate()
             .into(this)
 }
 
@@ -43,6 +44,7 @@ fun ImageView.loadRoundImageUrl(url: String) {
     GlideApp.with(context)
             .load(checkUrl(url))
             .override(size, size)
+            .dontAnimate()
             .transform(RoundedCorners(resources.getDimensionPixelOffset(R.dimen.room_radius)))
             .into(this)
 }
@@ -53,6 +55,7 @@ fun ImageView.loadImage(url: String) {
     if (url.startsWith("#")) {
         GlideApp.with(context)
                 .load(ColorDrawable(Color.parseColor(url)))
+                .dontAnimate()
                 .into(this)
     } else if (url.endsWith("gif")) {
         GlideApp.with(context)

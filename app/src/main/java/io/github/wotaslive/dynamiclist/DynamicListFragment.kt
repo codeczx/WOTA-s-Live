@@ -1,6 +1,7 @@
 package io.github.wotaslive.dynamiclist
 
 
+import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,12 +11,13 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.databinding.FragDynamicListBinding
 import io.github.wotaslive.main.MainActivity
+import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesAdapter
 import io.github.wotaslive.utils.obtainViewModel
 
-class DynamicListFragment : BaseLazyFragment() {
+class DynamicListFragment : BaseLazyFragment(), DynamicPicturesAdapter.Callback {
     private lateinit var viewModel: DynamicListViewModel
     private lateinit var viewDataBinding: FragDynamicListBinding
-    private val adapter = DynamicAdapter()
+    private val adapter = DynamicAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -26,6 +28,18 @@ class DynamicListFragment : BaseLazyFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         viewModel = (activity as MainActivity).obtainViewModel(DynamicListViewModel::class.java)
         viewDataBinding.setLifecycleOwner(this)
+        with(viewModel) {
+            data.observe(this@DynamicListFragment, Observer {
+                if (isLoad)
+                    viewDataBinding.srlDynamic.finishLoadMore()
+                else
+                    viewDataBinding.srlDynamic.finishRefresh()
+                adapter.submitList(it)
+            })
+            members.observe(this@DynamicListFragment, Observer {
+                adapter.updateMember(it)
+            })
+        }
         subscribeUi()
         super.onActivityCreated(savedInstanceState)
     }
@@ -59,6 +73,10 @@ class DynamicListFragment : BaseLazyFragment() {
             )
             adapter = this@DynamicListFragment.adapter
         }
+    }
+
+    override fun onImageClick(url: String) {
+
     }
 
     companion object {

@@ -14,7 +14,7 @@ data class DynamicInfo(
                         val share: Int,
                         val quote: Int,
                         val comment: Int,
-                        val picture: List<Picture>) {
+                        val picture: List<Picture>?) {
             data class Picture(
                     val picId: Int,
                     val width: Int,
