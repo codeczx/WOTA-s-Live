@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.ActPlayerBinding
+import io.github.wotaslive.widget.MediaController
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 class PlayerActivity : AppCompatActivity() {
@@ -23,6 +24,8 @@ class PlayerActivity : AppCompatActivity() {
 
     private fun initView() {
         with(viewDataBinding) {
+            player.isBackgroundPlayEnabled = true
+            player.setMediaController(MediaController(this@PlayerActivity))
             player.setFullScreen(this@PlayerActivity)
             player.setVideoPath(intent.getStringExtra(Constants.URL))
             player.start()

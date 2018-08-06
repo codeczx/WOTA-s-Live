@@ -17,6 +17,7 @@
 
 package io.github.wotaslive.widget
 
+import android.annotation.SuppressLint
 import android.annotation.TargetApi
 import android.app.Activity
 import android.content.Context
@@ -287,7 +288,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     // Extend: Background
     //-------------------------
 
-    val isBackgroundPlayEnabled = false
+    var isBackgroundPlayEnabled = false
 
     constructor(context: Context) : super(context) {
         initVideoView(context)
@@ -567,6 +568,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
         am.abandonAudioFocus(null)
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(ev: MotionEvent): Boolean {
         if (isInPlaybackState && mMediaController != null) {
             toggleMediaControlsVisiblity()
@@ -714,7 +716,7 @@ class IjkVideoView : FrameLayout, MediaController.MediaPlayerControl {
     }
 
     private fun createPlayer(playerType: Int): IMediaPlayer {
-        val ijkMediaPlayer: IjkMediaPlayer = IjkMediaPlayer()
+        val ijkMediaPlayer = IjkMediaPlayer()
         IjkMediaPlayer.native_setLogLevel(IjkMediaPlayer.IJK_LOG_DEBUG)
         // 硬解
         with(ijkMediaPlayer) {

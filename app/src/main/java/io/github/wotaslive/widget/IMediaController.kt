@@ -34,9 +34,4 @@ interface IMediaController {
     fun show(timeout: Int)
 
     fun show()
-
-    //----------
-    // Extends
-    //----------
-    fun showOnce(view: View)
 }
