@@ -58,6 +58,7 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
         with(viewDataBinding.rvLive) {
             layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
+            itemAnimator.changeDuration = 0
             addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(

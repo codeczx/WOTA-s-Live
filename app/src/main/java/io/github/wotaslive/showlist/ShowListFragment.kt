@@ -47,6 +47,7 @@ class ShowListFragment : BaseLazyFragment(), ShowListAdapter.Callback {
         with(viewDataBinding.rvShow) {
             layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
+            itemAnimator.changeDuration = 0
             addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(

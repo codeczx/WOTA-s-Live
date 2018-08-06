@@ -17,11 +17,11 @@ class DynamicListViewModel(application: Application, private val appRepository: 
     var isLoad = false
     private var lastTime = 0L
     private val compositeDisposable = CompositeDisposable()
+    private val dao = AppDatabase.getInstance(getApplication()).memberDao()
 
     fun load(isLoad: Boolean) {
         if (!isLoad) lastTime = 0
         this.isLoad = isLoad
-        val dao = AppDatabase.getInstance(getApplication()).memberDao()
         val map = HashMap<Int, SyncInfo.Content.MemberInfo>(members.value.orEmpty())
         val list = ArrayList<DynamicInfo.Content.Data>()
         val disposable = appRepository.getDynamicList(lastTime)
@@ -30,11 +30,11 @@ class DynamicListViewModel(application: Application, private val appRepository: 
                         if (size > 0) {
                             lastTime = get(size - 1).ctime
                         }
-                        forEach {
-                            if (!map.containsKey(it.memberId)) {
-                                map.put(it.memberId, dao.getMember(it.memberId))
+                        forEach { it1 ->
+                            if (!map.containsKey(it1.memberId)) {
+                                map[it1.memberId] = dao.getMember(it1.memberId)
                             }
-                            list.add(it)
+                            list.add(it1)
                         }
                     }
                     Flowable.just(true)

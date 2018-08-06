@@ -21,6 +21,7 @@ class PhotoActivity : AppCompatActivity() {
         viewModel = obtainViewModel(PhotoViewModel::class.java).also {
             viewDataBinding.setLifecycleOwner(this)
             viewDataBinding.viewModel = it
+            viewDataBinding.eventHandler = this
         }
         viewModel.url.set(intent.extras.getString(Constants.URL))
     }

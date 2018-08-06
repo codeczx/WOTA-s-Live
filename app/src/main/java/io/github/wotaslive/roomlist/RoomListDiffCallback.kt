@@ -11,6 +11,7 @@ class RoomListDiffCallback : DiffUtil.ItemCallback<RoomInfo.ContentBean>() {
     override fun areContentsTheSame(oldItem: RoomInfo.ContentBean?, newItem: RoomInfo.ContentBean?): Boolean {
         return oldItem?.roomName == newItem?.roomName &&
                 oldItem?.commentTimeMs == newItem?.commentTimeMs &&
+                oldItem?.commentTime == newItem?.commentTime &&
                 oldItem?.roomAvatar == newItem?.roomAvatar
     }
 }

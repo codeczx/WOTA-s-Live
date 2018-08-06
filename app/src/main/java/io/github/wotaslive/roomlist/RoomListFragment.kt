@@ -46,12 +46,12 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
             adapter.submitList(it)
             viewDataBinding.srlRoom.finishRefresh()
         })
-        viewModel.roomMessageCommand.observe(this, Observer {
+        viewModel.roomMessageCommand.observe(this, Observer { it ->
             with(viewDataBinding.srlRoom) {
                 finishRefresh()
-                it?.let {
-                    Snackbar.make(this, it, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.login) {
+                it?.let { it1 ->
+                    Snackbar.make(this, it1, Snackbar.LENGTH_LONG)
+                            .setAction(R.string.login) { _ ->
                                 LoginActivity.startLoginActivity(activity as MainActivity)
                             }
                             .show()
@@ -67,6 +67,7 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
         with(viewDataBinding.rvRoom) {
             layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
+            itemAnimator.changeDuration = 0
             addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(

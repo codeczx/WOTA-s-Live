@@ -65,6 +65,7 @@ class DynamicListFragment : BaseLazyFragment(), DynamicPicturesAdapter.Callback 
         with(viewDataBinding.rvDynamic) {
             layoutManager = android.support.v7.widget.LinearLayoutManager(context)
             isNestedScrollingEnabled = false
+            itemAnimator.changeDuration = 0
             addItemDecoration(com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     io.github.wotaslive.widget.SpaceItemDecoration(
