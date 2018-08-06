@@ -11,6 +11,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.databinding.FragDynamicListBinding
 import io.github.wotaslive.main.MainActivity
+import io.github.wotaslive.photo.PhotoActivity
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesAdapter
 import io.github.wotaslive.utils.obtainViewModel
 
@@ -76,7 +77,9 @@ class DynamicListFragment : BaseLazyFragment(), DynamicPicturesAdapter.Callback 
     }
 
     override fun onImageClick(url: String) {
-
+        activity?.let {
+            PhotoActivity.startPhotoActivity(it, url)
+        }
     }
 
     companion object {

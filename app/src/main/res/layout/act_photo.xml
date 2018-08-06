@@ -6,11 +6,11 @@
 
         <variable
             name="viewModel"
-            type="io.github.wotaslive.roomlist.room.RoomViewModel" />
+            type="io.github.wotaslive.photo.PhotoViewModel" />
 
         <variable
             name="eventHandler"
-            type="io.github.wotaslive.roomlist.room.PhotoFragment" />
+            type="io.github.wotaslive.photo.PhotoActivity" />
     </data>
 
     <com.github.chrisbanes.photoview.PhotoView
@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground"
-        android:onClick="@{()->eventHandler.activity.onBackPressed()}"
+        android:onClick="@{()->eventHandler.onBackPressed()}"
         android:onLongClick="@{()->eventHandler.onImageLongClick()}"
-        app:imageUrl="@{viewModel.imageUrl}" />
+        app:imageUrl="@{viewModel.url}" />
 </layout>

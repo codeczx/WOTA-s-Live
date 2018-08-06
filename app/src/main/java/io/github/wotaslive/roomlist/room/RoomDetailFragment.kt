@@ -3,12 +3,12 @@ package io.github.wotaslive.roomlist.room
 import android.arch.lifecycle.Observer
 import android.os.Bundle
 import android.support.v4.app.Fragment
-import android.support.v7.widget.LinearLayoutManager
 import android.view.*
 import com.orhanobut.logger.Logger
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragRoomDetailBinding
+import io.github.wotaslive.photo.PhotoActivity
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
@@ -110,13 +110,8 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
     }
 
     override fun onImageClick(url: String) {
-        viewModel.imageUrl.set(url)
-        fragmentManager?.run {
-            beginTransaction()
-                    .add(R.id.container, PhotoFragment.newInstance())
-                    .hide(this@RoomDetailFragment)
-                    .addToBackStack(this@RoomDetailFragment.javaClass.name)
-                    .commit()
+        activity?.let {
+            PhotoActivity.startPhotoActivity(it, url)
         }
     }
 

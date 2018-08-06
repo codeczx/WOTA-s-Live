@@ -10,7 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragPicsBinding
-import io.github.wotaslive.roomlist.room.PhotoFragment
+import io.github.wotaslive.photo.PhotoActivity
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.roomlist.room.RoomViewModel
 import io.github.wotaslive.utils.obtainViewModel
@@ -75,13 +75,8 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
     }
 
     override fun onImageClick(url: String) {
-        (activity as RoomDetailActivity).obtainViewModel(RoomViewModel::class.java).imageUrl.set(url)
-        fragmentManager?.run {
-            beginTransaction()
-                    .add(R.id.container, PhotoFragment.newInstance())
-                    .hide(this@DynamicPicturesFragment)
-                    .addToBackStack(this@DynamicPicturesFragment.javaClass.name)
-                    .commit()
+        activity?.let {
+            PhotoActivity.startPhotoActivity(it, url)
         }
     }
 

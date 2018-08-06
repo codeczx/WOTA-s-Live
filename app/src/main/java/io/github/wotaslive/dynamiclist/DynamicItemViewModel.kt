@@ -27,5 +27,5 @@ class DynamicItemViewModel(context: Context, callback: io.github.wotaslive.rooml
                     else -> GridLayoutManager(context, 3)
                 }
             })
-
+    val pictures = data.picture
 }

@@ -5,6 +5,8 @@
 
     <data>
 
+        <import type="android.view.View" />
+
         <variable
             name="viewModel"
             type="io.github.wotaslive.dynamiclist.DynamicItemViewModel" />
@@ -69,6 +71,7 @@
                 android:lineSpacingExtra="3dp"
                 android:text="@{viewModel.content}"
                 android:textSize="15sp"
+                android:visibility="visible"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/iv_avatar" />
@@ -77,9 +80,11 @@
                 android:id="@+id/rv_pics"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_vertical"
                 android:animateLayoutChanges="false"
                 android:nestedScrollingEnabled="false"
                 android:overScrollMode="never"
+                android:visibility="@{viewModel.pictures==null?View.GONE:View.VISIBLE}"
                 app:adapter="@{viewModel.adapter}"
                 app:layoutManager="@{viewModel.layoutManager}"
                 app:layout_constraintBottom_toBottomOf="parent"
