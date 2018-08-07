@@ -4,6 +4,7 @@ import android.databinding.DataBindingUtil
 import android.databinding.ViewDataBinding
 import android.support.v7.recyclerview.extensions.ListAdapter
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import io.github.wotaslive.Constants
 import io.github.wotaslive.DataBindingViewHolder
@@ -18,7 +19,7 @@ import io.github.wotaslive.roomlist.room.viewmodel.ItemTimeViewModel
 class RoomDetailAdapter(private val callback: Callback) : ListAdapter<Any, DataBindingViewHolder>(RoomDetailDiffCallback()) {
 
     interface Callback {
-        fun onImageClick(url: String)
+        fun onImageClick(view: View, url: String)
         fun onLiveClick(id: String)
     }
 

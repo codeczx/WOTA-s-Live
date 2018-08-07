@@ -10,11 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragPicsBinding
-import io.github.wotaslive.photo.PhotoActivity
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.roomlist.room.RoomViewModel
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
+import io.github.wotaslive.widget.PhotoWindow
 
 
 class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
@@ -74,9 +74,9 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
         viewModel.load(false)
     }
 
-    override fun onImageClick(url: String) {
-        activity?.let {
-            PhotoActivity.startPhotoActivity(it, url)
+    override fun onImageClick(view: View, url: String) {
+        context?.let {
+            PhotoWindow(it, url).show(view)
         }
     }
 

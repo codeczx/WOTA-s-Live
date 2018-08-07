@@ -8,7 +8,6 @@ import io.github.wotaslive.dynamiclist.DynamicListViewModel
 import io.github.wotaslive.livelist.LiveListViewModel
 import io.github.wotaslive.login.LoginViewModel
 import io.github.wotaslive.main.MainViewModel
-import io.github.wotaslive.photo.PhotoViewModel
 import io.github.wotaslive.roomlist.RoomListViewModel
 import io.github.wotaslive.roomlist.room.RoomViewModel
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesViewModel
@@ -40,8 +39,6 @@ class ViewModelFactory private constructor(
                         DynamicPicturesViewModel(application, appRepository)
                     isAssignableFrom(DynamicListViewModel::class.java) ->
                         DynamicListViewModel(application, appRepository)
-                    isAssignableFrom(PhotoViewModel::class.java) ->
-                        PhotoViewModel(application)
                     else ->
                         throw IllegalArgumentException("Unknown ViewModel class:${modelClass.name}")
                 }

@@ -22,7 +22,7 @@
             android:layout_height="0dp"
             android:contentDescription="@string/empty_value"
             android:foreground="?android:attr/selectableItemBackground"
-            android:onClick="@{()->eventHandler.onImageClick(viewModel.url)}"
+            android:onClick="@{(view)->eventHandler.onImageClick(view,viewModel.url)}"
             android:scaleType="centerCrop"
             app:imageUrl="@{@string/resize_250+viewModel.url}"
             app:layout_constraintBottom_toBottomOf="parent"

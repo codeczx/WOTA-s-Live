@@ -8,10 +8,10 @@ import com.orhanobut.logger.Logger
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragRoomDetailBinding
-import io.github.wotaslive.photo.PhotoActivity
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
+import io.github.wotaslive.widget.PhotoWindow
 
 class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
     private lateinit var viewModel: RoomViewModel
@@ -109,9 +109,9 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
         }
     }
 
-    override fun onImageClick(url: String) {
-        activity?.let {
-            PhotoActivity.startPhotoActivity(it, url)
+    override fun onImageClick(view: View, url: String) {
+        context?.let {
+            PhotoWindow(it, url).show(view)
         }
     }
 

@@ -3,12 +3,17 @@ package io.github.wotaslive.utils
 import android.databinding.BindingAdapter
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.os.Environment
 import android.text.TextUtils
 import android.widget.ImageView
+import com.blankj.utilcode.util.FileUtils
+import com.blankj.utilcode.util.ToastUtils
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.R
 import io.github.wotaslive.data.AppRepository
+import io.reactivex.schedulers.Schedulers
 
 fun checkUrl(originUrl: String): String {
     var url = originUrl
@@ -68,5 +73,21 @@ fun ImageView.loadImage(url: String) {
                 .load(checkUrl(url))
                 .dontAnimate()
                 .into(this)
+    }
+}
+
+fun ImageView.saveToLocal(url: String) {
+    val worker = Schedulers.io().createWorker()
+    worker.schedule {
+        val file = GlideApp.with(context)
+                .downloadOnly()
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .load(checkUrl(url))
+                .submit()
+                .get()
+        val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+        val fileName = path.absolutePath + "/" + url.substring(url.lastIndexOf("/") + 1)
+        FileUtils.copyFile(file.absolutePath, fileName, null)
+        ToastUtils.showShort("已保存到:$fileName")
     }
 }
