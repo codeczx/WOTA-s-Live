@@ -153,6 +153,14 @@ class AppRepository private constructor() {
         return syncApi.sync(sync)
     }
 
+    fun checkCardInfo(): Flowable<CardInfo> {
+        return userApi.cardInfo()
+    }
+
+    fun doCheckIn(): Flowable<CheckInInfo> {
+        return userApi.checkIn()
+    }
+
     fun getCommit(lastTime: Long, dynamicId: Int): Flowable<CommitInfo> {
         return dynamicApi.getCommit(CommitRequestBody(lastTime, dynamicId, DEFAULT_LIMIT))
     }
