@@ -9,7 +9,7 @@ import io.github.wotaslive.data.model.ShowInfo
 class ShowItemViewModel(context: Context, val show: ShowInfo.ContentBean.ShowBean) : ViewModel() {
     private val statusString by lazy {
         context.getString(
-                if (show.isIsOpen)
+                if (show.startTime < System.currentTimeMillis())
                     R.string.show_status_Streaming
                 else
                     R.string.show_status_future

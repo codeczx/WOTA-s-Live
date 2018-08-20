@@ -7,10 +7,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.support.v7.graphics.Palette
-import androidx.work.Constraints
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
-import androidx.work.WorkManager
+import androidx.work.*
 import com.blankj.utilcode.util.SPUtils
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.target.SimpleTarget
@@ -22,14 +19,16 @@ import io.github.wotaslive.Constants
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.SingleLiveEvent
 import io.github.wotaslive.data.AppRepository
-import io.github.wotaslive.data.RefreshWorker
-import io.github.wotaslive.data.SyncWorker
+import io.github.wotaslive.data.worker.CheckInWorker
+import io.github.wotaslive.data.worker.RefreshWorker
+import io.github.wotaslive.data.worker.SyncWorker
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.FlowableEmitter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
+import java.util.concurrent.TimeUnit
 
 class MainViewModel(application: Application, private val appRepository: AppRepository) : AndroidViewModel(application), MaterialViewPager.Listener {
     private val compositeDisposable: CompositeDisposable = CompositeDisposable()
@@ -41,24 +40,25 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     lateinit var nickname: String
 
     fun start() {
-        sync()
+        work()
         initHeader()
     }
 
-    private fun sync() {
+    private fun work() {
         val constraints = Constraints.Builder()
                 .setRequiredNetworkType(NetworkType.CONNECTED)
                 .build()
-//        val sync = PeriodicWorkRequest.Builder(SyncWorker::class.java, 1, TimeUnit.DAYS)
-//                .setConstraints(constraints)
-//                .build()
-        val sync = OneTimeWorkRequest.Builder(SyncWorker::class.java)
+        val sync = PeriodicWorkRequest.Builder(SyncWorker::class.java, 1, TimeUnit.DAYS)
+                .setConstraints(constraints)
+                .build()
+        val checkIn = PeriodicWorkRequest.Builder(CheckInWorker::class.java, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .build()
         val refresh = OneTimeWorkRequest.Builder(RefreshWorker::class.java)
                 .setConstraints(constraints)
                 .build()
         WorkManager.getInstance().enqueue(sync)
+        WorkManager.getInstance().enqueue(checkIn)
         WorkManager.getInstance().enqueue(refresh)
     }
 

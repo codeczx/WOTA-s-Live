@@ -52,4 +52,10 @@ interface ApiServices {
 
     @POST("syncsystem/api/cache/v1/update/overview")
     fun sync(@Body syncRequestBody: SyncRequestBody): Flowable<SyncInfo>
+
+    @POST("usersystem/api/user/v1/show/cardInfo")
+    fun cardInfo(): Flowable<CardInfo>
+
+    @POST("usersystem/api/user/v1/check/in")
+    fun checkIn(): Flowable<CheckInInfo>
 }
