@@ -8,19 +8,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
+import io.github.wotaslive.App
 import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
+import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.RoomInfo
 import io.github.wotaslive.databinding.FragRoomListBinding
 import io.github.wotaslive.login.LoginActivity
 import io.github.wotaslive.main.MainActivity
+import io.github.wotaslive.roomlist.all.AllRoomListActivity
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
-import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.widget.SpaceItemDecoration
 
 class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
     private lateinit var viewDataBinding: FragRoomListBinding
-    private lateinit var viewModel: RoomListViewModel
+    val viewModel = RoomListViewModel(App.instance, AppRepository.instance)
     private val adapter = RoomListAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -38,10 +40,12 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
-        viewModel = (activity as MainActivity).obtainViewModel(RoomListViewModel::class.java).also {
-            viewDataBinding.viewModel = it
-            viewDataBinding.setLifecycleOwner(this@RoomListFragment)
-        }
+        viewDataBinding.viewModel = viewModel
+        viewDataBinding.eventHandler = this@RoomListFragment
+        viewDataBinding.setLifecycleOwner(this@RoomListFragment)
+
+        viewModel.isMain.set(activity is MainActivity)
+
         viewModel.roomListData.observe(this, Observer {
             adapter.submitList(it)
             viewDataBinding.srlRoom.finishRefresh()
@@ -93,7 +97,16 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
         }
     }
 
+    fun enterAll() {
+        activity?.let {
+            AllRoomListActivity.startAllRoomListActivity(it)
+        }
+    }
+
     companion object {
         fun newInstance() = RoomListFragment()
+        fun newInstance(memberIds: List<Int>) = RoomListFragment().also {
+            it.viewModel.memberIds.addAll(memberIds)
+        }
     }
 }

@@ -1,8 +1,10 @@
 package io.github.wotaslive.utils
 
+import android.content.Intent
 import android.databinding.BindingAdapter
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Environment
 import android.text.TextUtils
 import android.widget.ImageView
@@ -10,6 +12,7 @@ import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import io.github.wotaslive.App
 import io.github.wotaslive.GlideApp
 import io.github.wotaslive.R
 import io.github.wotaslive.data.AppRepository
@@ -19,9 +22,9 @@ fun checkUrl(originUrl: String): String {
     var url = originUrl
     if (url.startsWith("http")) {
         // 网易NOS的证书Glide不认可，替换成http
-        if (url.startsWith("https://nos.netease.com")) {
-            url = url.replace("https", "http")
-        }
+//        if (url.startsWith("https://nos.netease.com")) {
+//            url = url.replace("https", "http")
+//        }
         if (url.contains("?")) {
             url = url.substring(0, url.indexOf("?"))
         }
@@ -86,8 +89,9 @@ fun ImageView.saveToLocal(url: String) {
                 .submit()
                 .get()
         val path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-        val fileName = path.absolutePath + "/" + url.substring(url.lastIndexOf("/") + 1)
+        val fileName = "${path.absolutePath}/${System.currentTimeMillis()}.jpg"
         FileUtils.copyFile(file.absolutePath, fileName, null)
         ToastUtils.showShort("已保存到:$fileName")
+        App.instance.sendBroadcast(Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(path)))
     }
 }

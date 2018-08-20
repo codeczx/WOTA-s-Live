@@ -8,7 +8,7 @@ import io.github.wotaslive.dynamiclist.DynamicListViewModel
 import io.github.wotaslive.livelist.LiveListViewModel
 import io.github.wotaslive.login.LoginViewModel
 import io.github.wotaslive.main.MainViewModel
-import io.github.wotaslive.roomlist.RoomListViewModel
+import io.github.wotaslive.roomlist.all.AllRoomListViewModel
 import io.github.wotaslive.roomlist.room.RoomViewModel
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesViewModel
 import io.github.wotaslive.showlist.ShowListViewModel
@@ -31,8 +31,8 @@ class ViewModelFactory private constructor(
                         ShowListViewModel(application, appRepository)
                     isAssignableFrom(LoginViewModel::class.java) ->
                         LoginViewModel(application, appRepository)
-                    isAssignableFrom(RoomListViewModel::class.java) ->
-                        RoomListViewModel(application, appRepository)
+                    isAssignableFrom(AllRoomListViewModel::class.java) ->
+                        AllRoomListViewModel(application, appRepository)
                     isAssignableFrom(RoomViewModel::class.java) ->
                         RoomViewModel(application, appRepository)
                     isAssignableFrom(DynamicPicturesViewModel::class.java) ->

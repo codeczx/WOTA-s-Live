@@ -17,4 +17,7 @@ interface TeamDao {
 
     @Query("SELECT * FROM `team` WHERE team_id=:id LIMIT 1")
     fun getTeam(id: Int): SyncInfo.Content.Team
+
+    @Query("SELECT * FROM `TEAM` WHERE group_id=:id")
+    fun getTeams(id: Int): Flowable<List<SyncInfo.Content.Team>>
 }
