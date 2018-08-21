@@ -158,7 +158,7 @@ class AppRepository private constructor() {
     }
 
     fun doCheckIn(): Flowable<CheckInInfo> {
-        return userApi.checkIn()
+        return userApi.checkIn(Any())
     }
 
     fun getCommit(lastTime: Long, dynamicId: Int): Flowable<CommitInfo> {

@@ -57,5 +57,5 @@ interface ApiServices {
     fun cardInfo(): Flowable<CardInfo>
 
     @POST("usersystem/api/user/v1/check/in")
-    fun checkIn(): Flowable<CheckInInfo>
+    fun checkIn(@Body params: Any = Any()): Flowable<CheckInInfo>
 }

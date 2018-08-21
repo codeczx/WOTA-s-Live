@@ -51,15 +51,17 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
         val sync = PeriodicWorkRequest.Builder(SyncWorker::class.java, 1, TimeUnit.DAYS)
                 .setConstraints(constraints)
                 .build()
-        val checkIn = PeriodicWorkRequest.Builder(CheckInWorker::class.java, 1, TimeUnit.DAYS)
+        val checkIn = OneTimeWorkRequest.Builder(CheckInWorker::class.java)
                 .setConstraints(constraints)
                 .build()
         val refresh = OneTimeWorkRequest.Builder(RefreshWorker::class.java)
                 .setConstraints(constraints)
                 .build()
         WorkManager.getInstance().enqueue(sync)
-        WorkManager.getInstance().enqueue(checkIn)
-        WorkManager.getInstance().enqueue(refresh)
+        WorkManager.getInstance()
+                .beginWith(refresh)
+                .then(checkIn)
+                .enqueue()
     }
 
     fun loadInfo() {
