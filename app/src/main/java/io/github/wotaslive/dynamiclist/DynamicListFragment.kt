@@ -3,6 +3,7 @@ package io.github.wotaslive.dynamiclist
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -63,7 +64,7 @@ class DynamicListFragment : BaseLazyFragment(), DynamicPicturesAdapter.Callback 
             })
         }
         with(viewDataBinding.rvDynamic) {
-            layoutManager = android.support.v7.widget.LinearLayoutManager(context)
+            layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
             itemAnimator.changeDuration = 0
             addItemDecoration(com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator())
@@ -78,7 +79,7 @@ class DynamicListFragment : BaseLazyFragment(), DynamicPicturesAdapter.Callback 
     }
 
     override fun onImageClick(view: View, url: String) {
-        context?.let {
+        activity?.let {
             PhotoWindow(it, url).show(view)
         }
     }

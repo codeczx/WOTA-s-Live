@@ -13,4 +13,5 @@
     <dimen name="room_radius">10dp</dimen>
     <dimen name="room_max_width">230dp</dimen>
     <dimen name="room_max_img_width">150dp</dimen>
+    <dimen name="fab_margin">30dp</dimen>
 </resources>

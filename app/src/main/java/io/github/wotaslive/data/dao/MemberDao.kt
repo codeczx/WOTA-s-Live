@@ -17,4 +17,7 @@ interface MemberDao {
 
     @Query("SELECT * FROM `member` WHERE member_id=:id LIMIT 1")
     fun getMember(id: Int): SyncInfo.Content.MemberInfo
+
+    @Query("SELECT * FROM `member` WHERE team=:id")
+    fun getMemberByTeam(id: Int): Flowable<List<SyncInfo.Content.MemberInfo>>
 }

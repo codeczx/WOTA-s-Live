@@ -110,7 +110,7 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
     }
 
     override fun onImageClick(view: View, url: String) {
-        context?.let {
+        activity?.let {
             PhotoWindow(it, url).show(view)
         }
     }

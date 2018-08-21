@@ -89,10 +89,9 @@ class AppRepository private constructor() {
     val recommendList: Flowable<RecommendInfo>
         get() = otherApi.recommendList
 
-    val roomList: Flowable<RoomInfo>
-        get() {
-            return roomApi.getRoomList(RoomListRequestBody(friends))
-        }
+    fun roomList(memberIds: List<Int>): Flowable<RoomInfo> {
+        return roomApi.getRoomList(RoomListRequestBody(memberIds))
+    }
 
     fun getLiveInfo(lastTime: Long): Flowable<LiveInfo> {
         val requestBody = LiveRequestBody(

@@ -1,6 +1,7 @@
 package io.github.wotaslive.widget
 
-import android.content.Context
+import android.Manifest
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.support.design.widget.Snackbar
@@ -9,14 +10,15 @@ import android.widget.PopupWindow
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ScreenUtils
 import com.github.chrisbanes.photoview.PhotoView
+import com.tbruyelle.rxpermissions2.RxPermissions
 import io.github.wotaslive.R
 import io.github.wotaslive.utils.loadImage
 import io.github.wotaslive.utils.saveToLocal
 
-class PhotoWindow(private val context: Context, private val url: String) : PopupWindow() {
+class PhotoWindow(private val activity: Activity, private val url: String) : PopupWindow() {
 
     fun show(anchor: View) {
-        val photo = PhotoView(context)
+        val photo = PhotoView(activity)
         width = ScreenUtils.getScreenWidth()
         height = ScreenUtils.getScreenHeight() - BarUtils.getStatusBarHeight()
         contentView = photo
@@ -31,8 +33,13 @@ class PhotoWindow(private val context: Context, private val url: String) : Popup
         }
         photo.setOnLongClickListener { _ ->
             Snackbar.make(photo, R.string.pic_save, Snackbar.LENGTH_LONG)
-                    .setAction(android.R.string.ok) {
-                        photo.saveToLocal(url)
+                    .setAction(android.R.string.ok) { _ ->
+                        val rxPermissions = RxPermissions(activity)
+                        rxPermissions.request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                                .subscribe {
+                                    if (it)
+                                        photo.saveToLocal(url)
+                                }
                     }
                     .show()
             return@setOnLongClickListener true
