@@ -31,6 +31,7 @@
         </activity>
         <activity
             android:name=".player.PlayerActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden"
             android:screenOrientation="portrait" />
         <activity android:name=".roomlist.room.RoomDetailActivity" />
         <activity android:name=".login.LoginActivity" />

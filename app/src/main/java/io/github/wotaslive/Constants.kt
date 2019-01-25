@@ -28,8 +28,7 @@ object Constants {
     const val SP_USER_ID = "user_id"
     const val SP_SYNC = "sync"
 
-    const val URL = "url"
-    const val IS_LIVE = "is_live"
+    const val ROOM = "room"
     const val ROOM_ID = "room_id"
     const val ROOM_NAME = "room_name"
     const val ROOM_CREATOR = "room_creator"

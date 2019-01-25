@@ -3,7 +3,12 @@
 
     <data></data>
 
-    <io.github.wotaslive.widget.IjkVideoView
+    <!--<io.github.wotaslive.widget.IjkVideoView-->
+    <!--android:id="@+id/player"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent" />-->
+
+    <cn.jzvd.JzvdStd
         android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

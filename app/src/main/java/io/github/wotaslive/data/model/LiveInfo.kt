@@ -1,5 +1,7 @@
 package io.github.wotaslive.data.model
 
+import android.os.Parcel
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 
 data class LiveInfo(var status: Int = 0,
@@ -37,6 +39,48 @@ data class LiveInfo(var status: Int = 0,
                             var picLoopTime: Int = 0,
                             var lrcPath: String? = null,
                             var streamPath: String? = null,
-                            var screenMode: Int = 0)
+                            var screenMode: Int = 0):Parcelable {
+            constructor(parcel: Parcel) : this(
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readLong(),
+                    parcel.readInt(),
+                    parcel.readInt(),
+                    parcel.readInt(),
+                    parcel.readString(),
+                    parcel.readString(),
+                    parcel.readInt()) {
+            }
+
+            override fun writeToParcel(parcel: Parcel, flags: Int) {
+                parcel.writeString(liveId)
+                parcel.writeString(title)
+                parcel.writeString(subTitle)
+                parcel.writeString(picPath)
+                parcel.writeLong(startTime)
+                parcel.writeInt(memberId)
+                parcel.writeInt(liveType)
+                parcel.writeInt(picLoopTime)
+                parcel.writeString(lrcPath)
+                parcel.writeString(streamPath)
+                parcel.writeInt(screenMode)
+            }
+
+            override fun describeContents(): Int {
+                return 0
+            }
+
+            companion object CREATOR : Parcelable.Creator<RoomBean> {
+                override fun createFromParcel(parcel: Parcel): RoomBean {
+                    return RoomBean(parcel)
+                }
+
+                override fun newArray(size: Int): Array<RoomBean?> {
+                    return arrayOfNulls(size)
+                }
+            }
+        }
     }
 }

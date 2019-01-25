@@ -86,9 +86,7 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
     }
 
     override fun onCoverClick(room: LiveInfo.ContentBean.RoomBean) {
-        room.streamPath?.let {
-            PlayerActivity.startPlayerActivity(context, it, room.liveType == 1)
-        }
+        PlayerActivity.startPlayerActivity(context, room)
     }
 
     override fun onLongClick(room: LiveInfo.ContentBean.RoomBean, anchor: View): Boolean {
