@@ -12,14 +12,12 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.databinding.FragDynamicListBinding
 import io.github.wotaslive.main.MainActivity
-import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesAdapter
 import io.github.wotaslive.utils.obtainViewModel
-import io.github.wotaslive.widget.PhotoWindow
 
-class DynamicListFragment : BaseLazyFragment(), DynamicPicturesAdapter.Callback {
+class DynamicListFragment : BaseLazyFragment() {
     private lateinit var viewModel: DynamicListViewModel
     private lateinit var viewDataBinding: FragDynamicListBinding
-    private val adapter = DynamicAdapter(this)
+    private val adapter = DynamicAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
@@ -75,12 +73,6 @@ class DynamicListFragment : BaseLazyFragment(), DynamicPicturesAdapter.Callback 
                     )
             )
             adapter = this@DynamicListFragment.adapter
-        }
-    }
-
-    override fun onImageClick(view: View, url: String) {
-        activity?.let {
-            PhotoWindow(it, url).show(view)
         }
     }
 

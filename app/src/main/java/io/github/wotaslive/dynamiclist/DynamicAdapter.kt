@@ -7,19 +7,20 @@ import io.github.wotaslive.DataBindingViewHolder
 import io.github.wotaslive.data.model.DynamicInfo
 import io.github.wotaslive.data.model.SyncInfo
 import io.github.wotaslive.databinding.ItemDynamicBinding
-import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesAdapter
 
-class DynamicAdapter(private val callback: DynamicPicturesAdapter.Callback) : ListAdapter<DynamicInfo.Content.Data, DataBindingViewHolder>(DynamicDiffCallback()) {
+class DynamicAdapter : ListAdapter<DynamicInfo.Content.Data, DataBindingViewHolder>(DynamicDiffCallback()) {
     private val memberMap = HashMap<Int, SyncInfo.Content.MemberInfo>()
+    private lateinit var binding: ItemDynamicBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
-        val binding = ItemDynamicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        binding = ItemDynamicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return DataBindingViewHolder(binding)
     }
 
     override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
         getItem(position).let {
             with(holder) {
-                bind(DynamicItemViewModel(itemView.context, callback, it, memberMap[it.memberId]))
+                bind(DynamicItemViewModel(itemView.context, this@DynamicAdapter.binding.rvPics, it, memberMap[it.memberId]))
                 itemView.tag = it
             }
         }

@@ -7,10 +7,6 @@
         <variable
             name="viewModel"
             type="io.github.wotaslive.roomlist.room.pictures.ItemViewModel" />
-
-        <variable
-            name="eventHandler"
-            type="io.github.wotaslive.roomlist.room.pictures.DynamicPicturesAdapter.Callback" />
     </data>
 
     <android.support.constraint.ConstraintLayout
@@ -18,11 +14,11 @@
         android:layout_height="wrap_content">
 
         <ImageView
+            android:id="@+id/iv_image"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:contentDescription="@string/empty_value"
             android:foreground="?android:attr/selectableItemBackground"
-            android:onClick="@{(view)->eventHandler.onImageClick(view,viewModel.url)}"
             android:scaleType="centerCrop"
             app:imageUrl="@{@string/resize_250+viewModel.url}"
             app:layout_constraintBottom_toBottomOf="parent"

@@ -11,7 +11,9 @@ import io.github.wotaslive.databinding.FragRoomDetailBinding
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
-import io.github.wotaslive.widget.PhotoWindow
+import net.moyokoo.diooto.Diooto
+import net.moyokoo.diooto.config.DiootoConfig
+import net.moyokoo.diooto.interfaces.DefaultPercentProgress
 
 class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
     private lateinit var viewModel: RoomViewModel
@@ -110,9 +112,13 @@ class RoomDetailFragment : Fragment(), RoomDetailAdapter.Callback {
     }
 
     override fun onImageClick(view: View, url: String) {
-        activity?.let {
-            PhotoWindow(it, url).show(view)
-        }
+        Diooto(context)
+                .urls(url)
+                .type(DiootoConfig.PHOTO)
+                .fullscreen(false)
+                .views(view)
+                .setProgress(DefaultPercentProgress())
+                .start()
     }
 
     override fun onLiveClick(id: String) {

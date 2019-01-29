@@ -1,31 +1,20 @@
 package io.github.wotaslive.roomlist.room.pictures
 
-import android.support.v7.recyclerview.extensions.ListAdapter
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import io.github.wotaslive.DataBindingViewHolder
+import android.databinding.DataBindingUtil
+import com.chad.library.adapter.base.BaseQuickAdapter
+import com.chad.library.adapter.base.BaseViewHolder
+import io.github.wotaslive.R
 import io.github.wotaslive.data.model.DynamicPictureInfo
 import io.github.wotaslive.databinding.ItemDynamicPicBinding
 
-class DynamicPicturesAdapter(private val callback: Callback) : ListAdapter<DynamicPictureInfo.Content.Data, DataBindingViewHolder>(DynamicPictureDiffCallback()) {
+class DynamicPicturesAdapter :
+        BaseQuickAdapter<DynamicPictureInfo.Content.Data, BaseViewHolder>(R.layout.item_dynamic_pic, null) {
 
-    interface Callback {
-        fun onImageClick(view: View, url: String)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataBindingViewHolder {
-        val binding = ItemDynamicPicBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        binding.eventHandler = callback
-        return DataBindingViewHolder(binding)
-    }
-
-    override fun onBindViewHolder(holder: DataBindingViewHolder, position: Int) {
-        getItem(position).let {
-            with(holder) {
-                bind(ItemViewModel(it.filePath))
-                itemView.tag = it
-            }
+    override fun convert(helper: BaseViewHolder?, item: DynamicPictureInfo.Content.Data?) {
+        helper?.itemView?.let {
+            val binding: ItemDynamicPicBinding? = DataBindingUtil.bind(it)
+            binding?.viewModel = ItemViewModel(item?.filePath)
+            it.tag = item
         }
     }
 }

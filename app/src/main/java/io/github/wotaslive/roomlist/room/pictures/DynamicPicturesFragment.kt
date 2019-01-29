@@ -8,20 +8,27 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.chad.library.adapter.base.BaseQuickAdapter
 import io.github.wotaslive.R
+import io.github.wotaslive.data.model.DynamicPictureInfo
 import io.github.wotaslive.databinding.FragPicsBinding
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.roomlist.room.RoomViewModel
+import io.github.wotaslive.utils.checkUrl
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
-import io.github.wotaslive.widget.PhotoWindow
+import net.moyokoo.diooto.Diooto
+import net.moyokoo.diooto.config.DiootoConfig
+import net.moyokoo.diooto.interfaces.CircleIndexIndicator
+import net.moyokoo.diooto.interfaces.DefaultPercentProgress
+import java.util.*
 
 
-class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
+class DynamicPicturesFragment : Fragment() {
     private lateinit var viewDataBinding: FragPicsBinding
-    private lateinit var viewModel: DynamicPicturesViewModel
-    private val adapter = DynamicPicturesAdapter(this)
 
+    private lateinit var viewModel: DynamicPicturesViewModel
+    private val adapter = DynamicPicturesAdapter()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
         viewDataBinding = FragPicsBinding.inflate(inflater, container, false)
@@ -38,8 +45,23 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
             } else {
                 viewDataBinding.srlPics.finishRefresh()
             }
-            adapter.submitList(it)
+            adapter.setNewData(it)
         })
+        adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+            val urls = arrayOfNulls<String>(adapter.data.size)
+            adapter.data.forEachIndexed { index, any ->
+                urls[index] = checkUrl((any as DynamicPictureInfo.Content.Data).filePath)
+            }
+            Diooto(context)
+                    .urls(Arrays.copyOfRange(urls, position, adapter.data.size))
+                    .type(DiootoConfig.PHOTO)
+                    .fullscreen(false)
+                    .position(0)
+                    .views(viewDataBinding.rvPics, R.id.iv_image)
+                    .setIndicator(CircleIndexIndicator())
+                    .setProgress(DefaultPercentProgress())
+                    .start()
+        }
         viewDataBinding.setLifecycleOwner(this)
         setupActionBar(viewDataBinding.toolbar) {
             setDisplayHomeAsUpEnabled(true)
@@ -72,12 +94,6 @@ class DynamicPicturesFragment : Fragment(), DynamicPicturesAdapter.Callback {
     override fun onResume() {
         super.onResume()
         viewModel.load(false)
-    }
-
-    override fun onImageClick(view: View, url: String) {
-        activity?.let {
-            PhotoWindow(it, url).show(view)
-        }
     }
 
     companion object {

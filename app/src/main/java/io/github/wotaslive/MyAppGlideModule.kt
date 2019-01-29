@@ -12,9 +12,9 @@ import com.bumptech.glide.module.AppGlideModule
  */
 @GlideModule
 class MyAppGlideModule : AppGlideModule() {
-    override fun applyOptions(context: Context?, builder: GlideBuilder?) {
+    override fun applyOptions(context: Context, builder: GlideBuilder) {
         super.applyOptions(context, builder)
         val cacheSize = 1024 * 1024 * 200
-        builder?.setMemoryCache(LruResourceCache(cacheSize.toLong()))
+        builder.setMemoryCache(LruResourceCache(cacheSize.toLong()))
     }
 }
