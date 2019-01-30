@@ -30,11 +30,13 @@ class DynamicListFragment : BaseLazyFragment() {
         viewDataBinding.setLifecycleOwner(this)
         with(viewModel) {
             data.observe(this@DynamicListFragment, Observer {
-                if (isLoad)
+                if (isLoad) {
                     viewDataBinding.srlDynamic.finishLoadMore()
-                else
+                    adapter.addData(it.orEmpty())
+                } else {
                     viewDataBinding.srlDynamic.finishRefresh()
-                adapter.submitList(it)
+                    adapter.setNewData(it.orEmpty())
+                }
             })
             members.observe(this@DynamicListFragment, Observer {
                 adapter.updateMember(it)

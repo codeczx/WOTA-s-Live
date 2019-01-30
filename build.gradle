@@ -17,7 +17,7 @@ buildscript {
 }
 
 ext {
-    minSdkVersion = 21
+    minSdkVersion = 23
     targetSdkVersion = 28
     compileSdkVersion = 28
     buildToolsVersion = '28.0.3'
@@ -35,6 +35,7 @@ allprojects {
         jcenter()
         maven { url 'https://maven.google.com' }
         maven { url "https://jitpack.io" }
+        maven { url "https://dl.bintray.com/albertlii/android-maven/" }
     }
 }
 

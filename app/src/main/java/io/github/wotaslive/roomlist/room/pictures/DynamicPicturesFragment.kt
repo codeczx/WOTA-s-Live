@@ -8,6 +8,7 @@ import android.support.v7.widget.GridLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.blankj.utilcode.util.SizeUtils
 import com.chad.library.adapter.base.BaseQuickAdapter
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.DynamicPictureInfo
@@ -17,6 +18,7 @@ import io.github.wotaslive.roomlist.room.RoomViewModel
 import io.github.wotaslive.utils.checkUrl
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
+import io.github.wotaslive.widget.GridSpaceItemDecoration
 import net.moyokoo.diooto.Diooto
 import net.moyokoo.diooto.config.DiootoConfig
 import net.moyokoo.diooto.interfaces.CircleIndexIndicator
@@ -68,6 +70,7 @@ class DynamicPicturesFragment : Fragment() {
             setDisplayShowHomeEnabled(true)
         }
         setupBinding()
+        viewModel.load(false)
     }
 
     private fun setupBinding() {
@@ -82,6 +85,7 @@ class DynamicPicturesFragment : Fragment() {
         with(viewDataBinding.rvPics) {
             layoutManager = GridLayoutManager(context, 3)
             adapter = this@DynamicPicturesFragment.adapter
+            addItemDecoration(GridSpaceItemDecoration(3, SizeUtils.dp2px(5f), false))
         }
         with(activity as RoomDetailActivity) {
             setupActionBar(R.id.toolbar) {
@@ -89,11 +93,6 @@ class DynamicPicturesFragment : Fragment() {
                 setDisplayShowHomeEnabled(true)
             }
         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.load(false)
     }
 
     companion object {

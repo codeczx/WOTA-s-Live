@@ -41,9 +41,6 @@ class DynamicListViewModel(application: Application, private val appRepository: 
                 }
                 .compose(RxJavaUtil.flowableNetworkScheduler())
                 .subscribe({
-                    if (isLoad) {
-                        list.addAll(0, data.value.orEmpty())
-                    }
                     members.value = map
                     data.value = list
                 }, Throwable::printStackTrace)

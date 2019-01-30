@@ -2,10 +2,10 @@ package io.github.wotaslive
 
 import android.arch.lifecycle.ViewModel
 import android.databinding.ViewDataBinding
-import android.support.v7.widget.RecyclerView
 import com.android.databinding.library.baseAdapters.BR
+import com.chad.library.adapter.base.BaseViewHolder
 
-class DataBindingViewHolder(val binding: ViewDataBinding) : RecyclerView.ViewHolder(binding.root) {
+class DataBindingViewHolder(val binding: ViewDataBinding) : BaseViewHolder(binding.root) {
     fun bind(viewModel: ViewModel) {
         with(binding) {
             setVariable(BR.viewModel, viewModel)

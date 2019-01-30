@@ -45,6 +45,15 @@ fun ImageView.loadAvatar(url: String) {
             .into(this)
 }
 
+@BindingAdapter("thumbUrl")
+fun ImageView.loadThumb(url: String) {
+    if (TextUtils.isEmpty(url)) return
+    GlideApp.with(context)
+            .load(checkUrl("/resize_160X160$url"))
+            .dontAnimate()
+            .into(this)
+}
+
 @BindingAdapter("roundImageUrl")
 fun ImageView.loadRoundImageUrl(url: String) {
     if (TextUtils.isEmpty(url)) return
