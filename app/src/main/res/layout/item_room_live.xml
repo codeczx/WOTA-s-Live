@@ -5,10 +5,6 @@
     <data>
 
         <variable
-            name="eventHandler"
-            type="io.github.wotaslive.roomlist.room.RoomDetailAdapter.Callback" />
-
-        <variable
             name="viewModel"
             type="io.github.wotaslive.roomlist.room.viewmodel.ItemLiveViewModel" />
     </data>
@@ -61,7 +57,6 @@
             android:clickable="true"
             android:focusable="true"
             android:foreground="?android:attr/selectableItemBackground"
-            android:onClick="@{()->eventHandler.onLiveClick(viewModel.liveId)}"
             app:cardCornerRadius="@dimen/list_card_radius"
             app:cardElevation="@dimen/list_card_elevation"
             app:layout_constraintStart_toEndOf="@id/iv_avatar"

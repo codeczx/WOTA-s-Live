@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.blankj.utilcode.util.SizeUtils
-import com.chad.library.adapter.base.BaseQuickAdapter
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.DynamicPictureInfo
 import io.github.wotaslive.databinding.FragPicsBinding
@@ -49,7 +48,7 @@ class DynamicPicturesFragment : Fragment() {
             }
             adapter.setNewData(it)
         })
-        adapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+        adapter.setOnItemClickListener { adapter, _, position ->
             val urls = arrayOfNulls<String>(adapter.data.size)
             adapter.data.forEachIndexed { index, any ->
                 urls[index] = checkUrl((any as DynamicPictureInfo.Content.Data).filePath)

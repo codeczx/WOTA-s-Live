@@ -22,10 +22,10 @@ import io.github.wotaslive.utils.setClipboard
 import io.github.wotaslive.widget.SpaceItemDecoration
 
 
-class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
+class LiveListFragment : BaseLazyFragment() {
     lateinit var viewModel: LiveListViewModel
     private lateinit var viewDataBinding: FragLiveListBinding
-    private val adapter = LiveListAdapter(this)
+    private val adapter = LiveListAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewDataBinding = FragLiveListBinding.inflate(inflater, container, false)
@@ -38,10 +38,11 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
             viewDataBinding.setLifecycleOwner(this@LiveListFragment)
         }
         viewModel.liveListData.observe(this, Observer {
-            adapter.submitList(it)
             if (viewModel.isLoadMore) {
+                adapter.addData(it.orEmpty())
                 viewDataBinding.srlLive.finishLoadMore()
             } else {
+                adapter.setNewData(it.orEmpty())
                 viewDataBinding.srlLive.finishRefresh()
             }
         })
@@ -58,7 +59,7 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
         with(viewDataBinding.rvLive) {
             layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
-            itemAnimator.changeDuration = 0
+            itemAnimator?.changeDuration = 0
             addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(
@@ -67,6 +68,30 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
                     )
             )
             adapter = this@LiveListFragment.adapter
+        }
+        adapter.setOnItemClickListener { adapter, _, position ->
+            PlayerActivity.startPlayerActivity(context, adapter.getItem(position) as LiveInfo.ContentBean.RoomBean)
+        }
+        adapter.setOnItemLongClickListener { adapter, view, position ->
+            val room = adapter.getItem(position) as LiveInfo.ContentBean.RoomBean
+            val wrapper = ContextThemeWrapper(context, R.style.AppTheme_Menu)
+            val popupMenu = PopupMenu(wrapper, view)
+            with(popupMenu) {
+                inflate(R.menu.menu_list_more)
+                setOnMenuItemClickListener { menuItem ->
+                    when (menuItem.itemId) {
+                        R.id.List_copy_address -> {
+                            room.streamPath?.let {
+                                context?.setClipboard(it)
+                            }
+                            return@setOnMenuItemClickListener true
+                        }
+                    }
+                    false
+                }
+                show()
+            }
+            return@setOnItemLongClickListener true
         }
     }
 
@@ -83,31 +108,6 @@ class LiveListFragment : BaseLazyFragment(), LiveListAdapter.CallBack {
                 }
             })
         }
-    }
-
-    override fun onCoverClick(room: LiveInfo.ContentBean.RoomBean) {
-        PlayerActivity.startPlayerActivity(context, room)
-    }
-
-    override fun onLongClick(room: LiveInfo.ContentBean.RoomBean, anchor: View): Boolean {
-        val wrapper = ContextThemeWrapper(context, R.style.AppTheme_Menu)
-        val popupMenu = PopupMenu(wrapper, anchor)
-        with(popupMenu) {
-            inflate(R.menu.menu_list_more)
-            setOnMenuItemClickListener { menuItem ->
-                when (menuItem.itemId) {
-                    R.id.List_copy_address -> {
-                        room.streamPath?.let {
-                            context?.setClipboard(it)
-                        }
-                        return@setOnMenuItemClickListener true
-                    }
-                }
-                false
-            }
-            show()
-        }
-        return true
     }
 
     companion object {

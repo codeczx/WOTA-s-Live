@@ -94,12 +94,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun subscribeUIBinding() {
-        viewModel.headerRefreshCommand.observe(this, Observer {
-            with(viewDataBinding.materialViewPager) {
-                setMaterialViewPagerListener(it)
-                notifyHeaderChanged()
-            }
-        })
         viewModel.isLogin.observe(this, Observer {
             invalidateOptionsMenu()
         })

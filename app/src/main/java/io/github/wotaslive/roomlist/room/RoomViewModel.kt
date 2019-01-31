@@ -43,7 +43,6 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                     return@flatMap Flowable.fromIterable(it.content?.data)
                 }
                 .doFinally {
-                    list.addAll(0, roomDetailData.value.orEmpty())
                     roomDetailData.value = list
                 }
                 .subscribe({
@@ -63,7 +62,7 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
         isLoadMore = isMore
         if (!isLoadMore)
             boardLastTime = 0
-        val list = ArrayList(roomBoardData.value.orEmpty())
+        val list = ArrayList<ExtInfo>()
         val disposable = appRepository.getRoomBoard(roomId, boardLastTime)
                 .compose(RxJavaUtil.flowableNetworkScheduler())
                 .filter {

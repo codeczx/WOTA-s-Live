@@ -20,10 +20,10 @@ import io.github.wotaslive.roomlist.all.AllRoomListActivity
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.widget.SpaceItemDecoration
 
-class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
+class RoomListFragment : BaseLazyFragment() {
     private lateinit var viewDataBinding: FragRoomListBinding
     val viewModel = RoomListViewModel(App.instance, AppRepository.instance)
-    private val adapter = RoomListAdapter(this)
+    private val adapter = RoomListAdapter()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewDataBinding = FragRoomListBinding.inflate(inflater, container, false)
@@ -47,7 +47,7 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
         viewModel.isMain.set(activity is MainActivity)
 
         viewModel.roomListData.observe(this, Observer {
-            adapter.submitList(it)
+            adapter.setNewData(it.orEmpty())
             viewDataBinding.srlRoom.finishRefresh()
         })
         viewModel.roomMessageCommand.observe(this, Observer { it ->
@@ -71,7 +71,7 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
         with(viewDataBinding.rvRoom) {
             layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
-            itemAnimator.changeDuration = 0
+            itemAnimator?.changeDuration = 0
             addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(
@@ -81,6 +81,12 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
             )
             adapter = this@RoomListFragment.adapter
         }
+        adapter.setOnItemClickListener { adapter, _, position ->
+            context?.let {
+                RoomDetailActivity.startRoomDetailActivity(it, adapter.getItem(position) as RoomInfo.ContentBean)
+
+            }
+        }
     }
 
     private fun setupRefresh() {
@@ -88,12 +94,6 @@ class RoomListFragment : BaseLazyFragment(), RoomListAdapter.Callback {
             setOnRefreshListener {
                 viewModel.start()
             }
-        }
-    }
-
-    override fun onRoomClick(content: RoomInfo.ContentBean) {
-        context?.let {
-            RoomDetailActivity.startRoomDetailActivity(it, content)
         }
     }
 

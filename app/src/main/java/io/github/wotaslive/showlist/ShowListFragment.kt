@@ -9,17 +9,16 @@ import android.view.ViewGroup
 import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
 import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
-import io.github.wotaslive.data.model.ShowInfo
 import io.github.wotaslive.databinding.FragShowListBinding
 import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.widget.SpaceItemDecoration
 
-class ShowListFragment : BaseLazyFragment(), ShowListAdapter.Callback {
+class ShowListFragment : BaseLazyFragment() {
     lateinit var viewModel: ShowListViewModel
 
     private lateinit var viewDataBinding: FragShowListBinding
-    private val adapter = ShowListAdapter(this)
+    private val adapter = ShowListAdapter()
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewDataBinding = FragShowListBinding.inflate(inflater, container, false)
         return viewDataBinding.root
@@ -31,7 +30,7 @@ class ShowListFragment : BaseLazyFragment(), ShowListAdapter.Callback {
             viewDataBinding.setLifecycleOwner(this@ShowListFragment)
         }
         viewModel.showListData.observe(this, Observer {
-            adapter.submitList(it)
+            adapter.setNewData(it.orEmpty())
             viewDataBinding.srlShow.finishRefresh()
         })
         setupAdapter()
@@ -47,7 +46,7 @@ class ShowListFragment : BaseLazyFragment(), ShowListAdapter.Callback {
         with(viewDataBinding.rvShow) {
             layoutManager = LinearLayoutManager(context)
             isNestedScrollingEnabled = false
-            itemAnimator.changeDuration = 0
+            itemAnimator?.changeDuration = 0
             addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(
@@ -63,10 +62,6 @@ class ShowListFragment : BaseLazyFragment(), ShowListAdapter.Callback {
         with(viewDataBinding.srlShow) {
             setOnRefreshListener { viewModel.start() }
         }
-    }
-
-    override fun onCoverClick(show: ShowInfo.ContentBean.ShowBean) {
-
     }
 
     companion object {

@@ -5,10 +5,6 @@
     <data>
 
         <variable
-            name="eventHandler"
-            type="io.github.wotaslive.roomlist.room.RoomDetailAdapter.Callback" />
-
-        <variable
             name="viewModel"
             type="io.github.wotaslive.roomlist.room.viewmodel.ItemImageViewModel" />
     </data>
@@ -63,7 +59,6 @@
             android:contentDescription="@string/empty_value"
             android:foreground="?android:attr/selectableItemBackground"
             android:maxWidth="@dimen/room_max_img_width"
-            android:onClick="@{(view)->eventHandler.onImageClick(view,viewModel.image)}"
             android:scaleType="fitStart"
             app:layout_constraintStart_toEndOf="@id/iv_avatar"
             app:layout_constraintTop_toBottomOf="@id/tv_sender_name"

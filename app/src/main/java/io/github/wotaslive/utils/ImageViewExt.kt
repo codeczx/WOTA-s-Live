@@ -37,29 +37,29 @@ fun checkUrl(originUrl: String): String {
 }
 
 @BindingAdapter("avatarUrl")
-fun ImageView.loadAvatar(url: String) {
+fun ImageView.loadAvatar(url: String?) {
     if (TextUtils.isEmpty(url)) return
     GlideApp.with(context)
-            .load(checkUrl(url))
+            .load(checkUrl(url!!))
             .dontAnimate()
             .into(this)
 }
 
 @BindingAdapter("thumbUrl")
-fun ImageView.loadThumb(url: String) {
+fun ImageView.loadThumb(url: String?) {
     if (TextUtils.isEmpty(url)) return
     GlideApp.with(context)
-            .load(checkUrl("/resize_160X160$url"))
+            .load(checkUrl("/resize_250X250$url"))
             .dontAnimate()
             .into(this)
 }
 
 @BindingAdapter("roundImageUrl")
-fun ImageView.loadRoundImageUrl(url: String) {
+fun ImageView.loadRoundImageUrl(url: String?) {
     if (TextUtils.isEmpty(url)) return
     val size = resources.getDimensionPixelSize(R.dimen.room_max_img_width)
     GlideApp.with(context)
-            .load(checkUrl(url))
+            .load(checkUrl(url!!))
             .override(size, size)
             .dontAnimate()
             .transform(RoundedCorners(resources.getDimensionPixelOffset(R.dimen.room_radius)))
@@ -67,9 +67,9 @@ fun ImageView.loadRoundImageUrl(url: String) {
 }
 
 @BindingAdapter("imageUrl")
-fun ImageView.loadImage(url: String) {
+fun ImageView.loadImage(url: String?) {
     if (TextUtils.isEmpty(url)) return
-    if (url.startsWith("#")) {
+    if (url!!.startsWith("#")) {
         GlideApp.with(context)
                 .load(ColorDrawable(Color.parseColor(url)))
                 .dontAnimate()

@@ -23,22 +23,11 @@ class LiveListViewModel(application: Application, private val appRepository: App
                 .compose(RxJavaUtil.flowableNetworkScheduler())
                 .map {
                     val list = ArrayList<LiveInfo.ContentBean.RoomBean>()
-                    if (isLoadMore) {
-                        list.addAll(liveListData.value.orEmpty())
+                    it.content?.liveList?.let {
+                        list.addAll(it.filter { it.liveType == 1 })
                     }
-                    val live = it.content?.liveList
-                    val review = it.content?.reviewList
-                    live?.let {
-                        it.forEach {
-                            it.liveType = 1
-                        }
-                        list.addAll(it)
-                    }
-                    review?.let {
-                        it.forEach {
-                            it.liveType = 2
-                        }
-                        list.addAll(it)
+                    it.content?.reviewList?.let {
+                        list.addAll(it.filter { it.liveType == 2 })
                     }
                     return@map list
                 }
