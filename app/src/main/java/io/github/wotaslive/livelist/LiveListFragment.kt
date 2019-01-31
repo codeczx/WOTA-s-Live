@@ -8,7 +8,6 @@ import android.support.v7.widget.PopupMenu
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
 import com.scwang.smartrefresh.layout.api.RefreshLayout
 import com.scwang.smartrefresh.layout.listener.OnRefreshLoadMoreListener
 import io.github.wotaslive.BaseLazyFragment
@@ -58,13 +57,11 @@ class LiveListFragment : BaseLazyFragment() {
     private fun setupAdapter() {
         with(viewDataBinding.rvLive) {
             layoutManager = LinearLayoutManager(context)
-            isNestedScrollingEnabled = false
             itemAnimator?.changeDuration = 0
-            addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(
-                            resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
-                            resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                            resources.getDimensionPixelOffset(R.dimen.margin_horizontal),
+                            resources.getDimensionPixelOffset(R.dimen.margin_vertical)
                     )
             )
             adapter = this@LiveListFragment.adapter

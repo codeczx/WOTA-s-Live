@@ -1,15 +1,13 @@
 package io.github.wotaslive.main
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.Activity
-import android.arch.lifecycle.Observer
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
-import android.view.Menu
-import android.view.MenuItem
-import com.github.florent37.materialviewpager.header.HeaderDesign
 import com.tbruyelle.rxpermissions2.RxPermissions
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.ActMainBinding
@@ -28,52 +26,17 @@ class MainActivity : AppCompatActivity() {
             viewDataBinding.viewModel = it
             viewDataBinding.setLifecycleOwner(this)
         }
-        val toolbar = viewDataBinding.materialViewPager.toolbar
-        toolbar.let {
-            setSupportActionBar(toolbar)
-            supportActionBar?.let {
-                it.setHomeButtonEnabled(false)
-                it.setDisplayShowTitleEnabled(false)
-                it.setDisplayShowHomeEnabled(false)
-                it.setDisplayHomeAsUpEnabled(false)
-            }
-        }
-        subscribeUIBinding()
         initView()
         checkPermissions()
+        viewModel.loadInfo()
+        if (viewModel.isLogin.value != true) {
+            LoginActivity.startLoginActivity(this)
+        }
     }
 
     override fun onResume() {
         super.onResume()
         viewModel.loadInfo()
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.menu_main, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
-            R.id.menu_login -> {
-                LoginActivity.startLoginActivity(this)
-                return true
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
-        menu?.run {
-            val isLogin = viewModel.isLogin.value ?: false
-            findItem(R.id.menu_login).isVisible = !isLogin
-            with(findItem(R.id.menu_username)) {
-                isVisible = isLogin
-                if (isLogin)
-                    title = viewModel.nickname
-            }
-        }
-        return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -83,6 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    @SuppressLint("CheckResult")
     private fun checkPermissions() {
         val rxPermissions = RxPermissions(this)
         rxPermissions.request(Manifest.permission.READ_PHONE_STATE).subscribe {
@@ -93,21 +57,28 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun subscribeUIBinding() {
-        viewModel.isLogin.observe(this, Observer {
-            invalidateOptionsMenu()
-        })
-    }
-
     private fun initView() {
         val pagerAdapter = MainPagerAdapter(this@MainActivity, supportFragmentManager)
-        with(viewDataBinding.materialViewPager) {
+        with(viewDataBinding) {
             viewPager.adapter = pagerAdapter
-            setMaterialViewPagerListener {
-                HeaderDesign.fromColorResAndDrawable(R.color.colorPrimaryDark, getDrawable(R.drawable.bg_default_header))
-            }
             viewPager.offscreenPageLimit = pagerAdapter.count - 1
-            pagerTitleStrip.setViewPager(viewPager)
+            bottomNavi.setOnNavigationItemSelectedListener {
+                viewPager.currentItem = it.order
+                return@setOnNavigationItemSelectedListener true
+            }
+            viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+                override fun onPageScrollStateChanged(p0: Int) {
+
+                }
+
+                override fun onPageScrolled(p0: Int, p1: Float, p2: Int) {
+
+                }
+
+                override fun onPageSelected(p0: Int) {
+                    bottomNavi.menu.getItem(p0).isChecked = true
+                }
+            })
         }
     }
 }

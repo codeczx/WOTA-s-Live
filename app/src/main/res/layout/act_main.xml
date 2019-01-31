@@ -9,23 +9,24 @@
             type="io.github.wotaslive.main.MainViewModel" />
     </data>
 
-    <com.github.florent37.materialviewpager.MaterialViewPager
-        android:id="@+id/materialViewPager"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:viewpager_animatedHeaderImage="true"
-        app:viewpager_color="@color/colorPrimary"
-        app:viewpager_displayToolbarWhenSwipe="true"
-        app:viewpager_enableToolbarElevation="true"
-        app:viewpager_headerAdditionalHeight="20dp"
-        app:viewpager_headerAlpha="1.0"
-        app:viewpager_headerHeight="200dp"
-        app:viewpager_hideLogoWithFade="false"
-        app:viewpager_hideToolbarAndTitle="true"
-        app:viewpager_imageHeaderDarkLayerAlpha="0.2"
-        app:viewpager_logo="@layout/header_logo"
-        app:viewpager_logoMarginTop="100dp"
-        app:viewpager_pagerTitleStrip="@layout/material_view_pager_pagertitlestrip_newstand"
-        app:viewpager_parallaxHeaderFactor="1.5"
-        app:viewpager_transparentToolbar="true" />
+        android:orientation="vertical">
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <android.support.design.widget.BottomNavigationView
+            android:id="@+id/bottom_navi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="?android:attr/windowBackground"
+            app:itemTextColor="@color/blackCover"
+            app:menu="@menu/menu_main_bottom_navi" />
+    </LinearLayout>
 </layout>

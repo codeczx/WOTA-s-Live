@@ -8,19 +8,39 @@
             type="io.github.wotaslive.showlist.ShowListViewModel" />
     </data>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/srl_show"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:srlAccentColor="@color/colorAccent"
-        app:srlEnableHeaderTranslationContent="false"
-        app:srlEnableLoadMore="false"
-        app:srlPrimaryColor="@color/colorPrimary">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_show"
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="wrap_content">
 
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:title="@string/app_name" />
+        </android.support.design.widget.AppBarLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/srl_show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:srlAccentColor="@color/colorAccent"
+            app:srlEnableHeaderTranslationContent="true"
+            app:srlPrimaryColor="@color/colorPrimary">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_show"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

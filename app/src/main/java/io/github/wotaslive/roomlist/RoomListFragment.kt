@@ -7,7 +7,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
 import io.github.wotaslive.App
 import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
@@ -16,7 +15,6 @@ import io.github.wotaslive.data.model.RoomInfo
 import io.github.wotaslive.databinding.FragRoomListBinding
 import io.github.wotaslive.login.LoginActivity
 import io.github.wotaslive.main.MainActivity
-import io.github.wotaslive.roomlist.all.AllRoomListActivity
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.widget.SpaceItemDecoration
 
@@ -41,7 +39,6 @@ class RoomListFragment : BaseLazyFragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         viewDataBinding.viewModel = viewModel
-        viewDataBinding.eventHandler = this@RoomListFragment
         viewDataBinding.setLifecycleOwner(this@RoomListFragment)
 
         viewModel.isMain.set(activity is MainActivity)
@@ -70,13 +67,11 @@ class RoomListFragment : BaseLazyFragment() {
     private fun setupAdapter() {
         with(viewDataBinding.rvRoom) {
             layoutManager = LinearLayoutManager(context)
-            isNestedScrollingEnabled = false
             itemAnimator?.changeDuration = 0
-            addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(
-                            resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
-                            resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                            resources.getDimensionPixelOffset(R.dimen.margin_horizontal),
+                            resources.getDimensionPixelOffset(R.dimen.margin_vertical)
                     )
             )
             adapter = this@RoomListFragment.adapter
@@ -94,12 +89,6 @@ class RoomListFragment : BaseLazyFragment() {
             setOnRefreshListener {
                 viewModel.start()
             }
-        }
-    }
-
-    fun enterAll() {
-        activity?.let {
-            AllRoomListActivity.startAllRoomListActivity(it)
         }
     }
 

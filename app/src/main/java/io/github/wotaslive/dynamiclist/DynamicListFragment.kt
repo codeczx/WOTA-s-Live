@@ -65,13 +65,11 @@ class DynamicListFragment : BaseLazyFragment() {
         }
         with(viewDataBinding.rvDynamic) {
             layoutManager = LinearLayoutManager(context)
-            isNestedScrollingEnabled = false
             itemAnimator?.changeDuration = 0
-            addItemDecoration(com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     io.github.wotaslive.widget.SpaceItemDecoration(
-                            resources.getDimensionPixelOffset(io.github.wotaslive.R.dimen.cardMarginHorizontal),
-                            resources.getDimensionPixelOffset(io.github.wotaslive.R.dimen.cardMarginVertical)
+                            resources.getDimensionPixelOffset(io.github.wotaslive.R.dimen.margin_horizontal),
+                            resources.getDimensionPixelOffset(io.github.wotaslive.R.dimen.margin_vertical)
                     )
             )
             adapter = this@DynamicListFragment.adapter

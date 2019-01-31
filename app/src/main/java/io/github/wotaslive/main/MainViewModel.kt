@@ -8,7 +8,6 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.blankj.utilcode.util.SPUtils
-import com.orhanobut.logger.Logger
 import io.github.wotaslive.Constants
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.worker.SyncWorker
@@ -48,7 +47,6 @@ class MainViewModel(application: Application, private val appRepository: AppRepo
     fun loadInfo() {
         nickname = spUtils.getString(Constants.SP_NICKNAME)
         isLogin.value = spUtils.getString(Constants.HEADER_KEY_TOKEN).isNotEmpty()
-        Logger.d(spUtils.getString(Constants.HEADER_KEY_TOKEN))
     }
 
     override fun onCleared() {

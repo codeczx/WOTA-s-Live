@@ -6,7 +6,6 @@ import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.florent37.materialviewpager.header.MaterialViewPagerHeaderDecorator
 import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragShowListBinding
@@ -45,13 +44,11 @@ class ShowListFragment : BaseLazyFragment() {
     private fun setupAdapter() {
         with(viewDataBinding.rvShow) {
             layoutManager = LinearLayoutManager(context)
-            isNestedScrollingEnabled = false
             itemAnimator?.changeDuration = 0
-            addItemDecoration(MaterialViewPagerHeaderDecorator())
             addItemDecoration(
                     SpaceItemDecoration(
-                            resources.getDimensionPixelOffset(R.dimen.cardMarginHorizontal),
-                            resources.getDimensionPixelOffset(R.dimen.cardMarginVertical)
+                            resources.getDimensionPixelOffset(R.dimen.margin_horizontal),
+                            resources.getDimensionPixelOffset(R.dimen.margin_vertical)
                     )
             )
             adapter = this@ShowListFragment.adapter

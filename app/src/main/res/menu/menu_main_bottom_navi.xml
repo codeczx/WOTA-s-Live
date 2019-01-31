@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/navi_live"
+        android:icon="@drawable/ic_live"
+        android:orderInCategory="0"
+        android:title="@string/tab_stream" />
+    <item
+        android:id="@+id/navi_show"
+        android:icon="@drawable/ic_show"
+        android:orderInCategory="1"
+        android:title="@string/tab_show" />
+    <item
+        android:id="@+id/navi_room"
+        android:icon="@drawable/ic_room"
+        android:orderInCategory="2"
+        android:title="@string/tab_room" />
+    <item
+        android:id="@+id/navi_dynamic"
+        android:icon="@drawable/ic_dynamic"
+        android:orderInCategory="3"
+        android:title="@string/tab_dynamic" />
+</menu>

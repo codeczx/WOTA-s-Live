@@ -8,42 +8,41 @@
         <variable
             name="viewModel"
             type="io.github.wotaslive.roomlist.RoomListViewModel" />
-
-        <variable
-            name="eventHandler"
-            type="io.github.wotaslive.roomlist.RoomListFragment" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <android.support.design.widget.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?android:attr/actionBarSize"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:title="@string/app_name" />
+        </android.support.design.widget.AppBarLayout>
+
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/srl_room"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:srlAccentColor="@color/colorAccent"
-            app:srlEnableHeaderTranslationContent="false"
-            app:srlEnableLoadMore="false"
+            app:srlEnableHeaderTranslationContent="true"
             app:srlPrimaryColor="@color/colorPrimary">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/rv_room"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fab_login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/fab_margin"
-            android:layout_marginEnd="@dimen/fab_margin"
-            android:onClick="@{()->eventHandler.enterAll()}"
-            android:src="@drawable/ic_baseline_public_24px"
-            android:visibility="@{viewModel.isMain?View.VISIBLE:View.GONE}"
-            app:layout_anchor="@+id/srl_room"
-            app:layout_anchorGravity="right|bottom" />
     </android.support.design.widget.CoordinatorLayout>
 </layout>
