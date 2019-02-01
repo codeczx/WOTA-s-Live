@@ -32,8 +32,7 @@
                 app:imageUrl="@{@string/resize_250+viewModel.url}"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/bg_default_header" />
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv_name"
@@ -41,8 +40,8 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:paddingEnd="@dimen/margin_horizontal"
                 android:paddingStart="@dimen/margin_horizontal"
+                android:paddingEnd="@dimen/margin_horizontal"
                 android:text="@{viewModel.name}"
                 android:textColor="@android:color/black"
                 android:textSize="15sp"
@@ -55,8 +54,8 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:paddingEnd="@dimen/margin_horizontal"
                 android:paddingStart="@dimen/margin_horizontal"
+                android:paddingEnd="@dimen/margin_horizontal"
                 android:singleLine="true"
                 android:text="@{viewModel.comment}"
                 android:textSize="13sp"

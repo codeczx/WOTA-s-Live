@@ -45,6 +45,7 @@ fun ImageView.loadAvatar(url: String?) {
             .load(checkUrl(url!!))
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error)
+            .centerCrop()
             .dontAnimate()
             .into(this)
 }
@@ -56,6 +57,7 @@ fun ImageView.loadThumb(url: String?) {
             .load(checkUrl("/resize_250X250$url"))
             .placeholder(R.drawable.ic_placeholder)
             .error(R.drawable.ic_error)
+            .centerCrop()
             .dontAnimate()
             .into(this)
 }
