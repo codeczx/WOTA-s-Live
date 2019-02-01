@@ -166,7 +166,7 @@ class AppRepository private constructor() {
 
     companion object {
 
-        const val IMG_BASE_URL = "https://source.48.cn/"
+        const val IMG_BASE_URL = "https://source.48.cn"
         private const val LIVE_BASE_URL = "https://plive.48.cn/"
         private const val OTHER_BASE_URL = "https://pother.48.cn/"
         private const val ROOM_BASE_URL = "https://pjuju.48.cn/"

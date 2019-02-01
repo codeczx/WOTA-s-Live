@@ -30,6 +30,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    androidExtensions {
+        experimental = true
+    }
     dexOptions {
         preDexLibraries true
         javaMaxHeapSize "3g"
@@ -87,10 +90,9 @@ dependencies {
     kapt 'com.github.bumptech.glide:compiler:4.5.0'
     implementation 'tv.danmaku.ijk.media:ijkplayer-java:0.8.4'
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-10'
-    implementation 'com.github.moyokoo:Diooto:1.20'
-    implementation 'me.panpf:sketch:2.7.0'
     implementation 'com.liyi.view:auto-gridview:1.1.2'
     implementation 'com.liyi.view:image-viewer:2.1.2'
     implementation 'cn.jzvd:jiaozivideoplayer:6.4.1'
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.46'
+    implementation 'com.ycjiang:ImagePreview:2.2.2'
 }

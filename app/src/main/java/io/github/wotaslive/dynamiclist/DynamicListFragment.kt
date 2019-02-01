@@ -17,7 +17,7 @@ import io.github.wotaslive.utils.obtainViewModel
 class DynamicListFragment : BaseLazyFragment() {
     private lateinit var viewModel: DynamicListViewModel
     private lateinit var viewDataBinding: FragDynamicListBinding
-    private val adapter = DynamicAdapter()
+    private val adapter = DynamicAdapter(this)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {

@@ -36,14 +36,7 @@
         <activity android:name=".roomlist.room.RoomDetailActivity" />
         <activity android:name=".login.LoginActivity" />
 
-        <service
-            android:name=".MediaPlayerService"
-            android:enabled="false"
-            android:exported="false"
-            android:icon="@mipmap/ic_launcher"
-            android:label="@string/app_name" />
-
-        <activity android:name=".roomlist.all.AllRoomListActivity"></activity>
+        <activity android:name=".roomlist.all.AllRoomListActivity" />
     </application>
 
 </manifest>

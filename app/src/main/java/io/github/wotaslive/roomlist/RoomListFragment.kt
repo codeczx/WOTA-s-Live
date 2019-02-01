@@ -79,7 +79,6 @@ class RoomListFragment : BaseLazyFragment() {
         adapter.setOnItemClickListener { adapter, _, position ->
             context?.let {
                 RoomDetailActivity.startRoomDetailActivity(it, adapter.getItem(position) as RoomInfo.ContentBean)
-
             }
         }
     }

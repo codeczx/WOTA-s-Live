@@ -29,25 +29,11 @@
     <string name="user_not_exist">用户不存在</string>
     <string name="password_is_null">密码不能为空</string>
     <string name="password_wrong"> 密码错误</string>
-
     <string name="auth_fail">授权失败，请登录</string>
 
-    <string name="N_A">N/A</string>
-
-    <string name="VideoView_ar_aspect_fit_parent">Aspect / Fit parent</string>
-    <string name="VideoView_ar_aspect_fill_parent">Aspect / Fill parent</string>
-    <string name="VideoView_ar_aspect_wrap_content">Aspect / Wrap content</string>
-    <string name="VideoView_ar_match_parent">Free / Fill parent</string>
-    <string name="VideoView_ar_16_9_fit_parent">16:9 / Fit parent</string>
-    <string name="VideoView_ar_4_3_fit_parent">4:3 / Fit parent</string>
-
-    <string name="VideoView_error_text_invalid_progressive_playback">Invalid progressive playback</string>
-    <string name="VideoView_error_text_unknown">Unknown</string>
-    <string name="VideoView_error_button">OK</string>
-
-    <string name="resize_250">resize_250X250</string>
-    <string name="resize_160">resize_160X160</string>
-    <string name="resize_100">resize_100X100</string>
+    <string name="resize_250">/resize_250X250</string>
+    <string name="resize_160">/resize_160X160</string>
+    <string name="resize_100">/resize_100X100</string>
 
     <string name="photo_album">相册</string>
     <string name="pic_save">保存到本地?</string>

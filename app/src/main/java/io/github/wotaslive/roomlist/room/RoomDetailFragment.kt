@@ -1,20 +1,23 @@
 package io.github.wotaslive.roomlist.room
 
 import android.arch.lifecycle.Observer
+import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
+import android.support.v7.widget.LinearLayoutManager
+import android.text.TextUtils
 import android.view.*
+import android.widget.ImageView
 import com.google.gson.JsonParser
+import com.previewlibrary.GPreviewBuilder
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ExtInfo
+import io.github.wotaslive.data.model.ImageInfo
 import io.github.wotaslive.databinding.FragRoomDetailBinding
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
-import net.moyokoo.diooto.Diooto
-import net.moyokoo.diooto.config.DiootoConfig
-import net.moyokoo.diooto.interfaces.DefaultPercentProgress
 
 class RoomDetailFragment : Fragment() {
     private lateinit var viewModel: RoomViewModel
@@ -26,11 +29,6 @@ class RoomDetailFragment : Fragment() {
         viewDataBinding = FragRoomDetailBinding.inflate(inflater, container, false)
         setHasOptionsMenu(true)
         return viewDataBinding.root
-    }
-
-    override fun onResume() {
-        super.onResume()
-        viewModel.load()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -85,16 +83,31 @@ class RoomDetailFragment : Fragment() {
             }
         })
         setupBinding()
-        adapter.setOnItemChildClickListener { adapter, view, position ->
+        adapter.setOnItemChildClickListener { adapter, _, position ->
             val info = adapter.getItem(position) as ExtInfo
-            Diooto(context)
-                    .urls(JsonParser().parse(info.bodys).asJsonObject["url"].asString)
-                    .type(DiootoConfig.PHOTO)
-                    .fullscreen(false)
-                    .views(view)
-                    .setProgress(DefaultPercentProgress())
+            var idx = -1
+            val layoutManager = viewDataBinding.rvRoomDetail.layoutManager as LinearLayoutManager
+            val list = ArrayList<ImageInfo>()
+            adapter.data.forEachIndexed { index, item ->
+                if (item is ExtInfo && Constants.MESSAGE_TYPE_IMAGE == item.messageObject) {
+                    if (TextUtils.equals(item.bodys, info.bodys)) idx = list.size
+                    val rect = Rect()
+                    val itemView = layoutManager.findViewByPosition(index)
+                    itemView?.let {
+                        val imageView = itemView.findViewById(R.id.iv_image) as ImageView
+                        imageView.getGlobalVisibleRect(rect)
+                    }
+                    list.add(0, ImageInfo(JsonParser().parse(item.bodys).asJsonObject["url"].asString, null, rect))
+                }
+            }
+            GPreviewBuilder.from(this)
+                    .setData(list)
+                    .setCurrentIndex(list.size - 1 - idx)
+                    .setSingleFling(true)
+                    .setType(GPreviewBuilder.IndicatorType.Number)
                     .start()
         }
+        viewModel.load()
     }
 
     private fun setupBinding() {

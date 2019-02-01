@@ -28,9 +28,11 @@ fun checkUrl(originUrl: String): String {
         if (url.contains("?")) {
             url = url.substring(0, url.indexOf("?"))
         }
-    } else if (url.endsWith(".gif") && url.contains("resize_", true)) {
-        url = AppRepository.IMG_BASE_URL + url.substring(url.indexOf("/") + 1)
-    } else {
+    }
+//    else if (url.endsWith(".gif")) {
+//        url = AppRepository.IMG_BASE_URL + url.substring(url.indexOf("/") + 1)
+//    }
+    else {
         url = AppRepository.IMG_BASE_URL + url
     }
     return url
@@ -41,6 +43,8 @@ fun ImageView.loadAvatar(url: String?) {
     if (TextUtils.isEmpty(url)) return
     GlideApp.with(context)
             .load(checkUrl(url!!))
+            .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_error)
             .dontAnimate()
             .into(this)
 }
@@ -50,6 +54,8 @@ fun ImageView.loadThumb(url: String?) {
     if (TextUtils.isEmpty(url)) return
     GlideApp.with(context)
             .load(checkUrl("/resize_250X250$url"))
+            .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_error)
             .dontAnimate()
             .into(this)
 }
@@ -61,6 +67,8 @@ fun ImageView.loadRoundImageUrl(url: String?) {
     GlideApp.with(context)
             .load(checkUrl(url!!))
             .override(size, size)
+            .placeholder(R.drawable.ic_placeholder)
+            .error(R.drawable.ic_error)
             .dontAnimate()
             .transform(RoundedCorners(resources.getDimensionPixelOffset(R.dimen.room_radius)))
             .into(this)
@@ -69,19 +77,32 @@ fun ImageView.loadRoundImageUrl(url: String?) {
 @BindingAdapter("imageUrl")
 fun ImageView.loadImage(url: String?) {
     if (TextUtils.isEmpty(url)) return
-    if (url!!.startsWith("#")) {
-        GlideApp.with(context)
+    when {
+        url!!.endsWith("gif") -> GlideApp.with(context)
+                .asBitmap()
+                .load(checkUrl(url))
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error)
+                .dontAnimate()
+                .into(this)
+        else -> GlideApp.with(context)
+                .load(checkUrl(url))
+                .placeholder(R.drawable.ic_placeholder)
+                .error(R.drawable.ic_error)
+                .dontAnimate()
+                .into(this)
+    }
+}
+
+@BindingAdapter("bgUrl")
+fun ImageView.loadBg(url: String?) {
+    if (TextUtils.isEmpty(url)) return
+    when {
+        url!!.startsWith("#") -> GlideApp.with(context)
                 .load(ColorDrawable(Color.parseColor(url)))
                 .dontAnimate()
                 .into(this)
-    } else if (url.endsWith("gif")) {
-        GlideApp.with(context)
-                .asBitmap()
-                .load(checkUrl(url))
-                .dontAnimate()
-                .into(this)
-    } else {
-        GlideApp.with(context)
+        else -> GlideApp.with(context)
                 .load(checkUrl(url))
                 .dontAnimate()
                 .into(this)

@@ -2,15 +2,20 @@ package io.github.wotaslive.roomlist.room.pictures
 
 
 import android.arch.lifecycle.Observer
+import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
+import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import com.blankj.utilcode.util.SizeUtils
+import com.previewlibrary.GPreviewBuilder
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.DynamicPictureInfo
+import io.github.wotaslive.data.model.ImageInfo
 import io.github.wotaslive.databinding.FragPicsBinding
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.roomlist.room.RoomViewModel
@@ -18,11 +23,6 @@ import io.github.wotaslive.utils.checkUrl
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
 import io.github.wotaslive.widget.GridSpaceItemDecoration
-import net.moyokoo.diooto.Diooto
-import net.moyokoo.diooto.config.DiootoConfig
-import net.moyokoo.diooto.interfaces.CircleIndexIndicator
-import net.moyokoo.diooto.interfaces.DefaultPercentProgress
-import java.util.*
 
 
 class DynamicPicturesFragment : Fragment() {
@@ -49,18 +49,26 @@ class DynamicPicturesFragment : Fragment() {
             adapter.setNewData(it)
         })
         adapter.setOnItemClickListener { adapter, _, position ->
-            val urls = arrayOfNulls<String>(adapter.data.size)
-            adapter.data.forEachIndexed { index, any ->
-                urls[index] = checkUrl((any as DynamicPictureInfo.Content.Data).filePath)
+            val thumbViewInfoList = ArrayList<ImageInfo>()
+            adapter.data.forEach {
+                thumbViewInfoList.add(ImageInfo(checkUrl((it as DynamicPictureInfo.Content.Data).filePath), null, null))
             }
-            Diooto(context)
-                    .urls(Arrays.copyOfRange(urls, position, adapter.data.size))
-                    .type(DiootoConfig.PHOTO)
-                    .fullscreen(false)
-                    .position(0)
-                    .views(viewDataBinding.rvPics, R.id.iv_image)
-                    .setIndicator(CircleIndexIndicator())
-                    .setProgress(DefaultPercentProgress())
+            val gridLayoutManager = viewDataBinding.rvPics.layoutManager as LinearLayoutManager
+            val firstCompletelyVisiblePos = gridLayoutManager.findFirstVisibleItemPosition()
+            for (i in firstCompletelyVisiblePos until thumbViewInfoList.size) {
+                val itemView = gridLayoutManager.findViewByPosition(i)
+                val bounds = Rect()
+                if (itemView != null) {
+                    val thumbView = itemView.findViewById(R.id.iv_image) as ImageView
+                    thumbView.getGlobalVisibleRect(bounds)
+                }
+                thumbViewInfoList[i].rect = bounds
+            }
+            GPreviewBuilder.from(this)
+                    .setData(thumbViewInfoList)
+                    .setCurrentIndex(position)
+                    .setSingleFling(true)
+                    .setType(GPreviewBuilder.IndicatorType.Number)
                     .start()
         }
         viewDataBinding.setLifecycleOwner(this)
@@ -87,7 +95,7 @@ class DynamicPicturesFragment : Fragment() {
             addItemDecoration(GridSpaceItemDecoration(3, SizeUtils.dp2px(5f), false))
         }
         with(activity as RoomDetailActivity) {
-            setupActionBar(R.id.toolbar) {
+            setupActionBar(io.github.wotaslive.R.id.toolbar) {
                 setDisplayHomeAsUpEnabled(true)
                 setDisplayShowHomeEnabled(true)
             }
