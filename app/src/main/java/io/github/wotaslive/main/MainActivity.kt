@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
+import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.R
 import io.github.wotaslive.databinding.ActMainBinding
 import io.github.wotaslive.login.LoginActivity
@@ -18,6 +19,8 @@ import io.github.wotaslive.utils.obtainViewModel
 class MainActivity : AppCompatActivity() {
     private lateinit var viewDataBinding: ActMainBinding
     private lateinit var viewModel: MainViewModel
+    private var firstTime = 0L
+    private var lastTapId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,6 +66,13 @@ class MainActivity : AppCompatActivity() {
             viewPager.adapter = pagerAdapter
             viewPager.offscreenPageLimit = pagerAdapter.count - 1
             bottomNavi.setOnNavigationItemSelectedListener {
+                val secondTime = System.currentTimeMillis()
+                if (secondTime - firstTime < 500 && it.order == lastTapId) {
+                    // double tap
+                    (pagerAdapter.getItem(it.order) as BaseLazyFragment).scrollToTop()
+                }
+                firstTime = secondTime
+                lastTapId = it.order
                 viewPager.currentItem = it.order
                 return@setOnNavigationItemSelectedListener true
             }

@@ -17,6 +17,8 @@ abstract class BaseLazyFragment : Fragment() {
     /*加载数据的方法,由子类实现*/
     abstract fun initData()
 
+    abstract fun scrollToTop()
+
     /*懒加载方法*/
     fun lazyInitData() {
         if (!isInitData && isVisibleToUser && isPrepareView) {

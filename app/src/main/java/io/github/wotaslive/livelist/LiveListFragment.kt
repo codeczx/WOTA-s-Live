@@ -2,6 +2,7 @@ package io.github.wotaslive.livelist
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.view.ContextThemeWrapper
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.PopupMenu
@@ -18,14 +19,15 @@ import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.player.PlayerActivity
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setClipboard
+import io.github.wotaslive.utils.showSnackbar
 import io.github.wotaslive.widget.SpaceItemDecoration
 
 
 class LiveListFragment : BaseLazyFragment() {
     lateinit var viewModel: LiveListViewModel
+
     private lateinit var viewDataBinding: FragLiveListBinding
     private val adapter = LiveListAdapter()
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         viewDataBinding = FragLiveListBinding.inflate(inflater, container, false)
         return viewDataBinding.root
@@ -36,6 +38,13 @@ class LiveListFragment : BaseLazyFragment() {
             viewDataBinding.viewModel = it
             viewDataBinding.setLifecycleOwner(this@LiveListFragment)
         }
+        subscribe()
+        setupAdapter()
+        setupRefresh()
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    private fun subscribe() {
         viewModel.liveListData.observe(this, Observer {
             if (viewModel.isLoadMore) {
                 adapter.addData(it.orEmpty())
@@ -45,13 +54,21 @@ class LiveListFragment : BaseLazyFragment() {
                 viewDataBinding.srlLive.finishRefresh()
             }
         })
-        setupAdapter()
-        setupRefresh()
-        super.onActivityCreated(savedInstanceState)
+        viewModel.errorCommand.observe(this, Observer {
+            it?.let {
+                viewDataBinding.rvLive.showSnackbar(getString(it), Snackbar.LENGTH_SHORT)
+                viewDataBinding.srlLive.finishRefresh()
+                viewDataBinding.srlLive.finishLoadMoreWithNoMoreData()
+            }
+        })
     }
 
     override fun initData() {
         viewModel.loadLives(false)
+    }
+
+    override fun scrollToTop() {
+        viewDataBinding.rvLive.scrollToPosition(0)
     }
 
     private fun setupAdapter() {

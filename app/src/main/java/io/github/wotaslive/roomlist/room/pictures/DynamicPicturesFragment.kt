@@ -39,6 +39,11 @@ class DynamicPicturesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as RoomDetailActivity).obtainViewModel(DynamicPicturesViewModel::class.java)
+        viewDataBinding.setLifecycleOwner(this)
+        setupActionBar(viewDataBinding.toolbar) {
+            setDisplayHomeAsUpEnabled(true)
+            setDisplayShowHomeEnabled(true)
+        }
         viewModel.memberId = (activity as RoomDetailActivity).obtainViewModel(RoomViewModel::class.java).memberId
         viewModel.picsData.observe(this, Observer {
             if (viewModel.isLoadMore) {
@@ -48,6 +53,30 @@ class DynamicPicturesFragment : Fragment() {
             }
             adapter.setNewData(it)
         })
+        initView()
+        viewModel.load(false)
+    }
+
+    private fun initView() {
+        with(viewDataBinding.srlPics) {
+            setOnRefreshListener {
+                viewModel.load(false)
+            }
+            setOnLoadMoreListener {
+                viewModel.load(true)
+            }
+        }
+        with(viewDataBinding.rvPics) {
+            layoutManager = GridLayoutManager(context, 3)
+            adapter = this@DynamicPicturesFragment.adapter
+            addItemDecoration(GridSpaceItemDecoration(3, SizeUtils.dp2px(5f), false))
+        }
+        with(activity as RoomDetailActivity) {
+            setupActionBar(io.github.wotaslive.R.id.toolbar) {
+                setDisplayHomeAsUpEnabled(true)
+                setDisplayShowHomeEnabled(true)
+            }
+        }
         adapter.setOnItemClickListener { adapter, _, position ->
             val thumbViewInfoList = ArrayList<ImageInfo>()
             adapter.data.forEach {
@@ -70,35 +99,6 @@ class DynamicPicturesFragment : Fragment() {
                     .setSingleFling(true)
                     .setType(GPreviewBuilder.IndicatorType.Number)
                     .start()
-        }
-        viewDataBinding.setLifecycleOwner(this)
-        setupActionBar(viewDataBinding.toolbar) {
-            setDisplayHomeAsUpEnabled(true)
-            setDisplayShowHomeEnabled(true)
-        }
-        setupBinding()
-        viewModel.load(false)
-    }
-
-    private fun setupBinding() {
-        with(viewDataBinding.srlPics) {
-            setOnRefreshListener {
-                viewModel.load(false)
-            }
-            setOnLoadMoreListener {
-                viewModel.load(true)
-            }
-        }
-        with(viewDataBinding.rvPics) {
-            layoutManager = GridLayoutManager(context, 3)
-            adapter = this@DynamicPicturesFragment.adapter
-            addItemDecoration(GridSpaceItemDecoration(3, SizeUtils.dp2px(5f), false))
-        }
-        with(activity as RoomDetailActivity) {
-            setupActionBar(io.github.wotaslive.R.id.toolbar) {
-                setDisplayHomeAsUpEnabled(true)
-                setDisplayShowHomeEnabled(true)
-            }
         }
     }
 

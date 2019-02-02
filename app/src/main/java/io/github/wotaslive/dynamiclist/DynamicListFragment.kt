@@ -3,6 +3,7 @@ package io.github.wotaslive.dynamiclist
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import io.github.wotaslive.BaseLazyFragment
 import io.github.wotaslive.databinding.FragDynamicListBinding
 import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.utils.obtainViewModel
+import io.github.wotaslive.utils.showSnackbar
 
 class DynamicListFragment : BaseLazyFragment() {
     private lateinit var viewModel: DynamicListViewModel
@@ -28,6 +30,12 @@ class DynamicListFragment : BaseLazyFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         viewModel = (activity as MainActivity).obtainViewModel(DynamicListViewModel::class.java)
         viewDataBinding.setLifecycleOwner(this)
+        subscribe()
+        initView()
+        super.onActivityCreated(savedInstanceState)
+    }
+
+    private fun subscribe() {
         with(viewModel) {
             data.observe(this@DynamicListFragment, Observer {
                 if (isLoad) {
@@ -41,16 +49,25 @@ class DynamicListFragment : BaseLazyFragment() {
             members.observe(this@DynamicListFragment, Observer {
                 adapter.updateMember(it)
             })
+            errorCommand.observe(this@DynamicListFragment, Observer {
+                it?.let {
+                    viewDataBinding.rvDynamic.showSnackbar(getString(it), Snackbar.LENGTH_SHORT)
+                    viewDataBinding.srlDynamic.finishRefresh()
+                    viewDataBinding.srlDynamic.finishLoadMoreWithNoMoreData()
+                }
+            })
         }
-        subscribeUi()
-        super.onActivityCreated(savedInstanceState)
     }
 
     override fun initData() {
         viewModel.load(false)
     }
 
-    private fun subscribeUi() {
+    override fun scrollToTop() {
+        viewDataBinding.rvDynamic.scrollToPosition(0)
+    }
+
+    private fun initView() {
         with(viewDataBinding.srlDynamic) {
             setEnableAutoLoadMore(true)
             setOnRefreshLoadMoreListener(object : OnRefreshLoadMoreListener {

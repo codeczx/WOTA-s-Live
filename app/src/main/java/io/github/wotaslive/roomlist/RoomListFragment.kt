@@ -16,6 +16,7 @@ import io.github.wotaslive.databinding.FragRoomListBinding
 import io.github.wotaslive.login.LoginActivity
 import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
+import io.github.wotaslive.utils.showSnackbar
 import io.github.wotaslive.widget.SpaceItemDecoration
 
 class RoomListFragment : BaseLazyFragment() {
@@ -37,34 +38,54 @@ class RoomListFragment : BaseLazyFragment() {
         viewModel.start()
     }
 
+    override fun scrollToTop() {
+        viewDataBinding.rvRoom.scrollToPosition(0)
+    }
+
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         viewDataBinding.viewModel = viewModel
         viewDataBinding.setLifecycleOwner(this@RoomListFragment)
 
         viewModel.isMain.set(activity is MainActivity)
 
-        viewModel.roomListData.observe(this, Observer {
-            adapter.setNewData(it.orEmpty())
-            viewDataBinding.srlRoom.finishRefresh()
-        })
-        viewModel.roomMessageCommand.observe(this, Observer { it ->
-            with(viewDataBinding.srlRoom) {
-                finishRefresh()
-                it?.let { it1 ->
-                    Snackbar.make(this, it1, Snackbar.LENGTH_LONG)
-                            .setAction(R.string.login) { _ ->
-                                LoginActivity.startLoginActivity(activity as MainActivity)
-                            }
-                            .show()
-                }
-            }
-        })
-        setupAdapter()
-        setupRefresh()
+        subscribe()
+        initView()
         super.onActivityCreated(savedInstanceState)
     }
 
-    private fun setupAdapter() {
+    private fun subscribe() {
+        with(viewModel) {
+            roomListData.observe(this@RoomListFragment, Observer {
+                adapter.setNewData(it.orEmpty())
+                viewDataBinding.srlRoom.finishRefresh()
+            })
+            roomMessageCommand.observe(this@RoomListFragment, Observer { it ->
+                with(viewDataBinding.srlRoom) {
+                    finishRefresh()
+                    it?.let { it1 ->
+                        Snackbar.make(this, it1, Snackbar.LENGTH_LONG)
+                                .setAction(R.string.login) { _ ->
+                                    LoginActivity.startLoginActivity(activity as MainActivity)
+                                }
+                                .show()
+                    }
+                }
+            })
+            errorCommand.observe(this@RoomListFragment, Observer {
+                it?.let {
+                    viewDataBinding.rvRoom.showSnackbar(getString(it), Snackbar.LENGTH_SHORT)
+                    viewDataBinding.srlRoom.finishRefresh()
+                }
+            })
+        }
+    }
+
+    private fun initView() {
+        with(viewDataBinding.srlRoom) {
+            setOnRefreshListener {
+                viewModel.start()
+            }
+        }
         with(viewDataBinding.rvRoom) {
             layoutManager = LinearLayoutManager(context)
             itemAnimator?.changeDuration = 0
@@ -79,14 +100,6 @@ class RoomListFragment : BaseLazyFragment() {
         adapter.setOnItemClickListener { adapter, _, position ->
             context?.let {
                 RoomDetailActivity.startRoomDetailActivity(it, adapter.getItem(position) as RoomInfo.ContentBean)
-            }
-        }
-    }
-
-    private fun setupRefresh() {
-        with(viewDataBinding.srlRoom) {
-            setOnRefreshListener {
-                viewModel.start()
             }
         }
     }

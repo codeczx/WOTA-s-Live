@@ -2,6 +2,7 @@ package io.github.wotaslive.showlist
 
 import android.arch.lifecycle.Observer
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import io.github.wotaslive.R
 import io.github.wotaslive.databinding.FragShowListBinding
 import io.github.wotaslive.main.MainActivity
 import io.github.wotaslive.utils.obtainViewModel
+import io.github.wotaslive.utils.showSnackbar
 import io.github.wotaslive.widget.SpaceItemDecoration
 
 class ShowListFragment : BaseLazyFragment() {
@@ -28,17 +30,31 @@ class ShowListFragment : BaseLazyFragment() {
             viewDataBinding.viewModel = it
             viewDataBinding.setLifecycleOwner(this@ShowListFragment)
         }
-        viewModel.showListData.observe(this, Observer {
-            adapter.setNewData(it.orEmpty())
-            viewDataBinding.srlShow.finishRefresh()
-        })
+        subscribe()
         setupAdapter()
         setupRefresh()
         super.onActivityCreated(savedInstanceState)
     }
 
+    private fun subscribe() {
+        viewModel.showListData.observe(this, Observer {
+            adapter.setNewData(it.orEmpty())
+            viewDataBinding.srlShow.finishRefresh()
+        })
+        viewModel.errorCommand.observe(this, Observer {
+            it?.let {
+                viewDataBinding.rvShow.showSnackbar(getString(it), Snackbar.LENGTH_SHORT)
+                viewDataBinding.srlShow.finishRefresh()
+            }
+        })
+    }
+
     override fun initData() {
         viewModel.start()
+    }
+
+    override fun scrollToTop() {
+        viewDataBinding.rvShow.scrollToPosition(0)
     }
 
     private fun setupAdapter() {

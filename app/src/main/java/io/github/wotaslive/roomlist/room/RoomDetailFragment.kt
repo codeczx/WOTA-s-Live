@@ -3,6 +3,7 @@ package io.github.wotaslive.roomlist.room
 import android.arch.lifecycle.Observer
 import android.graphics.Rect
 import android.os.Bundle
+import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
 import android.text.TextUtils
@@ -18,6 +19,7 @@ import io.github.wotaslive.databinding.FragRoomDetailBinding
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
+import io.github.wotaslive.utils.showSnackbar
 
 class RoomDetailFragment : Fragment() {
     private lateinit var viewModel: RoomViewModel
@@ -69,48 +71,43 @@ class RoomDetailFragment : Fragment() {
                 }
             }
         }
-        viewModel.roomDetailData.observe(this, Observer {
-            adapter.addData(it.orEmpty())
-            viewDataBinding.srlRoomDetail.finishRefresh()
-        })
-        viewModel.roomBoardData.observe(this, Observer {
-            if (viewModel.isLoadMore) {
-                boardAdapter.addData(it.orEmpty())
-                viewDataBinding.srlRoomBoard.finishLoadMore()
-            } else {
-                boardAdapter.setNewData(it.orEmpty())
-                viewDataBinding.srlRoomBoard.finishRefresh()
-            }
-        })
-        setupBinding()
-        adapter.setOnItemChildClickListener { adapter, _, position ->
-            val info = adapter.getItem(position) as ExtInfo
-            var idx = -1
-            val layoutManager = viewDataBinding.rvRoomDetail.layoutManager as LinearLayoutManager
-            val list = ArrayList<ImageInfo>()
-            adapter.data.forEachIndexed { index, item ->
-                if (item is ExtInfo && Constants.MESSAGE_TYPE_IMAGE == item.messageObject) {
-                    if (TextUtils.equals(item.bodys, info.bodys)) idx = list.size
-                    val rect = Rect()
-                    val itemView = layoutManager.findViewByPosition(index)
-                    itemView?.let {
-                        val imageView = itemView.findViewById(R.id.iv_image) as ImageView
-                        imageView.getGlobalVisibleRect(rect)
-                    }
-                    list.add(0, ImageInfo(JsonParser().parse(item.bodys).asJsonObject["url"].asString, null, rect))
-                }
-            }
-            GPreviewBuilder.from(this)
-                    .setData(list)
-                    .setCurrentIndex(list.size - 1 - idx)
-                    .setSingleFling(true)
-                    .setType(GPreviewBuilder.IndicatorType.Number)
-                    .start()
-        }
+        subscribe()
+        initView()
         viewModel.load()
     }
 
-    private fun setupBinding() {
+    private fun subscribe() {
+        with(viewModel) {
+            roomDetailData.observe(this@RoomDetailFragment, Observer {
+                adapter.addData(it.orEmpty())
+                viewDataBinding.srlRoomDetail.finishRefresh()
+            })
+            roomBoardData.observe(this@RoomDetailFragment, Observer {
+                if (viewModel.isLoadMore) {
+                    boardAdapter.addData(it.orEmpty())
+                    viewDataBinding.srlRoomBoard.finishLoadMore()
+                } else {
+                    boardAdapter.setNewData(it.orEmpty())
+                    viewDataBinding.srlRoomBoard.finishRefresh()
+                }
+            })
+            errorCommand.observe(this@RoomDetailFragment, Observer {
+                it?.let {
+                    viewDataBinding.srlRoomDetail.finishLoadMoreWithNoMoreData()
+                    viewDataBinding.rvRoomDetail.showSnackbar(getString(it), Snackbar.LENGTH_SHORT)
+                }
+            })
+            errorBoardCommand.observe(this@RoomDetailFragment, Observer {
+                it?.let {
+                    viewDataBinding.srlRoomBoard.finishRefresh()
+                    viewDataBinding.srlRoomBoard.finishLoadMoreWithNoMoreData()
+                    viewDataBinding.srlRoomBoard.showSnackbar(getString(it), Snackbar.LENGTH_SHORT)
+                }
+            })
+        }
+    }
+
+    private fun initView() {
         with(viewDataBinding) {
             viewModel = this@RoomDetailFragment.viewModel
             setLifecycleOwner(this@RoomDetailFragment)
@@ -135,6 +132,31 @@ class RoomDetailFragment : Fragment() {
         with(viewDataBinding.rvRoomBoard) {
             layoutManager = android.support.v7.widget.LinearLayoutManager(context)
             adapter = boardAdapter
+        }
+
+        adapter.setOnItemChildClickListener { adapter, _, position ->
+            val info = adapter.getItem(position) as ExtInfo
+            var idx = -1
+            val layoutManager = viewDataBinding.rvRoomDetail.layoutManager as LinearLayoutManager
+            val list = ArrayList<ImageInfo>()
+            adapter.data.forEachIndexed { index, item ->
+                if (item is ExtInfo && Constants.MESSAGE_TYPE_IMAGE == item.messageObject) {
+                    if (TextUtils.equals(item.bodys, info.bodys)) idx = list.size
+                    val rect = Rect()
+                    val itemView = layoutManager.findViewByPosition(index)
+                    itemView?.let {
+                        val imageView = itemView.findViewById(R.id.iv_image) as ImageView
+                        imageView.getGlobalVisibleRect(rect)
+                    }
+                    list.add(0, ImageInfo(JsonParser().parse(item.bodys).asJsonObject["url"].asString, null, rect))
+                }
+            }
+            GPreviewBuilder.from(this)
+                    .setData(list)
+                    .setCurrentIndex(list.size - 1 - idx)
+                    .setSingleFling(true)
+                    .setType(GPreviewBuilder.IndicatorType.Number)
+                    .start()
         }
     }
 

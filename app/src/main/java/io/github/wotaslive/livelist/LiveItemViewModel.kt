@@ -12,7 +12,7 @@ class LiveItemViewModel(context: Context, val room: LiveInfo.ContentBean.RoomBea
                 if (room.liveType == 1)
                     R.string.live
                 else
-                    R.string.review
+                    R.string.radio
         )
     }
     private val timeString by lazy {

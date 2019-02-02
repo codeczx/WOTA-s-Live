@@ -5,17 +5,23 @@ import android.arch.lifecycle.AndroidViewModel
 import android.arch.lifecycle.MutableLiveData
 import android.databinding.ObservableField
 import com.google.gson.Gson
+import io.github.wotaslive.R
+import io.github.wotaslive.SingleLiveEvent
 import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.ExtInfo
 import io.github.wotaslive.utils.RxJavaUtil
 import io.reactivex.Flowable
 import io.reactivex.disposables.CompositeDisposable
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 
 class RoomViewModel(application: Application, private val appRepository: AppRepository) :
         AndroidViewModel(application) {
     val url = ObservableField<String>()
     val roomDetailData = MutableLiveData<List<Any>>()
     val roomBoardData = MutableLiveData<List<ExtInfo>>()
+    val errorCommand = SingleLiveEvent<Int>()
+    val errorBoardCommand = SingleLiveEvent<Int>()
     var isLoadMore = false
     var roomId = 0
     var memberId = 0
@@ -54,7 +60,12 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                     obj.msgTime = it.msgTime
                     list.add(obj)
                     firstSend = it.msgTime
-                }, Throwable::printStackTrace)
+                }, {
+                    if (it is SocketTimeoutException || it is UnknownHostException)
+                        errorCommand.value = R.string.timeout_exception
+                    else
+                        errorCommand.value = R.string.server_exception
+                })
         compositeDisposable.add(disposable)
     }
 
@@ -72,15 +83,18 @@ class RoomViewModel(application: Application, private val appRepository: AppRepo
                     boardLastTime = it.content?.lastTime ?: 0
                     return@flatMap Flowable.fromIterable(it.content?.data)
                 }
-                .doFinally {
-                    roomBoardData.value = list
-                }
                 .subscribe({
                     list.add(gson.fromJson(it.extInfo, ExtInfo::class.java).run {
                         this.msgTime = it.msgTime
                         this
                     })
-                }, Throwable::printStackTrace)
+                    roomBoardData.value = list
+                }, {
+                    if (it is SocketTimeoutException || it is UnknownHostException)
+                        errorBoardCommand.value = R.string.timeout_exception
+                    else
+                        errorBoardCommand.value = R.string.server_exception
+                })
         compositeDisposable.add(disposable)
     }
 

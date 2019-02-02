@@ -14,6 +14,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class AppRepository private constructor() {
     private val liveApi: ApiServices by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -203,6 +204,10 @@ class AppRepository private constructor() {
 
         private val okHttpClient: OkHttpClient
             get() = OkHttpClient.Builder()
+                    .retryOnConnectionFailure(true)
+                    .connectTimeout(5, TimeUnit.SECONDS)
+                    .readTimeout(5, TimeUnit.SECONDS)
+                    .writeTimeout(5, TimeUnit.SECONDS)
                     .addInterceptor(HeaderInterceptor())
                     .addInterceptor(HttpLoggingInterceptor().also {
                         it.level = HttpLoggingInterceptor.Level.BASIC

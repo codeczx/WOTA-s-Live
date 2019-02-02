@@ -10,8 +10,8 @@
     <string name="second">秒</string>
 
     <string name="live_start_time" formatted="false"><![CDATA[开始时间：%tm-%<td %<tH:%<tM]]></string>
-    <string name="live">直播中</string>
-    <string name="review">回放中</string>
+    <string name="live">直播</string>
+    <string name="radio">电台</string>
 
     <string name="show_status_Streaming">进行中</string>
     <string name="show_status_future">即将进行</string>
@@ -37,4 +37,7 @@
 
     <string name="photo_album">相册</string>
     <string name="pic_save">保存到本地?</string>
+
+    <string name="timeout_exception">网络异常</string>
+    <string name="server_exception">服务器异常</string>
 </resources>
