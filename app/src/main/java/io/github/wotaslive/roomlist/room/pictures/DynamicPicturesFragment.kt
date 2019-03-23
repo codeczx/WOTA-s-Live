@@ -2,20 +2,14 @@ package io.github.wotaslive.roomlist.room.pictures
 
 
 import android.arch.lifecycle.Observer
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v7.widget.GridLayoutManager
-import android.support.v7.widget.LinearLayoutManager
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import com.blankj.utilcode.util.SizeUtils
-import com.previewlibrary.GPreviewBuilder
 import io.github.wotaslive.R
-import io.github.wotaslive.data.model.DynamicPictureInfo
-import io.github.wotaslive.data.model.ImageInfo
 import io.github.wotaslive.databinding.FragPicsBinding
 import io.github.wotaslive.roomlist.room.RoomDetailActivity
 import io.github.wotaslive.roomlist.room.RoomViewModel
@@ -23,6 +17,8 @@ import io.github.wotaslive.utils.checkUrl
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
 import io.github.wotaslive.widget.GridSpaceItemDecoration
+import net.moyokoo.diooto.Diooto
+import net.moyokoo.diooto.config.DiootoConfig
 
 
 class DynamicPicturesFragment : Fragment() {
@@ -39,7 +35,7 @@ class DynamicPicturesFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as RoomDetailActivity).obtainViewModel(DynamicPicturesViewModel::class.java)
-        viewDataBinding.setLifecycleOwner(this)
+        viewDataBinding.lifecycleOwner = this
         setupActionBar(viewDataBinding.toolbar) {
             setDisplayHomeAsUpEnabled(true)
             setDisplayShowHomeEnabled(true)
@@ -77,27 +73,20 @@ class DynamicPicturesFragment : Fragment() {
                 setDisplayShowHomeEnabled(true)
             }
         }
-        adapter.setOnItemClickListener { adapter, _, position ->
-            val thumbViewInfoList = ArrayList<ImageInfo>()
-            adapter.data.forEach {
-                thumbViewInfoList.add(ImageInfo(checkUrl((it as DynamicPictureInfo.Content.Data).filePath), null, null))
+        adapter.setOnItemClickListener { _, _, position ->
+            val urls = arrayOfNulls<String>(adapter.data.size)
+            adapter.data.forEachIndexed { index, item ->
+                urls[index] = checkUrl(item.filePath)
             }
-            val gridLayoutManager = viewDataBinding.rvPics.layoutManager as LinearLayoutManager
-            val firstCompletelyVisiblePos = gridLayoutManager.findFirstVisibleItemPosition()
-            for (i in firstCompletelyVisiblePos until thumbViewInfoList.size) {
-                val itemView = gridLayoutManager.findViewByPosition(i)
-                val bounds = Rect()
-                if (itemView != null) {
-                    val thumbView = itemView.findViewById(R.id.iv_image) as ImageView
-                    thumbView.getGlobalVisibleRect(bounds)
-                }
-                thumbViewInfoList[i].rect = bounds
-            }
-            GPreviewBuilder.from(this)
-                    .setData(thumbViewInfoList)
-                    .setCurrentIndex(position)
-                    .setSingleFling(true)
-                    .setType(GPreviewBuilder.IndicatorType.Number)
+            Diooto(context)
+                    .urls(urls)
+                    .type(DiootoConfig.PHOTO)
+                    .position(position)
+                    .views(viewDataBinding.rvPics, R.id.iv_image)
+                    .loadPhotoBeforeShowBigImage { sketchImageView, pos ->
+                        sketchImageView.displayImage(checkUrl(getString(R.string.resize_250) +
+                                adapter.getItem(pos)!!.filePath))
+                    }
                     .start()
         }
     }

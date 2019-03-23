@@ -1,25 +1,22 @@
 package io.github.wotaslive.roomlist.room
 
 import android.arch.lifecycle.Observer
-import android.graphics.Rect
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v4.app.Fragment
 import android.support.v7.widget.LinearLayoutManager
-import android.text.TextUtils
 import android.view.*
-import android.widget.ImageView
 import com.google.gson.JsonParser
-import com.previewlibrary.GPreviewBuilder
 import io.github.wotaslive.Constants
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.ExtInfo
-import io.github.wotaslive.data.model.ImageInfo
 import io.github.wotaslive.databinding.FragRoomDetailBinding
 import io.github.wotaslive.roomlist.room.pictures.DynamicPicturesFragment
 import io.github.wotaslive.utils.obtainViewModel
 import io.github.wotaslive.utils.setupActionBar
 import io.github.wotaslive.utils.showSnackbar
+import net.moyokoo.diooto.Diooto
+import net.moyokoo.diooto.config.DiootoConfig
 
 class RoomDetailFragment : Fragment() {
     private lateinit var viewModel: RoomViewModel
@@ -56,7 +53,7 @@ class RoomDetailFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         viewModel = (activity as RoomDetailActivity).obtainViewModel(RoomViewModel::class.java).also {
             viewDataBinding.viewModel = it
-            viewDataBinding.setLifecycleOwner(this@RoomDetailFragment)
+            viewDataBinding.lifecycleOwner = this@RoomDetailFragment
         }
         (activity as RoomDetailActivity).let {
             val extras = it.intent.extras
@@ -110,7 +107,7 @@ class RoomDetailFragment : Fragment() {
     private fun initView() {
         with(viewDataBinding) {
             viewModel = this@RoomDetailFragment.viewModel
-            setLifecycleOwner(this@RoomDetailFragment)
+            lifecycleOwner = this@RoomDetailFragment
         }
         with(viewDataBinding.srlRoomDetail) {
             setOnRefreshListener {
@@ -134,28 +131,12 @@ class RoomDetailFragment : Fragment() {
             adapter = boardAdapter
         }
 
-        adapter.setOnItemChildClickListener { adapter, _, position ->
-            val info = adapter.getItem(position) as ExtInfo
-            var idx = -1
-            val layoutManager = viewDataBinding.rvRoomDetail.layoutManager as LinearLayoutManager
-            val list = ArrayList<ImageInfo>()
-            adapter.data.forEachIndexed { index, item ->
-                if (item is ExtInfo && Constants.MESSAGE_TYPE_IMAGE == item.messageObject) {
-                    if (TextUtils.equals(item.bodys, info.bodys)) idx = list.size
-                    val rect = Rect()
-                    val itemView = layoutManager.findViewByPosition(index)
-                    itemView?.let {
-                        val imageView = itemView.findViewById(R.id.iv_image) as ImageView
-                        imageView.getGlobalVisibleRect(rect)
-                    }
-                    list.add(0, ImageInfo(JsonParser().parse(item.bodys).asJsonObject["url"].asString, null, rect))
-                }
-            }
-            GPreviewBuilder.from(this)
-                    .setData(list)
-                    .setCurrentIndex(list.size - 1 - idx)
-                    .setSingleFling(true)
-                    .setType(GPreviewBuilder.IndicatorType.Number)
+        adapter.setOnItemChildClickListener { _, view, position ->
+            Diooto(context)
+                    .urls(JsonParser().parse((adapter.getItem(position) as ExtInfo).bodys).asJsonObject["url"].asString)
+                    .type(DiootoConfig.PHOTO)
+                    .position(position)
+                    .views(view)
                     .start()
         }
     }

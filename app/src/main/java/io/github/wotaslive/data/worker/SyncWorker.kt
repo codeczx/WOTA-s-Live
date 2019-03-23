@@ -1,6 +1,8 @@
 package io.github.wotaslive.data.worker
 
+import android.content.Context
 import androidx.work.Worker
+import androidx.work.WorkerParameters
 import com.blankj.utilcode.util.SPUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.google.gson.Gson
@@ -10,7 +12,7 @@ import io.github.wotaslive.data.AppRepository
 import io.github.wotaslive.data.model.SyncRequestBody
 import io.reactivex.schedulers.Schedulers
 
-class SyncWorker : Worker() {
+class SyncWorker(context: Context, workerParameters: WorkerParameters) : Worker(context, workerParameters) {
     override fun doWork(): Result {
         AppRepository.instance
                 .getSync()
@@ -53,6 +55,6 @@ class SyncWorker : Worker() {
                     }
                     ToastUtils.showShort("同步成员列表成功！")
                 }, Throwable::printStackTrace)
-        return Result.SUCCESS
+        return Result.success()
     }
 }

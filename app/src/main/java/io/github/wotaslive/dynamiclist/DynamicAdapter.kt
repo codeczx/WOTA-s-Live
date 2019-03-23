@@ -1,20 +1,20 @@
 package io.github.wotaslive.dynamiclist
 
 import android.databinding.DataBindingUtil
-import android.graphics.Rect
 import android.support.v4.app.Fragment
+import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
 import com.liyi.grid.adapter.BaseAutoGridHolder
 import com.liyi.grid.adapter.SimpleAutoGridAdapter
-import com.previewlibrary.GPreviewBuilder
 import io.github.wotaslive.R
 import io.github.wotaslive.data.model.DynamicInfo
-import io.github.wotaslive.data.model.ImageInfo
 import io.github.wotaslive.data.model.SyncInfo
 import io.github.wotaslive.databinding.ItemDynamicBinding
 import io.github.wotaslive.utils.checkUrl
 import io.github.wotaslive.utils.loadThumb
+import net.moyokoo.diooto.Diooto
+import net.moyokoo.diooto.config.DiootoConfig
 
 class DynamicAdapter(private val fragment: Fragment) : BaseQuickAdapter<DynamicInfo.Content.Data, BaseViewHolder>(R.layout.item_dynamic) {
     private val memberMap = HashMap<Int, SyncInfo.Content.MemberInfo>()
@@ -31,17 +31,23 @@ class DynamicAdapter(private val fragment: Fragment) : BaseQuickAdapter<DynamicI
                         }
                     })
                     it1.setOnItemClickListener { position, _ ->
-                        val list = ArrayList<ImageInfo>()
-                        for (i in 0 until it.picture.orEmpty().size) {
-                            val rect = Rect()
-                            it1.getChildAt(i).getGlobalVisibleRect(rect)
-                            list.add(ImageInfo(checkUrl(it.picture.orEmpty()[i].filePath), null, rect))
+                        val array = arrayOfNulls<String>(it.picture.orEmpty().size)
+                        val views = arrayOfNulls<View>(it1.childCount)
+                        it.picture?.forEachIndexed { index, picture ->
+                            array[index] = checkUrl(picture.filePath)
                         }
-                        GPreviewBuilder.from(fragment)
-                                .setData(list)
-                                .setCurrentIndex(position)
-                                .setSingleFling(true)
-                                .setType(GPreviewBuilder.IndicatorType.Dot)
+                        for (i in 0 until it1.childCount) {
+                            views[i] = it1.getChildAt(i)
+                        }
+                        Diooto(fragment.context)
+                                .urls(array)
+                                .type(DiootoConfig.PHOTO)
+                                .position(position)
+                                .views(views)
+                                .loadPhotoBeforeShowBigImage { sketchImageView, pos ->
+                                    sketchImageView.displayImage(checkUrl(fragment.getString(R.string.resize_250) +
+                                            it.picture.orEmpty()[pos].filePath))
+                                }
                                 .start()
                     }
                 }

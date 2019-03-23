@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
         viewDataBinding = DataBindingUtil.setContentView(this, R.layout.act_main)
         viewModel = obtainViewModel(MainViewModel::class.java).also {
             viewDataBinding.viewModel = it
-            viewDataBinding.setLifecycleOwner(this)
+            viewDataBinding.lifecycleOwner = this
         }
         initView()
         checkPermissions()
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 val secondTime = System.currentTimeMillis()
                 if (secondTime - firstTime < 500 && it.order == lastTapId) {
                     // double tap
-                    (pagerAdapter.getItem(it.order) as BaseLazyFragment).scrollToTop()
+                    (pagerAdapter.getItem(it.order) as BaseLazyFragment?)?.scrollToTop()
                 }
                 firstTime = secondTime
                 lastTapId = it.order
