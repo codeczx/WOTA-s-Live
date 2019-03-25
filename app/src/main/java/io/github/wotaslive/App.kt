@@ -7,12 +7,14 @@ import com.shuyu.gsyvideoplayer.model.VideoOptionModel
 import com.shuyu.gsyvideoplayer.player.IjkPlayerManager
 import com.shuyu.gsyvideoplayer.player.PlayerFactory
 import com.shuyu.gsyvideoplayer.utils.GSYVideoType
+import com.simple.spiderman.SpiderMan
 import tv.danmaku.ijk.media.player.IjkMediaPlayer
 
 class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        SpiderMan.init(this)
         Utils.init(this)
         instance = this
         PlayerFactory.setPlayManager(IjkPlayerManager::class.java)

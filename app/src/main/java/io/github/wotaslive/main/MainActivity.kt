@@ -6,6 +6,7 @@ import android.app.Activity
 import android.content.Intent
 import android.databinding.DataBindingUtil
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.view.ViewPager
 import android.support.v7.app.AppCompatActivity
 import com.tbruyelle.rxpermissions2.RxPermissions
@@ -69,7 +70,8 @@ class MainActivity : AppCompatActivity() {
                 val secondTime = System.currentTimeMillis()
                 if (secondTime - firstTime < 500 && it.order == lastTapId) {
                     // double tap
-                    (pagerAdapter.getItem(it.order) as BaseLazyFragment?)?.scrollToTop()
+                    val frag: Fragment = pagerAdapter.getItem(it.order)
+                    if (frag.isVisible) (frag as BaseLazyFragment).scrollToTop()
                 }
                 firstTime = secondTime
                 lastTapId = it.order
